@@ -16,6 +16,9 @@ export interface CaseStudySection {
   heading: string;
   body?: string; // markdown-ish plain text, short paragraphs
   imageRef?: string; // key into ASSET_MAP, optional
+  imageSrc?: string; // real exported file in /public — only set once the asset actually exists
+  imageWidth?: number;
+  imageHeight?: number;
   imageCaption?: string;
   list?: string[];
 }

@@ -10,6 +10,7 @@ export const about = {
   bio: [
     "Most of my ideas don't come from staring at Figma. They come from cooking something new on a Sunday, getting halfway through a puzzle, taking photos I'll probably never post, or spending way too much time noticing tiny details everyone else walks past.",
     "I'm curious by nature, and that curiosity usually finds its way back into my work.",
+    "I enjoy making complex things feel simple. I like asking questions, challenging assumptions, and designing products that feel intuitive — not because they're basic, but because someone took the time to make them that way.",
   ],
   currentRoles: [
     { org: "YourStory", title: "Product Design Intern", period: "Oct 2025 – Present" },

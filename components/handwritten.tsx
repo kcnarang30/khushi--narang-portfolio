@@ -11,7 +11,7 @@ export function Handwritten({
 }) {
   return (
     <span
-      className={cn("inline-block font-hand text-accent", className)}
+      className={cn("inline-block font-pen text-accent", className)}
       style={{ transform: `rotate(${rotate}deg)` }}
     >
       {children}

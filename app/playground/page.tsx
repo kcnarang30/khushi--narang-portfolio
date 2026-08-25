@@ -4,6 +4,7 @@ import { getPlayground } from "@/data/projects";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
+import { DoNotOpen } from "@/components/do-not-open";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Playground" };
@@ -21,7 +22,8 @@ const sizeClasses = {
 };
 
 export default function PlaygroundPage() {
-  const items = getPlayground();
+  const items = getPlayground().filter((p) => p.slug !== "sip-coffee");
+  const unfinished = getPlayground().find((p) => p.slug === "sip-coffee");
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
@@ -61,6 +63,18 @@ export default function PlaygroundPage() {
           );
         })}
       </div>
+
+      {unfinished && (
+        <Reveal delay={0.1} className="mt-14 max-w-md">
+          <DoNotOpen label="Unfinished">
+            <p className="font-display text-lg font-bold">{unfinished.name}</p>
+            <p className="mt-2 font-serif text-sm leading-relaxed text-fg-muted">{unfinished.oneLiner}</p>
+            {unfinished.todo?.[0] && (
+              <p className="mt-3 font-mono text-[11px] text-fg-dim">TODO — {unfinished.todo[0]}</p>
+            )}
+          </DoNotOpen>
+        </Reveal>
+      )}
     </div>
   );
 }

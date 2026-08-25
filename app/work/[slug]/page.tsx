@@ -3,9 +3,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { projects, getBySlug } from "@/data/projects";
 import { StatusBadge } from "@/components/status-badge";
-import { ImagePlaceholder } from "@/components/image-placeholder";
-import { WindowFrame } from "@/components/window-frame";
 import { Reveal } from "@/components/reveal";
+import { ShuruKarDossier } from "@/components/shurukar-dossier";
+import { TechSparksStats } from "@/components/techsparks-stats";
+import { PendingAsset } from "@/components/pending-asset";
+import { RealShot } from "@/components/real-shot";
 
 export function generateStaticParams() {
   return projects.filter((p) => p.caseStudy).map((p) => ({ slug: p.slug }));
@@ -36,7 +38,7 @@ export default async function CaseStudyPage({
   return (
     <article>
       {/* Hero */}
-      <header className="mx-auto max-w-4xl px-5 pb-10 pt-14 sm:px-8 sm:pt-20">
+      <header className="mx-auto max-w-4xl px-5 pb-8 pt-14 sm:px-8 sm:pt-20">
         <Link
           href="/work"
           className="focus-ring rounded font-mono text-[11px] uppercase tracking-widest text-fg-dim hover:text-fg-muted"
@@ -53,38 +55,45 @@ export default async function CaseStudyPage({
         <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold leading-[1.02] sm:text-6xl">
           {cs.hero.statement}
         </h1>
-        {cs.hero.sub && <p className="mt-4 max-w-xl text-[15px] text-fg-muted">{cs.hero.sub}</p>}
+        {cs.hero.sub && !project.caseStudyContent?.hero.sub?.includes(" → ") && (
+          <p className="mt-4 max-w-xl font-serif text-[16px] italic text-fg-muted">{cs.hero.sub}</p>
+        )}
 
-        <div className="mt-8 grid grid-cols-2 gap-6 border-y border-line py-6 sm:grid-cols-4">
-          <Meta label="Role" value={project.role ?? "TBD"} />
-          <Meta label="Category" value={project.category.replace("-", " ")} />
-          {project.collaborators && <Meta label="Collaborators" value={project.collaborators} />}
+        {project.slug === "devsparks" && cs.hero.sub?.includes(" → ") && (
+          <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-display text-lg font-bold sm:text-2xl">
+            {cs.hero.sub.replace(".", "").split(" → ").map((city, i, arr) => (
+              <span key={city} className="flex items-center gap-2.5">
+                <span>{city}</span>
+                {i < arr.length - 1 && <span className="text-accent" aria-hidden>/</span>}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {project.slug === "techsparks" && <TechSparksStats />}
+
+        <p className="mt-7 font-mono text-[12px] text-fg-dim">
+          {project.role ?? "Product Designer"}
+          {project.collaborators && ` · ${project.collaborators}`}
           {project.liveUrl && (
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Live</p>
+            <>
+              {" · "}
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring mt-1 inline-block rounded font-mono text-xs text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
+                className="focus-ring text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
               >
-                Visit site ↗
+                visit site ↗
               </a>
-            </div>
+            </>
           )}
-        </div>
+        </p>
       </header>
-
-      {/* Cover */}
-      <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <WindowFrame label={project.slug}>
-          <ImagePlaceholder label={project.coverAssetRef ?? "cover pending"} aspect="aspect-[16/9]" className="rounded-none border-0" />
-        </WindowFrame>
-      </div>
 
       {/* My contribution */}
       {project.myContribution && project.myContribution.length > 0 && (
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-8">
+        <div className="mx-auto max-w-4xl px-5 py-10 sm:px-8">
           <Reveal>
             <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">My contribution</p>
             <ul className="mt-3 grid grid-cols-1 gap-x-8 gap-y-1.5 text-sm text-fg-muted sm:grid-cols-2">
@@ -100,55 +109,63 @@ export default async function CaseStudyPage({
       )}
 
       {/* Sections */}
-      <div className="mx-auto max-w-4xl px-5 pb-16 sm:px-8">
-        <div className="flex flex-col gap-16">
-          {cs.sections.map((s, i) => (
-            <Reveal key={s.heading} delay={i * 0.03}>
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
-                <div className="md:col-span-2">
-                  <h2 className="font-display text-xl font-bold sm:text-2xl">{s.heading}</h2>
+      {project.slug === "shurukar" ? (
+        <ShuruKarDossier sections={cs.sections} reflection={cs.reflection} />
+      ) : (
+        <div className="mx-auto max-w-4xl px-5 pb-16 pt-6 sm:px-8">
+          <div className="flex flex-col gap-14">
+            {cs.sections.map((s, i) => (
+              <Reveal key={s.heading} delay={i * 0.03}>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
+                  <div className="md:col-span-2">
+                    <h2 className="font-display text-xl font-bold sm:text-2xl">{s.heading}</h2>
+                  </div>
+                  <div className="md:col-span-3">
+                    {s.body && <p className="font-serif text-[15.5px] leading-relaxed text-fg-muted">{s.body}</p>}
+                    {s.list && (
+                      <ul className="mt-3 flex flex-col gap-1.5 text-sm text-fg-muted">
+                        {s.list.map((l) => (
+                          <li key={l} className="flex gap-2">
+                            <span className="text-accent" aria-hidden>—</span>
+                            {l}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {!s.imageSrc && s.imageRef && <PendingAsset assetKey={s.imageRef} caption={s.imageCaption} />}
+                  </div>
                 </div>
-                <div className="md:col-span-3">
-                  {s.body && <p className="text-[15px] leading-relaxed text-fg-muted">{s.body}</p>}
-                  {s.list && (
-                    <ul className="mt-3 flex flex-col gap-1.5 text-sm text-fg-muted">
-                      {s.list.map((l) => (
-                        <li key={l} className="flex gap-2">
-                          <span className="text-accent" aria-hidden>—</span>
-                          {l}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {s.imageRef && (
-                    <div className="mt-5">
-                      <WindowFrame label={s.imageRef}>
-                        <ImagePlaceholder label={s.imageRef} aspect="aspect-[4/3]" className="rounded-none border-0" />
-                      </WindowFrame>
-                      {s.imageCaption && (
-                        <p className="mt-2 font-mono text-[11px] text-fg-dim">{s.imageCaption}</p>
-                      )}
-                    </div>
-                  )}
-                </div>
+                {s.imageSrc && s.imageWidth && s.imageHeight && (
+                  <div className="mx-auto mt-6 max-w-xl md:-mr-16 lg:-mr-32">
+                    <RealShot
+                      src={s.imageSrc}
+                      width={s.imageWidth}
+                      height={s.imageHeight}
+                      alt={s.imageCaption ?? s.heading}
+                      caption={s.imageCaption}
+                    />
+                  </div>
+                )}
+              </Reveal>
+            ))}
+          </div>
+
+          {cs.reflection && (
+            <Reveal delay={0.1}>
+              <div className="mt-16 border-l-2 border-accent pl-6 sm:pl-8">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Reflection</p>
+                <p className="mt-3 max-w-2xl font-serif text-lg italic leading-relaxed text-fg sm:text-xl">
+                  {cs.reflection}
+                </p>
               </div>
             </Reveal>
-          ))}
+          )}
         </div>
+      )}
 
-        {cs.reflection && (
-          <Reveal delay={0.1}>
-            <div className="mt-16 border-l-2 border-accent pl-6 sm:pl-8">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Reflection</p>
-              <p className="mt-3 max-w-2xl font-display text-lg leading-relaxed text-fg sm:text-xl">
-                {cs.reflection}
-              </p>
-            </div>
-          </Reveal>
-        )}
-
-        {project.todo && project.todo.length > 0 && (
-          <div className="mt-10 border-t border-dashed border-line-strong pt-5">
+      {project.todo && project.todo.length > 0 && (
+        <div className="mx-auto max-w-4xl px-5 pb-16 sm:px-8">
+          <div className="border-t border-dashed border-line-strong pt-5">
             <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
               Open items before this goes fully live
             </p>
@@ -158,17 +175,8 @@ export default async function CaseStudyPage({
               ))}
             </ul>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </article>
-  );
-}
-
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">{label}</p>
-      <p className="mt-1 text-xs text-fg-muted">{value}</p>
-    </div>
   );
 }

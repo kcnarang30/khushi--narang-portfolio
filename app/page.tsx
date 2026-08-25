@@ -1,14 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getFeatured, getSpotlight } from "@/data/projects";
 import { about } from "@/data/about";
-import { HeroStage } from "@/components/hero-stage";
-import { FeaturedProject, FeaturedVariant } from "@/components/featured-project";
+import { HeroCover } from "@/components/hero-cover";
+import { FeaturedProject } from "@/components/featured-project";
 import { FloppyCard } from "@/components/floppy-card";
 import { Handwritten } from "@/components/handwritten";
 import { Reveal } from "@/components/reveal";
 import { ImagePlaceholder } from "@/components/image-placeholder";
-
-const variants: FeaturedVariant[] = ["type-dominant", "full-bleed", "split-float"];
 
 export default function Home() {
   const featured = getFeatured();
@@ -16,7 +15,7 @@ export default function Home() {
 
   return (
     <div>
-      <HeroStage anchor={featured[0]} second={featured[1]} />
+      <HeroCover projects={featured} />
 
       {/* FEATURED WORK */}
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
@@ -37,8 +36,8 @@ export default function Home() {
           </div>
         </Reveal>
         <div className="flex flex-col gap-24 sm:gap-32">
-          {featured.map((p, i) => (
-            <FeaturedProject key={p.slug} project={p} variant={variants[i % variants.length]} />
+          {featured.map((p) => (
+            <FeaturedProject key={p.slug} project={p} />
           ))}
         </div>
       </section>
@@ -74,8 +73,8 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-14 md:grid-cols-5 md:items-center">
             <div className="md:col-span-3">
               <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">About</p>
-              <p className="mt-4 font-display text-xl font-bold leading-snug sm:text-2xl">{about.bio[0]}</p>
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-fg-muted">{about.bio[1]}</p>
+              <p className="mt-4 font-serif text-xl italic leading-snug text-fg sm:text-2xl">{about.bio[0]}</p>
+              <p className="mt-4 max-w-md font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[1]}</p>
               <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[12px] text-fg-muted">
                 <span>{about.statsProjects}</span>
                 <span>{about.statsLive} live</span>
@@ -94,7 +93,9 @@ export default function Home() {
                   <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" />
                 </div>
                 <div className="absolute -bottom-8 -right-6 w-32 rotate-[7deg] sm:-right-10">
-                  <ImagePlaceholder label="cooking" aspect="aspect-square" />
+                  <div className="relative aspect-square w-full overflow-hidden rounded-sm border border-line-strong">
+                    <Image src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" fill className="object-cover" sizes="128px" />
+                  </div>
                 </div>
                 <Handwritten className="absolute -top-6 -left-8 text-lg sm:text-xl" rotate={-6}>
                   currently thinking about —

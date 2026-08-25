@@ -58,7 +58,7 @@ export function FloppyCard({ project, index }: { project: Project; index: number
             <p className="font-mono text-[9px] uppercase tracking-wide text-black/50">
               {project.category.replace("-", " ")}
             </p>
-            <p className="mt-0.5 font-display text-[13px] font-bold leading-tight text-black">
+            <p className="mt-0.5 font-body text-[12.5px] font-semibold leading-tight text-black">
               {project.name}
             </p>
           </div>

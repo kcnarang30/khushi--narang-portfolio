@@ -1,32 +1,40 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, Caveat, JetBrains_Mono } from "next/font/google";
+import { Big_Shoulders, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const bigShoulders = Big_Shoulders({
+  variable: "--font-big-shoulders",
   subsets: ["latin"],
-  weight: ["500", "700"],
+  weight: ["600", "700", "800", "900"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
-const caveat = Caveat({
-  variable: "--font-caveat",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "700"],
+});
+
+// Editor's red pen — used once or twice as a proof-mark accent, never as body voice.
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -48,7 +56,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${caveat.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${bigShoulders.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
       <body className="antialiased">
         <a
           href="#main"

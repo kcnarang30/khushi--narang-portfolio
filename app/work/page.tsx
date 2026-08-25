@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getFeatured, getSpotlight, getPlayground, getArchive } from "@/data/projects";
-import { FeaturedProject, FeaturedVariant } from "@/components/featured-project";
+import { FeaturedProject } from "@/components/featured-project";
 import { FloppyCard } from "@/components/floppy-card";
 import { Reveal } from "@/components/reveal";
 
 export const metadata: Metadata = { title: "Work" };
-
-const variants: FeaturedVariant[] = ["type-dominant", "full-bleed", "split-float"];
 
 export default function WorkPage() {
   const featured = getFeatured();
@@ -26,8 +24,8 @@ export default function WorkPage() {
 
       {/* FEATURED */}
       <div className="mt-20 flex flex-col gap-24 sm:gap-32">
-        {featured.map((p, i) => (
-          <FeaturedProject key={p.slug} project={p} variant={variants[i % variants.length]} />
+        {featured.map((p) => (
+          <FeaturedProject key={p.slug} project={p} />
         ))}
       </div>
 

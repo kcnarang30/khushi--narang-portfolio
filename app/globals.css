@@ -1,31 +1,57 @@
 @import "tailwindcss";
 
+/*
+ * Palette derived from Khushi's own work, not invented:
+ * - Cyber Angel (illustration): deep violet ground, cyan hair, hot-pink wings,
+ *   chromatic-aberration glitch text, wireframe/grid overlay.
+ * - Greek Comics: teal border, coral halftone lettering, mustard bursts,
+ *   cracked-porcelain texture.
+ * - knwn: pure black/white mascot family with ONE purple→cyan gradient accent.
+ * - Internet Magazine: near-monochrome with a single yellow tag.
+ * The recurring threads across all four: violet depth, cyan/teal as the one
+ * consistent "signal" color, coral as a punch, amber as a highlighter.
+ * Orange never appears in any of it — it was never hers, so it's gone.
+ */
 :root {
-  /* Base */
-  --bg: #0a0a0a;
-  --bg-raised: #131311;
-  --bg-raised-2: #1b1a17;
-  --paper: #ede6d6;
-  --paper-dark: #ddd3bd;
-  --fg: #f3f0e8;
-  --fg-muted: #948f83;
-  --fg-dim: #55524a;
-  --line: #29281f;
-  --line-strong: #3a3830;
+  /* Ink — a deep violet-black ground, not flat grey-black */
+  --bg: #120e1a;
+  --bg-raised: #1c1526;
+  --bg-raised-2: #251c33;
 
-  /* Signature accent — warning-label orange-red (floppy sticker color) */
-  --accent: #ff4d23;
-  --accent-dim: #7a2c17;
+  /* Paper — reversed panels, exhibit tear-sheets */
+  --paper: #f2ede1;
+  --paper-dark: #e3d8c1;
 
-  /* Spotlight-only floppy palette (not used elsewhere) */
-  --floppy-1: #6f8fd6;
-  --floppy-2: #8a9a5b;
-  --floppy-3: #c9843a;
-  --floppy-4: #a077c9;
+  --fg: #f4f1ea;
+  --fg-muted: #a099ac;
+  --fg-dim: #5e5570;
+  --line: #271f36;
+  --line-strong: #3a2e4d;
 
-  /* Status */
-  --live: #6fbf73;
-  --beta: #e6b566;
+  /* Signal — the one consistent color across her actual illustration work */
+  --accent: #3fe0c5;
+  --accent-dim: #185c50;
+
+  /* Ember — the coral/pink punch (Cyber Angel wings, Greek Comics lettering) */
+  --ember: #ff5f87;
+  --ember-dim: #6e2438;
+
+  /* Violet — the case file's redaction/mystery color (Cyber Angel's ground) */
+  --inst: #7c4fd1;
+  --inst-dim: #2c2050;
+
+  /* Highlight — the marginalia / "DO NOT OPEN" amber (Greek Comics bursts) */
+  --live-signal: #ffcf4d;
+
+  /* Spotlight-only floppy palette — tuned into the same family, still varied */
+  --floppy-1: #5aa9d6;
+  --floppy-2: #4fae8e;
+  --floppy-3: #e8a33d;
+  --floppy-4: #9066c9;
+
+  /* Status — kept functional/semantic, separate from the expressive palette */
+  --live: #6fd196;
+  --beta: #ffcf4d;
 }
 
 @theme inline {
@@ -41,6 +67,11 @@
   --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
+  --color-ember: var(--ember);
+  --color-ember-dim: var(--ember-dim);
+  --color-inst: var(--inst);
+  --color-inst-dim: var(--inst-dim);
+  --color-live-signal: var(--live-signal);
   --color-floppy-1: var(--floppy-1);
   --color-floppy-2: var(--floppy-2);
   --color-floppy-3: var(--floppy-3);
@@ -48,10 +79,16 @@
   --color-live: var(--live);
   --color-beta: var(--beta);
 
-  --font-display: var(--font-space-grotesk);
-  --font-body: var(--font-inter);
-  --font-hand: var(--font-caveat);
+  /* Big Shoulders — condensed masthead headlines, the paper's voice */
+  --font-display: var(--font-big-shoulders);
+  /* Source Serif 4 — case-file prose, exhibit captions, reading text */
+  --font-serif: var(--font-source-serif);
+  /* IBM Plex Sans — interface: nav, buttons, short labels */
+  --font-body: var(--font-plex-sans);
+  /* JetBrains Mono — archival tags AND live/system state */
   --font-mono: var(--font-jetbrains);
+  /* Caveat — marginalia. Her voice in the margins, used throughout on purpose. */
+  --font-pen: var(--font-caveat);
 }
 
 * {
@@ -79,13 +116,14 @@ body {
   color: var(--fg);
   font-family: var(--font-body), system-ui, sans-serif;
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,77,35,0.06), transparent),
+    radial-gradient(ellipse 70% 45% at 15% -10%, rgba(124,79,209,0.14), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 15%, rgba(63,224,197,0.06), transparent),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: var(--accent);
-  color: #0a0a0a;
+  color: #120e1a;
 }
 
 .focus-ring:focus-visible {
@@ -99,4 +137,53 @@ a, button {
 
 .grain-card {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.grain-paper {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+/* Redaction stripe — the case file's honest-gap motif */
+.redacted-stripe {
+  background-image: repeating-linear-gradient(45deg, var(--inst), var(--inst) 7px, var(--inst-dim) 7px, var(--inst-dim) 14px);
+}
+
+/* Wireframe grid overlay — from Cyber Angel's background texture */
+.grid-overlay {
+  background-image:
+    linear-gradient(rgba(244,241,234,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244,241,234,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Chromatic-aberration glitch — from Cyber Angel's title treatment */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.glitch-text::before {
+  color: var(--accent);
+  transform: translate(-2px, 0);
+  mix-blend-mode: screen;
+}
+.glitch-text::after {
+  color: var(--ember);
+  transform: translate(2px, 0);
+  mix-blend-mode: screen;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glitch-text::before, .glitch-text::after { display: none; }
+}
+
+/* Tabular figures wherever digits line up */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }

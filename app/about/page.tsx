@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { about } from "@/data/about";
 import { ImagePlaceholder } from "@/components/image-placeholder";
@@ -20,8 +21,9 @@ export default function AboutPage() {
       <div className="mt-14 grid grid-cols-1 gap-12 md:grid-cols-5">
         <div className="md:col-span-3">
           <Reveal>
-            <p className="text-lg leading-relaxed">{about.bio[0]}</p>
-            <p className="mt-4 text-[15px] leading-relaxed text-fg-muted">{about.bio[1]}</p>
+            <p className="font-serif text-lg leading-relaxed">{about.bio[0]}</p>
+            <p className="mt-4 font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[1]}</p>
+            <p className="mt-4 font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[2]}</p>
           </Reveal>
 
           <Reveal delay={0.05}>
@@ -84,7 +86,9 @@ export default function AboutPage() {
                 <ImagePlaceholder label="polaroid — 'meet cat the cat'" aspect="aspect-[3/4]" />
               </div>
               <div className="absolute -left-10 top-16 w-24 -rotate-[8deg] sm:-left-14 sm:w-28">
-                <ImagePlaceholder label="cooking" aspect="aspect-square" />
+                <div className="relative aspect-square w-full overflow-hidden rounded-sm border border-line-strong">
+                  <Image src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" fill className="object-cover" sizes="112px" />
+                </div>
               </div>
               <Handwritten className="absolute -top-8 right-0 text-lg sm:text-xl" rotate={4}>
                 not in Figma —
