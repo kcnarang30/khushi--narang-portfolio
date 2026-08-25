@@ -138,6 +138,16 @@ export const projects: Project[] = [
       },
       sections: [
         {
+          heading: "The event",
+          body:
+            "TechSparks' 16th edition — October 13–15, Bengaluru. Powered by PhonePe, co-presented by Meta and Groq. The real site copy sets the theme directly: 'AI has reshuffled the deck. The field is open. The tools are equal. That is the democratisation of access. That is the new tech order. And it belongs to whoever moves first, builds right, and solves real problems.'",
+          imageRef: "techsparks-hero",
+          imageSrc: "/projects/techsparks/techsparks-hero.png",
+          imageWidth: 400,
+          imageHeight: 640,
+          imageCaption: "The real 2026 hero — dates, presenting sponsors, and the four scale numbers, as shipped.",
+        },
+        {
           heading: "The brief",
           body:
             "TechSparks 2026 needed to carry the theme 'The New Tech Order' across a large amount of information — three content pillars, a three-day agenda, and scale numbers (10,000+ attendees, 500+ speakers, 300+ investors, 200+ startups) that could easily read as a list instead of an event people want to attend.",
@@ -146,7 +156,11 @@ export const projects: Project[] = [
           heading: "What's in store",
           body:
             "Content organised around four verbs — Learn, Create, Experience, Connect — each carrying a distinct set of session types (fireside chats and keynotes; masterclasses and workshops; live demos and startup exhibits; a startup hub and India-international corridor).",
-          imageRef: "techsparks-whats-in-store",
+          imageRef: "techsparks-day2-theme",
+          imageSrc: "/projects/techsparks/techsparks-day2-theme.png",
+          imageWidth: 400,
+          imageHeight: 540,
+          imageCaption: "Day 2 — 'The Builder,' plus the real Learn / Create / Connect / Experience grid.",
         },
         {
           heading: "Day 1: Power, Control & The New Tech Order",
@@ -154,14 +168,29 @@ export const projects: Project[] = [
             "The opening day frames AI as infrastructure rather than application — compute, chips, supply chains, sovereignty versus globalisation. Dr. Sreedhara Panicker Somanath, ISRO Chairman, opens with 'India's Space Story: A view from the top.'",
         },
         {
+          heading: "Day 2: The Builder — Systems, DeepTech & Execution",
+          body:
+            "AI from prototype to production — semiconductors, biotech, climate, spacetech. Building large-scale systems, not demos.",
+        },
+        {
           heading: "Visual system",
           body:
             "Public Sans and Sora, a red-and-purple palette, and a refracted-glass hero treatment — a visual break in the surface that mirrors the theme's language of disruption and turning points.",
-          imageRef: "techsparks-hero",
+        },
+        {
+          heading: "Real reach",
+          body:
+            "The real partner and investor wall from the 2026 edition — the scale numbers made concrete.",
+          imageRef: "techsparks-partners",
+          imageSrc: "/projects/techsparks/techsparks-partners.png",
+          imageWidth: 400,
+          imageHeight: 155,
+          imageCaption: "A slice of the real 2026 partner and investor logo wall.",
         },
       ],
     },
     coverAssetRef: "techsparks-cover",
+    coverImageSrc: "/projects/techsparks/techsparks-hero.png",
     tags: ["Web Design", "Event Experience", "QA"],
     order: 2,
     todo: ["Confirm exact scope of my design ownership vs. team contribution for 2026 edition"],

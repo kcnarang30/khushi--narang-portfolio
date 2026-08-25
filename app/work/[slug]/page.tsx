@@ -5,6 +5,7 @@ import { projects, getBySlug } from "@/data/projects";
 import { StatusBadge } from "@/components/status-badge";
 import { Reveal } from "@/components/reveal";
 import { ShuruKarDossier } from "@/components/shurukar-dossier";
+import { TechSparksExhibit } from "@/components/techsparks-exhibit";
 import { TechSparksStats } from "@/components/techsparks-stats";
 import { PendingAsset } from "@/components/pending-asset";
 import { RealShot } from "@/components/real-shot";
@@ -111,6 +112,8 @@ export default async function CaseStudyPage({
       {/* Sections */}
       {project.slug === "shurukar" ? (
         <ShuruKarDossier sections={cs.sections} reflection={cs.reflection} />
+      ) : project.slug === "techsparks" ? (
+        <TechSparksExhibit sections={cs.sections} />
       ) : (
         <div className="mx-auto max-w-4xl px-5 pb-16 pt-6 sm:px-8">
           <div className="flex flex-col gap-14">

@@ -16,6 +16,7 @@ import { TechSparksStats } from "./techsparks-stats";
 const REAL_IMAGES: Record<string, { src: string; width: number; height: number }> = {
   shurukar: { src: "/projects/shurukar/shurukar-resources.png", width: 975, height: 425 },
   devsparks: { src: "/projects/devsparks/devsparks-cover-v2.png", width: 265, height: 429 },
+  techsparks: { src: "/projects/techsparks/techsparks-hero.png", width: 400, height: 640 },
 };
 
 export function FeaturedProject({ project }: { project: Project }) {
@@ -67,14 +68,32 @@ export function FeaturedProject({ project }: { project: Project }) {
   if (project.slug === "techsparks") {
     return (
       <motion.div {...fadeUp} className="relative">
-        <Link href={`/work/${project.slug}`} className="focus-ring group block">
-          <StatusBadge status={project.status} />
-          <h3 className="mt-4 font-display text-3xl font-bold leading-[1.05] sm:text-4xl">{project.name}</h3>
-          <p className="mt-3 max-w-lg font-serif text-[15px] leading-relaxed text-fg-muted">{project.oneLiner}</p>
-          <TechSparksStats />
-          <span className="mt-6 inline-block font-mono text-[11px] uppercase tracking-widest text-accent underline decoration-accent/40 underline-offset-4 group-hover:decoration-accent">
-            View case study
-          </span>
+        <Link href={`/work/${project.slug}`} className="focus-ring group grid grid-cols-1 items-center gap-10 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <StatusBadge status={project.status} />
+            <h3 className="mt-4 font-display text-3xl font-bold leading-[1.05] sm:text-4xl">{project.name}</h3>
+            <p className="mt-3 max-w-sm font-serif text-[15px] leading-relaxed text-fg-muted">{project.oneLiner}</p>
+            <TechSparksStats />
+            <span className="mt-6 inline-block font-mono text-[11px] uppercase tracking-widest text-accent underline decoration-accent/40 underline-offset-4 group-hover:decoration-accent">
+              View case study
+            </span>
+          </div>
+          <div className="md:col-span-7">
+            {img && (
+              <div
+                className="overflow-hidden rounded-sm border border-red-500/20 p-1.5 transition-transform duration-500 group-hover:-translate-y-1"
+                style={{ background: "radial-gradient(ellipse 90% 70% at 30% 0%, rgba(180,40,60,0.35), #0a0508)" }}
+              >
+                <Image
+                  src={img.src}
+                  width={img.width}
+                  height={img.height}
+                  alt={project.name}
+                  className="h-auto w-full rounded-[2px]"
+                />
+              </div>
+            )}
+          </div>
         </Link>
       </motion.div>
     );
