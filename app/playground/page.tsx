@@ -6,6 +6,7 @@ import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
 import { DoNotOpen } from "@/components/do-not-open";
 import { ConsolePing } from "@/components/console-ping";
+import { PlaygroundDesk } from "@/components/playground-desk";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Playground" };
@@ -45,6 +46,10 @@ export default function PlaygroundPage() {
           </div>
           <ConsolePing />
         </div>
+      </Reveal>
+
+      <Reveal delay={0.05}>
+        <PlaygroundDesk />
       </Reveal>
 
       <div className="mt-14 grid grid-cols-2 gap-5 sm:grid-cols-6 sm:gap-6 md:grid-cols-9">

@@ -41,6 +41,60 @@ const years = Array.from(new Set(sorted.map((p) => yearGroup(p.year))));
 const categories = Array.from(new Set(projects.map((p) => p.category))) as ProjectCategory[];
 const liveCount = projects.filter((p) => p.live).length;
 
+function YearFolder({
+  year,
+  items,
+  defaultOpen,
+}: {
+  year: string;
+  items: typeof sorted;
+  defaultOpen: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className={cn(
+          "focus-ring -mx-2 flex w-full items-center gap-2 rounded-t-sm px-2 py-1.5 text-left transition-colors",
+          open ? "bg-bg-raised" : "hover:bg-bg-raised/50"
+        )}
+      >
+        <span
+          aria-hidden
+          className={cn(
+            "inline-block font-mono text-[11px] text-accent transition-transform duration-200",
+            open && "rotate-90"
+          )}
+        >
+          ▸
+        </span>
+        <span className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">
+          {year}/
+          <span className="ml-2 text-fg-dim/60">
+            {items.length} {items.length === 1 ? "item" : "items"}
+          </span>
+        </span>
+      </button>
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <div className={cn("-mx-2 rounded-b-sm px-2 pb-1 pt-2", open && "bg-bg-raised/40")}>
+            {items.map((p) => (
+              <IndexRow key={p.slug} project={p} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FilterChip({
   active,
   onClick,
@@ -106,21 +160,10 @@ export function ArchiveExplorer() {
         </div>
       </div>
 
-      <div className="mt-10 flex flex-col gap-12">
+      <div className="mt-10 flex flex-col gap-3">
         {Array.from(groups.entries()).map(([g, items], i) => (
           <Reveal key={g} delay={i * 0.04}>
-            <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-              <span aria-hidden className="text-accent">▸ </span>
-              {g}/
-              <span className="ml-2 text-fg-dim/60">
-                {items.length} {items.length === 1 ? "item" : "items"}
-              </span>
-            </p>
-            <div className="mt-3">
-              {items.map((p) => (
-                <IndexRow key={p.slug} project={p} />
-              ))}
-            </div>
+            <YearFolder year={g} items={items} defaultOpen={i === 0} />
           </Reveal>
         ))}
         {filtered.length === 0 && (
