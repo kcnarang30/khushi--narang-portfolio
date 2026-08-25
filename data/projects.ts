@@ -235,7 +235,7 @@ export const projects: Project[] = [
         {
           heading: "One hub, one template",
           body:
-            "A single hub page plus a templated city-page structure share the same navigation, footer, and section architecture. Only the hero location and imagery change per city.",
+            "A single hub page plus a templated city-page structure share the same navigation, footer, and section architecture. The hero location and imagery change per city — and so does the presenting sponsor lockup: the hub reads 'YourStory | IBM Presents,' while individual editions like Pune and Bengaluru are co-presented by AWS instead.",
           imageRef: "devsparks-hub",
           imageSrc: "/projects/devsparks/devsparks-cover-v2.png",
           imageWidth: 265,
@@ -245,12 +245,47 @@ export const projects: Project[] = [
         {
           heading: "Session architecture",
           body:
-            "Four consistent session themes run across every city: GenAI to Agentic AI, AI in Action, The Developer Edge, and Infra, Cloud & Data — giving each city edition the same backbone with locally relevant speakers and stats.",
+            "Four consistent session themes run across every city: GenAI to Agentic AI ('The next wave of intelligence'), AI in Action ('Integrating & scaling use cases'), Infra, Cloud & Data ('Powering AI at scale'), and The Developer Edge ('GCCs & frontier tech') — giving each city edition the same backbone with locally relevant speakers and stats.",
+          imageRef: "devsparks-session-themes",
+          imageSrc: "/projects/devsparks/devsparks-session-themes.png",
+          imageWidth: 265,
+          imageHeight: 267,
+          imageCaption: "The real four-theme grid, live on devsparks.yourstory.com.",
+        },
+        {
+          heading: "Why attend",
+          body:
+            "Real event photography carries this section rather than stock imagery — solving real-world problems with AI, discovering new tech, fostering app development, and the career/upskilling case for showing up in person.",
+          imageRef: "devsparks-why-attend",
+          imageSrc: "/projects/devsparks/devsparks-why-attend.png",
+          imageWidth: 265,
+          imageHeight: 210,
+          imageCaption: "The real 'Why attend' grid — real speakers, real stages, no stock photography.",
+        },
+        {
+          heading: "Across the cities",
+          body:
+            "The real partner wall spans the same names across editions — groq, PayU, IndiaBulls, DBS, Oracle, ACKO, Microsoft, EY, and Mastercard among them.",
+          imageRef: "devsparks-partners",
+          imageSrc: "/projects/devsparks/devsparks-partners.png",
+          imageWidth: 265,
+          imageHeight: 106,
+          imageCaption: "A slice of the real DevSparks partner wall.",
+        },
+        {
+          heading: "In the room",
+          body:
+            "Photography from past editions — the part of a 6-city roadshow that a screenshot alone doesn't carry.",
+          imageRef: "devsparks-event-photos",
+          imageSrc: "/projects/devsparks/devsparks-event-photos.png",
+          imageWidth: 265,
+          imageHeight: 134,
+          imageCaption: "Real rooms, real editions — not a stock event photo.",
         },
         {
           heading: "Visual system",
           body:
-            "Neue Haas Grotesk Display Pro paired with Bai Jamjuree, and floating gradient orbs across a dark base — built closely enough with engineering that the Figma file carries literal build annotations for spacing and grid constraints.",
+            "Neue Haas Grotesk Display Pro paired with Bai Jamjuree — confirmed directly against the live site's own fonts — with floating gradient orbs across a dark base in the hero and stats sections. The Figma-build-annotations detail in this section is carried over from earlier notes; no DevSparks Figma file was available to re-verify it this pass.",
         },
       ],
     },
@@ -258,6 +293,11 @@ export const projects: Project[] = [
     coverImageSrc: "/projects/devsparks/devsparks-cover-v2.png",
     tags: ["Web Design", "Design Systems", "Event Experience"],
     order: 3,
+    todo: [
+      "Confirm real 2026 city roster — hero copy says Pune → Mumbai → Bengaluru → Hyderabad → Chennai → Delhi, but the live site's own events list (as of this pass) shows Pune, Bengaluru, Hyderabad, Chennai, Coimbatore, Delhi — Mumbai doesn't appear there and Coimbatore isn't in the hero copy",
+      "Reconcile scale stats — an earlier saved screenshot shows 5,000+ devs / 150+ speakers / 100+ sessions; the live site currently shows 500+ / 25+ / 15+. Not used as a headline number in the case study until this is confirmed",
+      "Re-verify the 'Figma file carries literal build annotations' claim once a DevSparks Figma file is shared — none was accessible this pass",
+    ],
   },
 
   // ───────────────────────── SPOTLIGHT ─────────────────────────
