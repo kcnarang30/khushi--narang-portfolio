@@ -7,6 +7,7 @@ import { RealShot } from "./real-shot";
 import { PendingAsset } from "./pending-asset";
 import { RedactedPanel } from "./redacted-panel";
 import { Marginalia } from "./marginalia";
+import { ShuruKarFlowExhibit } from "./shurukar-flow-exhibit";
 
 /**
  * The flagship treatment, built only for ShuruKar — the project with enough
@@ -21,6 +22,7 @@ type Exhibit = {
   status?: string;
   sections: CaseStudySection[];
   redacted?: boolean;
+  flow?: boolean;
 };
 
 export function ShuruKarDossier({ sections, reflection }: { sections: CaseStudySection[]; reflection?: string }) {
@@ -28,8 +30,9 @@ export function ShuruKarDossier({ sections, reflection }: { sections: CaseStudyS
     { id: "A", tag: "Exhibit A", title: "Origin", sections: [sections[0], sections[1]] },
     { id: "B", tag: "Exhibit B", title: "V1", status: "2025", sections: [sections[2]] },
     { id: "C", tag: "Exhibit C", title: "The pause", redacted: true, sections: [sections[3]] },
-    { id: "D", tag: "Exhibit D", title: "Reset — V2", status: "2025", sections: [sections[4]] },
-    { id: "E", tag: "Exhibit E", title: "V3 / Beta", status: "Current", sections: [sections[5], sections[6]] },
+    { id: "D", tag: "Exhibit D", title: "The onboarding flow", flow: true, sections: [sections[4]] },
+    { id: "E", tag: "Exhibit E", title: "Reset — V2", status: "2025", sections: [sections[5]] },
+    { id: "F", tag: "Exhibit F", title: "V3 / Beta", status: "Current", sections: [sections[6], sections[7]] },
   ];
 
   const [active, setActive] = useState(0);
@@ -43,7 +46,7 @@ export function ShuruKarDossier({ sections, reflection }: { sections: CaseStudyS
           Case file — open
         </span>
         <span className="font-mono text-[10.5px] uppercase tracking-widest text-fg-dim">
-          5 exhibits — origin to beta
+          6 exhibits — origin to beta
         </span>
       </div>
 
@@ -121,7 +124,7 @@ export function ShuruKarDossier({ sections, reflection }: { sections: CaseStudyS
                       </p>
                       <h3 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
                         {s.heading}
-                        {current.id === "D" && s.heading === "Reset — V2" && (
+                        {current.id === "E" && s.heading === "Reset — V2" && (
                           <Marginalia className="ml-3 hidden align-middle text-base sm:inline-flex" rotate={-4}>
                             could&rsquo;ve faked it here. didn&rsquo;t.
                           </Marginalia>
@@ -132,7 +135,11 @@ export function ShuruKarDossier({ sections, reflection }: { sections: CaseStudyS
                           {s.body}
                         </p>
                       )}
-                      {s.imageSrc && s.imageWidth && s.imageHeight ? (
+                      {current.flow ? (
+                        <div className="mt-6">
+                          <ShuruKarFlowExhibit />
+                        </div>
+                      ) : s.imageSrc && s.imageWidth && s.imageHeight ? (
                         <RealShot
                           className="mt-5 max-w-xl"
                           src={s.imageSrc}

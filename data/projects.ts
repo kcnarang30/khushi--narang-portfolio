@@ -73,6 +73,11 @@ export const projects: Project[] = [
             "The project paused for roughly six months. TODO: confirm the specific reason for the pause and what changed in that window — this case study should name it honestly rather than skip over it once that detail is available.",
         },
         {
+          heading: "The onboarding flow",
+          body:
+            "The real structure behind that 15+ question branching flow: a splash screen leads into onboarding, which adapts based on how someone answers — splitting into three separate personalized journeys before converging back into one walkthrough and home. Real edge cases are handled directly in the flow, not patched on after: an offline state, an invalid-phone-number screen, and invalid-input handling mid-onboarding. Returning users get their own separate path back in, rather than being run through onboarding again.",
+        },
+        {
           heading: "Reset — V2",
           body:
             "V2 rebuilt the onboarding into a 15+ question branching flow that adapts the entire app to who's answering, introduced the AI co-pilot ('Aapka ShuruKar Saathi') with quick actions for the five things people actually ask for, and restructured 20+ government schemes into one consistent four-question format: What is this? Am I eligible? How do I apply? Need help?",
@@ -105,6 +110,9 @@ export const projects: Project[] = [
       "Confirm current beta cohort size / testing scope if shareable",
       "Confirm whether shurukar.in is meant to be public-facing yet",
       "Source and export the strongest 4–6 screenshots per version (V1 / V2 / V3) — see ASSET_MAP.md",
+      "Reconcile scheme count — this case study says 20+ (V2 restructure); the live shurukar.in site currently says 300+. Not resolved.",
+      "Reconcile product framing — shurukar.in currently pitches a chat-first '24/7 AI mentor' with a 100+ idea bank, a different framing from this case study's scheme-discovery + support-model narrative. Not merged in until confirmed.",
+      "Confirm which version (V2, V3, or newer) the current shurukar.in site actually reflects",
     ],
   },
   {
