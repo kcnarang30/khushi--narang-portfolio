@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { about } from "@/data/about";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { Reveal } from "@/components/reveal";
@@ -59,27 +60,39 @@ export default function AboutPage() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="mt-10 flex gap-8 border-t border-line pt-8 font-mono text-sm text-fg-muted">
+            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-line pt-8 font-mono text-sm text-fg-muted">
               <span>{about.statsProjects}</span>
               <span>{about.statsLive} live</span>
               <span>{about.location}</span>
+              <Link
+                href="/certificates"
+                className="focus-ring rounded text-[13px] uppercase tracking-wide text-fg-dim underline decoration-fg-dim/40 underline-offset-4 hover:text-accent"
+              >
+                Certificates →
+              </Link>
             </div>
           </Reveal>
         </div>
 
-        <div className="md:col-span-2">
+        <div className="relative md:col-span-2">
           <Reveal delay={0.1}>
-            <div className="grid grid-cols-2 gap-3">
-              <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" />
-              <div className="mt-6">
+            <div className="relative mx-auto max-w-[15rem]">
+              <div className="rotate-[-3deg]">
+                <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" />
+              </div>
+              <div className="absolute -bottom-10 -right-8 w-28 rotate-[6deg] sm:-right-12 sm:w-32">
                 <ImagePlaceholder label="polaroid — 'meet cat the cat'" aspect="aspect-[3/4]" />
               </div>
-              <ImagePlaceholder label="cooking" aspect="aspect-square" />
-              <ImagePlaceholder label="desk / working" aspect="aspect-square" />
+              <div className="absolute -left-10 top-16 w-24 -rotate-[8deg] sm:-left-14 sm:w-28">
+                <ImagePlaceholder label="cooking" aspect="aspect-square" />
+              </div>
+              <Handwritten className="absolute -top-8 right-0 text-lg sm:text-xl" rotate={4}>
+                not in Figma —
+              </Handwritten>
             </div>
-            <Handwritten className="mt-4 block text-lg" rotate={-3}>
-              things I do when I&rsquo;m not in Figma
-            </Handwritten>
+            <div className="mt-24 sm:mt-16">
+              <ImagePlaceholder label="desk / working" aspect="aspect-[16/10]" className="rotate-[1deg]" />
+            </div>
           </Reveal>
         </div>
       </div>

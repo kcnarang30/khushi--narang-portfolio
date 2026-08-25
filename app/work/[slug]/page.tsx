@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { projects, getBySlug } from "@/data/projects";
 import { StatusBadge } from "@/components/status-badge";
 import { ImagePlaceholder } from "@/components/image-placeholder";
+import { WindowFrame } from "@/components/window-frame";
 import { Reveal } from "@/components/reveal";
 
 export function generateStaticParams() {
@@ -49,7 +50,7 @@ export default async function CaseStudyPage({
             <span className="font-mono text-[11px] text-fg-dim">{project.organisation}</span>
           )}
         </div>
-        <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-tight sm:text-5xl">
+        <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold leading-[1.02] sm:text-6xl">
           {cs.hero.statement}
         </h1>
         {cs.hero.sub && <p className="mt-4 max-w-xl text-[15px] text-fg-muted">{cs.hero.sub}</p>}
@@ -76,7 +77,9 @@ export default async function CaseStudyPage({
 
       {/* Cover */}
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <ImagePlaceholder label={project.coverAssetRef ?? "cover pending"} aspect="aspect-[16/9]" />
+        <WindowFrame label={project.slug}>
+          <ImagePlaceholder label={project.coverAssetRef ?? "cover pending"} aspect="aspect-[16/9]" className="rounded-none border-0" />
+        </WindowFrame>
       </div>
 
       {/* My contribution */}
@@ -119,7 +122,9 @@ export default async function CaseStudyPage({
                   )}
                   {s.imageRef && (
                     <div className="mt-5">
-                      <ImagePlaceholder label={s.imageRef} aspect="aspect-[4/3]" />
+                      <WindowFrame label={s.imageRef}>
+                        <ImagePlaceholder label={s.imageRef} aspect="aspect-[4/3]" className="rounded-none border-0" />
+                      </WindowFrame>
                       {s.imageCaption && (
                         <p className="mt-2 font-mono text-[11px] text-fg-dim">{s.imageCaption}</p>
                       )}
@@ -133,15 +138,17 @@ export default async function CaseStudyPage({
 
         {cs.reflection && (
           <Reveal delay={0.1}>
-            <div className="mt-16 rounded-md border border-line bg-bg-raised p-6 sm:p-8">
+            <div className="mt-16 border-l-2 border-accent pl-6 sm:pl-8">
               <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Reflection</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-fg">{cs.reflection}</p>
+              <p className="mt-3 max-w-2xl font-display text-lg leading-relaxed text-fg sm:text-xl">
+                {cs.reflection}
+              </p>
             </div>
           </Reveal>
         )}
 
         {project.todo && project.todo.length > 0 && (
-          <div className="mt-10 rounded-md border border-dashed border-line-strong p-5">
+          <div className="mt-10 border-t border-dashed border-line-strong pt-5">
             <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
               Open items before this goes fully live
             </p>

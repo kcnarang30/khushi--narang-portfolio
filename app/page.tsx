@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { getFeatured, getSpotlight } from "@/data/projects";
 import { about } from "@/data/about";
-import { FeaturedCard } from "@/components/featured-card";
+import { HeroStage } from "@/components/hero-stage";
+import { FeaturedProject, FeaturedVariant } from "@/components/featured-project";
 import { FloppyCard } from "@/components/floppy-card";
 import { Handwritten } from "@/components/handwritten";
 import { Reveal } from "@/components/reveal";
 import { ImagePlaceholder } from "@/components/image-placeholder";
+
+const variants: FeaturedVariant[] = ["type-dominant", "full-bleed", "split-float"];
 
 export default function Home() {
   const featured = getFeatured();
@@ -13,48 +16,14 @@ export default function Home() {
 
   return (
     <div>
-      {/* 01 — HERO */}
-      <section className="mx-auto max-w-6xl px-5 pb-16 pt-16 sm:px-8 sm:pb-24 sm:pt-24">
-        <p className="font-mono text-[12px] uppercase tracking-[0.25em] text-fg-dim">
-          Product Designer — Bengaluru
-        </p>
-        <h1 className="mt-5 max-w-4xl font-display text-[13vw] font-bold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
-          Turning messy problems into{" "}
-          <span className="relative inline-block">
-            intuitive
-            <Handwritten className="absolute -right-2 -top-6 text-lg sm:-top-8 sm:text-2xl" rotate={-6}>
-              (obvious, actually)
-            </Handwritten>
-          </span>{" "}
-          experiences.
-        </h1>
-        <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-fg-muted">
-          I like asking annoying questions until the problem starts making sense.
-          Currently designing at YourStory — product work, event experiences, and
-          the occasional AI tool that has no business being this fun to build.
-        </p>
-        <div className="mt-9 flex flex-wrap items-center gap-4">
-          <Link
-            href="/work"
-            className="focus-ring rounded-sm bg-accent px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-black transition-opacity hover:opacity-90"
-          >
-            See the work
-          </Link>
-          <Link
-            href="/about"
-            className="focus-ring rounded-sm border border-line-strong px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-fg-muted transition-colors hover:text-fg"
-          >
-            About me
-          </Link>
-        </div>
-      </section>
+      <HeroStage anchor={featured[0]} second={featured[1]} />
 
-      {/* 03 — SELECTED WORK */}
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      {/* FEATURED WORK */}
+      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
         <Reveal>
-          <div className="mb-10 flex items-end justify-between">
+          <div className="mb-14 flex items-end justify-between">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Selected work</p>
+              <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Featured work</p>
               <h2 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
                 A few things I&rsquo;d actually want to talk about
               </h2>
@@ -67,14 +36,14 @@ export default function Home() {
             </Link>
           </div>
         </Reveal>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-24 sm:gap-32">
           {featured.map((p, i) => (
-            <FeaturedCard key={p.slug} project={p} index={i} />
+            <FeaturedProject key={p.slug} project={p} variant={variants[i % variants.length]} />
           ))}
         </div>
       </section>
 
-      {/* 04 — SPOTLIGHT */}
+      {/* SPOTLIGHT */}
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
         <Reveal>
           <div className="mb-8 flex items-end justify-between">
@@ -90,7 +59,7 @@ export default function Home() {
             </Link>
           </div>
         </Reveal>
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-6">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 md:grid-cols-6">
           {spotlight.map((p, i) => (
             <Reveal key={p.slug} delay={i * 0.05}>
               <FloppyCard project={p} index={i} />
@@ -99,51 +68,55 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 05 — ABOUT PREVIEW + 06 — HUMAN SECTION */}
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      {/* ABOUT PREVIEW */}
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
         <Reveal>
-          <div className="relative grid grid-cols-1 gap-10 rounded-md border border-line bg-bg-raised p-6 sm:p-10 md:grid-cols-5">
-            <Handwritten
-              className="absolute -top-4 left-8 text-lg sm:text-xl"
-              rotate={-4}
-            >
-              currently thinking about —
-            </Handwritten>
+          <div className="grid grid-cols-1 gap-14 md:grid-cols-5 md:items-center">
             <div className="md:col-span-3">
               <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">About</p>
-              <p className="mt-3 text-lg leading-relaxed text-fg">{about.bio[0]}</p>
-              <p className="mt-3 text-sm leading-relaxed text-fg-muted">{about.bio[1]}</p>
-              <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[12px] text-fg-muted">
+              <p className="mt-4 font-display text-xl font-bold leading-snug sm:text-2xl">{about.bio[0]}</p>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-fg-muted">{about.bio[1]}</p>
+              <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[12px] text-fg-muted">
                 <span>{about.statsProjects}</span>
                 <span>{about.statsLive} live</span>
                 <span>{about.location}</span>
               </div>
               <Link
                 href="/about"
-                className="focus-ring mt-6 inline-block rounded font-mono text-[12px] uppercase tracking-widest text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+                className="focus-ring mt-7 inline-block rounded font-mono text-[12px] uppercase tracking-widest text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
               >
                 More about me →
               </Link>
             </div>
-            <div className="md:col-span-2">
-              <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" className="rotate-1" />
+            <div className="relative md:col-span-2">
+              <div className="relative mx-auto w-full max-w-[16rem]">
+                <div className="rotate-[-4deg]">
+                  <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" />
+                </div>
+                <div className="absolute -bottom-8 -right-6 w-32 rotate-[7deg] sm:-right-10">
+                  <ImagePlaceholder label="cooking" aspect="aspect-square" />
+                </div>
+                <Handwritten className="absolute -top-6 -left-8 text-lg sm:text-xl" rotate={-6}>
+                  currently thinking about —
+                </Handwritten>
+              </div>
             </div>
           </div>
         </Reveal>
       </section>
 
-      {/* 07 — CONTACT CTA */}
-      <section className="mx-auto max-w-6xl px-5 pb-24 pt-4 sm:px-8">
+      {/* CONTACT */}
+      <section className="mx-auto max-w-6xl px-5 pb-28 pt-4 sm:px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-md border border-line px-6 py-16 sm:px-12">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-              status: open to work
+          <div className="relative border-t border-line pt-14">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">status: open to work</p>
+            <h2 className="mt-4 max-w-3xl font-display text-[12vw] font-bold uppercase leading-[0.92] tracking-tight sm:text-6xl md:text-7xl">
+              Got a good <span className="text-accent">problem?</span>
+            </h2>
+            <p className="mt-6 max-w-md text-sm leading-relaxed text-fg-muted">
+              Internships, freelance, full-time — if it&rsquo;s a good problem, I&rsquo;m in.
             </p>
-            <p className="mt-4 max-w-xl font-display text-2xl font-bold leading-tight sm:text-4xl">
-              Internships, freelance, full-time —{" "}
-              <span className="text-accent">if it's a good problem, I&rsquo;m in.</span>
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-5">
+            <div className="mt-9 flex flex-wrap items-center gap-5">
               <Link
                 href="/contact"
                 className="focus-ring rounded-sm bg-accent px-6 py-3 font-mono text-[12px] uppercase tracking-widest text-black transition-opacity hover:opacity-90"
@@ -157,12 +130,6 @@ export default function Home() {
                 kcnarang3@gmail.com
               </a>
             </div>
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -bottom-10 -right-6 select-none font-display text-[9rem] font-bold leading-none text-fg opacity-[0.03] sm:text-[13rem]"
-            >
-              hi
-            </span>
           </div>
         </Reveal>
       </section>

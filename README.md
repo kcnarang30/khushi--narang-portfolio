@@ -84,16 +84,24 @@ Tokens live in `app/globals.css` under `@theme inline`.
   warning-label orange-red), and a 4-colour floppy-disk palette that is
   *only* used inside the Spotlight section — see `components/floppy-card.tsx`.
   The floppy motif has one job here, not five, per the brief.
-- Motion: `components/reveal.tsx` wraps scroll-triggered fades and respects
-  `prefers-reduced-motion` globally (see `globals.css`). No content or
-  navigation depends on motion to be accessible.
+- Motion: `components/reveal.tsx` wraps scroll-triggered fades, and
+  `components/hero-stage.tsx` adds scroll-linked parallax to the homepage
+  hero objects. Both respect `prefers-reduced-motion` globally (see
+  `globals.css`). No content or navigation depends on motion to be
+  accessible.
+- Composition: the site leans on physical "objects" (`WindowFrame`, tilted
+  index cards, the floppy motif) and asymmetric layouts instead of repeated
+  bordered cards — see `hero-stage.tsx` and `featured-project.tsx` for the
+  reference pattern before adding a new section.
 
 ### Reusable components
 
 | Component | Purpose |
 |---|---|
-| `FeaturedCard` | Large, asymmetric card for the 3 Featured case studies |
-| `FloppyCard` | Spotlight-only project card |
+| `HeroStage` | Homepage hero — oversized type plus scroll-linked floating objects |
+| `FeaturedProject` | The 3 Featured case studies, each a distinct composition (`type-dominant` / `full-bleed` / `split-float`) |
+| `WindowFrame` | Browser/app-window chrome used to make project previews read as objects, not cards |
+| `FloppyCard` | Spotlight-only project card, with cursor-tilt interaction |
 | `IndexRow` | Compact catalog-style row, used in Archive |
 | `StatusBadge` | Live / Beta / Shipped / Designed / Concept, consistent everywhere |
 | `ImagePlaceholder` | Intentional, labeled placeholder — never a broken-image icon |

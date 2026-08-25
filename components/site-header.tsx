@@ -8,14 +8,11 @@ import { cn } from "@/lib/utils";
 const primary = [
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
-
-const secondary = [
   { href: "/playground", label: "Playground" },
   { href: "/archive", label: "Archive" },
-  { href: "/certificates", label: "Certificates" },
 ];
+
+const cta = { href: "/contact", label: "Let's talk" };
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -45,19 +42,12 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <span className="h-4 w-px bg-line-strong" aria-hidden />
-          {secondary.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "focus-ring rounded font-mono text-[12px] uppercase tracking-wide transition-colors",
-                pathname?.startsWith(item.href) ? "text-accent" : "text-fg-dim hover:text-fg-muted"
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
+          <Link
+            href={cta.href}
+            className="focus-ring rounded-sm border border-line-strong px-4 py-1.5 font-mono text-[12px] uppercase tracking-wide text-fg-muted transition-colors hover:border-accent hover:text-fg"
+          >
+            {cta.label}
+          </Link>
         </nav>
 
         <button
@@ -73,7 +63,7 @@ export function SiteHeader() {
 
       {open && (
         <nav className="flex flex-col gap-1 border-t border-line px-5 py-4 md:hidden">
-          {[...primary, ...secondary].map((item) => (
+          {[...primary, cta].map((item) => (
             <Link
               key={item.href}
               href={item.href}
