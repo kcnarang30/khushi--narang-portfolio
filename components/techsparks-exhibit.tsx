@@ -69,7 +69,7 @@ export function TechSparksExhibit({ sections }: { sections: CaseStudySection[] }
                     width={event.imageWidth}
                     height={event.imageHeight}
                     alt={event.imageCaption ?? event.heading}
-                    className="[&>img]:rounded-none [&>img]:border-0"
+                    className="[&_img]:rounded-none [&_img]:border-0"
                     sizes="(max-width: 768px) 90vw, 420px"
                   />
                 </WindowFrame>
@@ -107,7 +107,7 @@ export function TechSparksExhibit({ sections }: { sections: CaseStudySection[] }
                     height={whatsInStore.imageHeight}
                     alt={whatsInStore.imageCaption ?? whatsInStore.heading}
                     caption={whatsInStore.imageCaption}
-                    className="[&>img]:rounded-sm [&>img]:border-white/10 [&>p]:text-white/35"
+                    className="[&_img]:rounded-sm [&_img]:border-white/10 [&>p]:text-white/35"
                   />
                 </div>
               ) : (
@@ -158,7 +158,7 @@ export function TechSparksExhibit({ sections }: { sections: CaseStudySection[] }
                   height={reach.imageHeight}
                   alt={reach.imageCaption ?? reach.heading}
                   caption={reach.imageCaption}
-                  className="[&>img]:rounded-[2px] [&>img]:border-0 [&>p]:text-white/35"
+                  className="[&_img]:rounded-[2px] [&_img]:border-0 [&>p]:text-white/35"
                 />
               </div>
             ) : (

@@ -65,7 +65,7 @@ export function DevSparksExhibit({ sections }: { sections: CaseStudySection[] })
                     width={hub.imageWidth}
                     height={hub.imageHeight}
                     alt={hub.imageCaption ?? hub.heading}
-                    className="[&>img]:rounded-none [&>img]:border-0"
+                    className="[&_img]:rounded-none [&_img]:border-0"
                   />
                 </WindowFrame>
               ) : (
@@ -96,6 +96,7 @@ export function DevSparksExhibit({ sections }: { sections: CaseStudySection[] })
                 <p className="text-white/50">Powering AI at scale</p>
                 <p className="mt-2 text-[#8ab8f5]"># The Developer Edge</p>
                 <p className="text-white/50">GCCs &amp; frontier tech</p>
+                <p className="mt-2 animate-pulse">▊</p>
               </TerminalWindow>
               {sessions.imageSrc && sessions.imageWidth && sessions.imageHeight && (
                 <div className="overflow-hidden rounded-sm transition-transform duration-500 hover:scale-[1.015]">
@@ -105,7 +106,7 @@ export function DevSparksExhibit({ sections }: { sections: CaseStudySection[] })
                     height={sessions.imageHeight}
                     alt={sessions.imageCaption ?? sessions.heading}
                     caption={sessions.imageCaption}
-                    className="[&>img]:rounded-sm [&>img]:border-white/10 [&>p]:text-white/35"
+                    className="[&_img]:rounded-sm [&_img]:border-white/10 [&>p]:text-white/35"
                   />
                 </div>
               )}
@@ -129,7 +130,7 @@ export function DevSparksExhibit({ sections }: { sections: CaseStudySection[] })
                     height={whyAttend.imageHeight}
                     alt={whyAttend.imageCaption ?? whyAttend.heading}
                     caption={whyAttend.imageCaption}
-                    className="[&>img]:rounded-sm [&>img]:border-white/10 [&>p]:text-white/35"
+                    className="[&_img]:rounded-sm [&_img]:border-white/10 [&>p]:text-white/35"
                   />
                 </div>
               )}
@@ -150,7 +151,7 @@ export function DevSparksExhibit({ sections }: { sections: CaseStudySection[] })
                   height={cities.imageHeight}
                   alt={cities.imageCaption ?? cities.heading}
                   caption={cities.imageCaption}
-                  className="[&>img]:rounded-[2px] [&>img]:border-0 [&>p]:text-white/35"
+                  className="[&_img]:rounded-[2px] [&_img]:border-0 [&>p]:text-white/35"
                 />
               </div>
             )}
@@ -170,7 +171,7 @@ export function DevSparksExhibit({ sections }: { sections: CaseStudySection[] })
                   height={room.imageHeight}
                   alt={room.imageCaption ?? room.heading}
                   caption={room.imageCaption}
-                  className="[&>img]:rounded-none [&>img]:border-0 [&>p]:px-1 [&>p]:pb-1 [&>p]:text-bg/50"
+                  className="[&_img]:rounded-none [&_img]:border-0 [&>p]:px-1 [&>p]:pb-1 [&>p]:text-bg/50"
                 />
               </div>
             )}

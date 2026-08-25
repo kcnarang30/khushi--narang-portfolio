@@ -56,7 +56,7 @@ export function NokiaPhone({ formAnchorId, className }: { formAnchorId?: string;
             href={links.behance}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg-raised-2 font-mono text-[10px] uppercase text-fg-muted transition-colors hover:text-fg"
+            className="focus-ring flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg-raised-2 font-mono text-[10px] uppercase text-fg-muted transition-all hover:text-fg active:scale-90"
           >
             Be
           </a>
@@ -64,7 +64,7 @@ export function NokiaPhone({ formAnchorId, className }: { formAnchorId?: string;
             href={links.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring flex h-10 shrink-0 items-center justify-center rounded-full bg-bg-raised-2 px-3.5 font-mono text-[10px] uppercase text-fg-muted transition-colors hover:text-fg"
+            className="focus-ring flex h-10 shrink-0 items-center justify-center rounded-full bg-bg-raised-2 px-3.5 font-mono text-[10px] uppercase text-fg-muted transition-all hover:text-fg active:scale-90"
           >
             Instagram
           </a>
