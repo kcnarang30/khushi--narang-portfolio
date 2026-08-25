@@ -12,7 +12,7 @@ export default function AboutPage() {
       <Reveal>
         <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">About</p>
         <h1 className="mt-2 max-w-2xl font-display text-3xl font-bold sm:text-5xl">
-          I like asking annoying questions until the problem starts making sense.
+          I like asking questions until the problem starts making sense.
         </h1>
       </Reveal>
 
