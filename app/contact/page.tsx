@@ -24,16 +24,23 @@ export default function ContactPage() {
         </p>
       </Reveal>
 
-      <div className="mt-14 grid grid-cols-1 items-start gap-10 lg:grid-cols-[19rem_1fr] lg:gap-14">
-        <Reveal>
-          <NokiaPhone email={links.email} formAnchorId="dispatch-form" />
-          <p className="mt-5 flex items-center gap-2 rounded-sm border border-line px-3 py-2.5 font-mono text-[11px] text-fg-muted">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live-signal" aria-hidden />
-            Currently open to freelance contracts and full-time roles.
-          </p>
-        </Reveal>
+      <div className="relative mt-14 overflow-hidden">
+        <p
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2 select-none whitespace-nowrap font-display text-[15vw] font-extrabold uppercase leading-none tracking-tight text-fg-dim/[0.07] sm:text-8xl md:text-9xl"
+        >
+          Contact me · Contact me ·
+        </p>
+        <div className="relative grid grid-cols-1 items-start gap-10 lg:grid-cols-[19rem_1fr] lg:gap-14">
+          <Reveal>
+            <NokiaPhone formAnchorId="dispatch-form" />
+            <p className="mt-5 flex items-center gap-2 rounded-sm border border-line px-3 py-2.5 font-mono text-[11px] text-fg-muted">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live-signal" aria-hidden />
+              Currently open to freelance contracts and full-time roles.
+            </p>
+          </Reveal>
 
-        <Reveal delay={0.08}>
+          <Reveal delay={0.08}>
           <form
             id="dispatch-form"
             action={`mailto:${links.email}`}
@@ -100,7 +107,8 @@ export default function ContactPage() {
               so nothing is silently lost.
             </p>
           </form>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
 
       <Reveal delay={0.12}>

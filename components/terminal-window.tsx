@@ -10,7 +10,7 @@ export function TerminalWindow({
   className?: string;
 }) {
   return (
-    <div className={cn("overflow-hidden rounded-sm border border-line-strong bg-[#0a0c09]", className)}>
+    <div className={cn("grain-card overflow-hidden rounded-sm border border-line-strong bg-[#0a0c09]", className)}>
       <div className="flex items-center gap-1.5 border-b border-line-strong px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-[#e2643c]/70" />
         <span className="h-2 w-2 rounded-full bg-[#e0a94a]/70" />

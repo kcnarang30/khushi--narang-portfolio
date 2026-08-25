@@ -9,7 +9,7 @@ const variants = {
   outline:
     "border border-line-strong px-5 py-3 text-fg-muted shadow-[0_3px_0_0_var(--line)] hover:text-fg hover:border-fg-dim active:shadow-[0_1px_0_0_var(--line)]",
   paper:
-    "bg-paper px-5 py-3 text-bg shadow-[0_3px_0_0_var(--paper-dark)] hover:brightness-95 active:shadow-[0_1px_0_0_var(--paper-dark)]",
+    "grain-paper bg-paper px-5 py-3 text-bg shadow-[0_3px_0_0_var(--paper-dark)] hover:brightness-95 active:shadow-[0_1px_0_0_var(--paper-dark)]",
 } as const;
 
 type Variant = keyof typeof variants;

@@ -22,7 +22,7 @@ export function ExhibitFrame({
 }) {
   return (
     <div
-      className={cn("group/exhibit relative bg-paper p-2 pb-9 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:!rotate-0 hover:-translate-y-1", className)}
+      className={cn("group/exhibit grain-paper relative bg-paper p-2 pb-9 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:!rotate-0 hover:-translate-y-1", className)}
       style={{ transform: `rotate(${rotate}deg)` }}
     >
       <div className="relative overflow-hidden">{children}</div>

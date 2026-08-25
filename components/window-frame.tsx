@@ -16,7 +16,7 @@ export function WindowFrame({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-md border border-line-strong bg-bg-raised shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)]",
+        "grain-card overflow-hidden rounded-md border border-line-strong bg-bg-raised shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)]",
         className
       )}
     >

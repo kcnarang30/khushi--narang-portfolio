@@ -54,7 +54,7 @@ export function FloppyCard({ project, index }: { project: Project; index: number
             style={{ background: color }}
           />
           <div className="relative h-2.5 w-9 rounded-b-[2px] bg-black/25" />
-          <div className="relative rounded-sm bg-[#f4f1ea] p-2.5 shadow-sm">
+          <div className="grain-paper relative rounded-sm bg-[#f4f1ea] p-2.5 shadow-sm">
             <p className="font-mono text-[9px] uppercase tracking-wide text-black/50">
               {project.category.replace("-", " ")}
             </p>

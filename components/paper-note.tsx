@@ -19,7 +19,7 @@ export function PaperNote({
   return (
     <div
       className={cn(
-        "relative bg-paper px-4 py-3 text-bg shadow-[0_14px_24px_-14px_rgba(0,0,0,0.45)]",
+        "grain-paper relative bg-paper px-4 py-3 text-bg shadow-[0_14px_24px_-14px_rgba(0,0,0,0.45)]",
         className
       )}
       style={{ transform: `rotate(${rotate}deg)` }}
