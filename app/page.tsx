@@ -1,11 +1,12 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getFeatured, getSpotlight } from "@/data/projects";
 import { about } from "@/data/about";
 import { HeroCover } from "@/components/hero-cover";
 import { FeaturedProject } from "@/components/featured-project";
 import { FloppyCard } from "@/components/floppy-card";
+import { Polaroid } from "@/components/polaroid";
 import { Handwritten } from "@/components/handwritten";
+import { PhysicalButton } from "@/components/physical-button";
 import { Reveal } from "@/components/reveal";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 
@@ -15,14 +16,14 @@ export default function Home() {
 
   return (
     <div>
-      <HeroCover projects={featured} />
+      <HeroCover />
 
       {/* FEATURED WORK */}
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
         <Reveal>
           <div className="mb-14 flex items-end justify-between">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Featured work</p>
+              <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Case files</p>
               <h2 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
                 A few things I&rsquo;d actually want to talk about
               </h2>
@@ -36,8 +37,16 @@ export default function Home() {
           </div>
         </Reveal>
         <div className="flex flex-col gap-24 sm:gap-32">
-          {featured.map((p) => (
-            <FeaturedProject key={p.slug} project={p} />
+          {featured.map((p, i) => (
+            <div key={p.slug}>
+              <p className="mb-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg-dim">
+                <span className="tnum text-accent">{String(i + 1).padStart(2, "0")}</span>
+                {" / "}
+                {p.category.replace("-", " ")}
+                {p.year ? ` · ${p.year}` : ""}
+              </p>
+              <FeaturedProject project={p} />
+            </div>
           ))}
         </div>
       </section>
@@ -92,10 +101,8 @@ export default function Home() {
                 <div className="rotate-[-4deg]">
                   <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" />
                 </div>
-                <div className="absolute -bottom-8 -right-6 w-32 rotate-[7deg] sm:-right-10">
-                  <div className="relative aspect-square w-full overflow-hidden rounded-sm border border-line-strong">
-                    <Image src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" fill className="object-cover" sizes="128px" />
-                  </div>
+                <div className="absolute -bottom-8 -right-6 w-32 sm:-right-10">
+                  <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={7} sizes="128px" />
                 </div>
                 <Handwritten className="absolute -top-6 -left-8 text-lg sm:text-xl" rotate={-6}>
                   currently thinking about —
@@ -118,12 +125,9 @@ export default function Home() {
               Internships, freelance, full-time — if it&rsquo;s a good problem, I&rsquo;m in.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-5">
-              <Link
-                href="/contact"
-                className="focus-ring rounded-sm bg-accent px-6 py-3 font-mono text-[12px] uppercase tracking-widest text-black transition-opacity hover:opacity-90"
-              >
+              <PhysicalButton href="/contact" className="px-6">
                 Contact me
-              </Link>
+              </PhysicalButton>
               <a
                 href="mailto:kcnarang3@gmail.com"
                 className="focus-ring rounded font-mono text-[12px] uppercase tracking-widest text-fg-muted underline decoration-fg-dim/40 underline-offset-4 hover:text-fg"

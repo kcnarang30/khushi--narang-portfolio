@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Big_Shoulders, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat } from "next/font/google";
+import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-const bigShoulders = Big_Shoulders({
-  variable: "--font-big-shoulders",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["600", "700", "800", "900"],
+  weight: ["600", "700", "800"],
 });
 
 const sourceSerif = Source_Serif_4({
@@ -56,7 +56,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${bigShoulders.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
+    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
       <body className="antialiased">
         <a
           href="#main"

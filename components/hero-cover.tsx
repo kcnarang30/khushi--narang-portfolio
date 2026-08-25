@@ -1,116 +1,104 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { Project } from "@/data/types";
-import { ImagePlaceholder } from "./image-placeholder";
-import { StatusBadge } from "./status-badge";
 import { Marginalia } from "./marginalia";
+import { PhysicalButton } from "./physical-button";
 
-const REAL_IMAGES: Record<string, string> = {
-  shurukar: "/projects/shurukar/shurukar-resources.png",
-  devsparks: "/projects/devsparks/devsparks-cover-v2.png",
-};
-
-export function HeroCover({ projects }: { projects: Project[] }) {
-  const [active, setActive] = useState(0);
+/**
+ * A small pile of real objects sitting slightly askew on the desk — not a
+ * perfectly aligned mockup grid. Each piece has its own independent hover
+ * (lift + straighten), no swap mechanic.
+ */
+export function HeroCover() {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const imgY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -50]);
-
-  const shown = projects[active];
+  const y = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -30]);
 
   return (
     <section ref={ref} className="relative overflow-hidden border-b border-line">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 lg:grid-cols-[1.15fr_1fr]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:gap-8">
         {/* Text column */}
-        <div className="flex flex-col justify-center px-5 py-14 sm:px-8 sm:py-20">
+        <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-fg-dim">
             Product designer — Bengaluru
           </p>
-          <h1 className="relative mt-4 font-display text-[15vw] font-extrabold uppercase leading-[0.86] tracking-tight sm:text-6xl md:text-7xl lg:text-[5.2rem]">
-            Turning messy
-            <br />
-            problems into
-            <br />
-            intuitive experiences.
-            <Marginalia className="absolute left-0 top-full mt-1 text-sm normal-case sm:text-base" rotate={-3}>
-              (obvious, in hindsight)
-            </Marginalia>
+          <h1 className="relative mt-4 font-display text-[13vw] font-extrabold leading-[0.98] tracking-tight sm:text-6xl md:text-[4.4rem]">
+            Turning messy problems into{" "}
+            <span className="text-accent">intuitive</span> experiences.
           </h1>
-          <p className="mt-7 max-w-md text-[15px] leading-relaxed text-fg-muted">
+          <Marginalia className="mt-1 inline-flex text-lg sm:text-xl" rotate={-4}>
+            (obvious, in hindsight)
+          </Marginalia>
+          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-fg-muted">
             I like asking annoying questions until the problem starts making sense.
-            Currently designing at YourStory — product work, event experiences, and
-            the occasional AI tool that has no business being this fun to build.
+            Currently designing at <span className="font-medium text-fg">YourStory</span> —
+            product work, event experiences, and the occasional AI tool that has no
+            business being this fun to build.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link
-              href="/work"
-              className="focus-ring rounded-sm bg-accent px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-black transition-opacity hover:opacity-90"
-            >
-              See the work
-            </Link>
-            <Link
-              href="/about"
-              className="focus-ring rounded-sm border border-line-strong px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-fg-muted transition-colors hover:text-fg"
-            >
-              About me
-            </Link>
+            <PhysicalButton href="/work">See the work</PhysicalButton>
+            <PhysicalButton href="/about" variant="outline">
+              More about me
+            </PhysicalButton>
           </div>
         </div>
 
-        {/* Cover image + interactive contents strip */}
-        <div className="relative flex flex-col border-t border-line lg:border-l lg:border-t-0">
-          <motion.div style={{ y: reduce ? 0 : imgY }} className="relative min-h-[20rem] flex-1 overflow-hidden bg-bg-raised sm:min-h-[26rem] lg:min-h-0">
-            {projects.map((p, i) => (
-              <div
-                key={p.slug}
-                className="absolute inset-0 transition-opacity duration-500 ease-[cubic-bezier(.22,1,.36,1)]"
-                style={{ opacity: i === active ? 1 : 0 }}
-                aria-hidden={i !== active}
-              >
-                {REAL_IMAGES[p.slug] ? (
-                  <Image
-                    src={REAL_IMAGES[p.slug]}
-                    alt={p.name}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className="object-cover"
-                    priority={i === 0}
-                  />
-                ) : (
-                  <ImagePlaceholder
-                    label={p.coverAssetRef ?? "cover pending"}
-                    aspect="aspect-[4/3] lg:aspect-auto lg:h-full"
-                    className="h-full rounded-none border-0"
-                  />
-                )}
-              </div>
-            ))}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-              <StatusBadge status={shown.status} className="border-white/25 bg-black/40 text-white backdrop-blur-sm" />
-            </div>
-          </motion.div>
+        {/* The pile */}
+        <motion.div style={{ y: reduce ? 0 : y }} className="relative mx-auto h-[22rem] w-full max-w-sm sm:h-[26rem]">
+          <span aria-hidden className="absolute right-10 top-2 h-2.5 w-2.5 rounded-full bg-ember" />
 
-          <nav className="flex divide-x divide-line border-t border-line font-mono text-[11px] uppercase tracking-wide">
-            {projects.map((p, i) => (
-              <Link
-                key={p.slug}
-                href={`/work/${p.slug}`}
-                onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
-                className={`focus-ring flex-1 px-3 py-3 text-center transition-colors ${
-                  i === active ? "bg-bg-raised text-accent" : "text-fg-dim hover:text-fg-muted"
-                }`}
-              >
-                <span className="tnum">P.0{i + 2}</span> {p.name.split(" ")[0]}
-              </Link>
-            ))}
-          </nav>
-        </div>
+          {/* paper sheet, back layer */}
+          <div
+            className="absolute left-2 top-10 h-64 w-48 rotate-[-9deg] bg-paper shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:rotate-[-6deg]"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(transparent, transparent 21px, var(--paper-dark) 22px)",
+            }}
+            aria-hidden
+          />
+
+          {/* first real screen, taped */}
+          <div className="group/tape absolute left-10 top-4 w-44 rotate-[6deg] bg-white p-1.5 pb-6 shadow-[0_24px_44px_-18px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:-translate-y-1 hover:rotate-[3deg]">
+            <span
+              aria-hidden
+              className="absolute -top-2.5 left-1/2 h-5 w-12 -translate-x-1/2 -rotate-3 bg-fg-muted/25"
+            />
+            <div className="relative aspect-[9/16] w-full overflow-hidden bg-bg-raised">
+              <Image
+                src="/projects/shurukar/shurukar-onboarding.png"
+                alt="ShuruKar onboarding screen"
+                fill
+                sizes="176px"
+                className="object-cover object-left"
+              />
+            </div>
+          </div>
+
+          {/* second real screen, front layer */}
+          <div className="absolute bottom-6 right-2 w-48 -rotate-[7deg] rounded-[8px] border-[6px] border-bg-raised-2 bg-bg-raised-2 shadow-[0_30px_50px_-16px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:translate-y-[-4px] hover:-rotate-[4deg]">
+            <div className="relative aspect-[9/17] w-full overflow-hidden rounded-[3px]">
+              <Image
+                src="/projects/shurukar/shurukar-resources.png"
+                alt="ShuruKar resources hub screen"
+                fill
+                sizes="192px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
+
+          <Link
+            href="/work/shurukar"
+            className="focus-ring absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-sm bg-bg-raised px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-dim shadow-[0_8px_16px_-8px_rgba(0,0,0,0.5)] transition-colors hover:text-accent"
+          >
+            ShuruKar, in beta →
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

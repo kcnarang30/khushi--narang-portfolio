@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { links } from "@/data/links";
+import { PhysicalButton } from "./physical-button";
 
 export function SiteFooter() {
   return (
@@ -15,22 +16,22 @@ export function SiteFooter() {
               {links.email}
             </a>
           </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-wide text-fg-muted">
-            <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-fg">
+          <div className="flex flex-wrap gap-2.5">
+            <PhysicalButton href={links.linkedin} external variant="paper" className="px-3 py-1.5 text-[11px]">
               LinkedIn
-            </a>
-            <a href={links.behance} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-fg">
+            </PhysicalButton>
+            <PhysicalButton href={links.behance} external variant="paper" className="px-3 py-1.5 text-[11px]">
               Behance
-            </a>
-            <a href={links.instagram} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-fg">
+            </PhysicalButton>
+            <PhysicalButton href={links.instagram} external variant="paper" className="px-3 py-1.5 text-[11px]">
               Instagram
-            </a>
-            <a href={links.github} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-fg">
+            </PhysicalButton>
+            <PhysicalButton href={links.github} external variant="paper" className="px-3 py-1.5 text-[11px]">
               GitHub
-            </a>
-            <a href={links.resumeHref} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-fg">
+            </PhysicalButton>
+            <PhysicalButton href={links.resumeHref} external variant="paper" className="px-3 py-1.5 text-[11px]">
               Resume
-            </a>
+            </PhysicalButton>
           </div>
         </div>
         <div className="mt-10 flex flex-col-reverse items-start justify-between gap-3 border-t border-line pt-6 sm:flex-row sm:items-center">

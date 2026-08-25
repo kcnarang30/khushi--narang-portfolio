@@ -5,14 +5,16 @@ import { ImagePlaceholder } from "@/components/image-placeholder";
 import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
 import { DoNotOpen } from "@/components/do-not-open";
+import { ConsolePing } from "@/components/console-ping";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Playground" };
 
-const SIZE_BY_CATEGORY: Record<string, "lg" | "md" | "sm"> = {
-  poster: "lg",
-  branding: "md",
-  editorial: "md",
+const SIZE_BY_SLUG: Record<string, "lg" | "md" | "sm"> = {
+  knwn: "lg",
+  "cyber-angel": "md",
+  "greek-comics": "lg",
+  "internet-magazine": "sm",
 };
 
 const sizeClasses = {
@@ -21,6 +23,9 @@ const sizeClasses = {
   sm: { wrap: "col-span-1 sm:col-span-2 md:col-span-3", aspect: "aspect-square" },
 };
 
+const ROTATE = ["sm:-rotate-2", "sm:rotate-1", "sm:-rotate-1", "sm:rotate-2", "sm:-rotate-1"];
+const OFFSET = ["sm:translate-y-2", "", "sm:-translate-y-3", "sm:translate-y-1", ""];
+
 export default function PlaygroundPage() {
   const items = getPlayground().filter((p) => p.slug !== "sip-coffee");
   const unfinished = getPlayground().find((p) => p.slug === "sip-coffee");
@@ -28,21 +33,33 @@ export default function PlaygroundPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
       <Reveal>
-        <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Playground</p>
-        <h1 className="mt-2 max-w-2xl font-display text-3xl font-bold sm:text-5xl">
-          Things I made because I wanted to.{" "}
-          <Handwritten rotate={2} className="text-xl sm:text-2xl">no case study required</Handwritten>
-        </h1>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Playground</p>
+            <h1 className="mt-2 max-w-2xl font-display text-3xl font-bold sm:text-5xl">
+              Things I made because I wanted to.{" "}
+              <Handwritten rotate={2} className="text-xl sm:text-2xl">
+                no case study required
+              </Handwritten>
+            </h1>
+          </div>
+          <ConsolePing />
+        </div>
       </Reveal>
 
       <div className="mt-14 grid grid-cols-2 gap-5 sm:grid-cols-6 sm:gap-6 md:grid-cols-9">
         {items.map((p, i) => {
-          const size = SIZE_BY_CATEGORY[p.category] ?? "sm";
+          const size = SIZE_BY_SLUG[p.slug] ?? "sm";
           const cls = sizeClasses[size];
-          const rotate = i % 3 === 0 ? "sm:-rotate-1" : i % 3 === 1 ? "sm:rotate-1" : "";
           return (
             <Reveal key={p.slug} delay={(i % 6) * 0.04} className={cls.wrap}>
-              <div className={cn("transition-transform duration-300 hover:rotate-0", rotate)}>
+              <div
+                className={cn(
+                  "transition-transform duration-300 hover:translate-y-0 hover:rotate-0",
+                  ROTATE[i % ROTATE.length],
+                  OFFSET[i % OFFSET.length]
+                )}
+              >
                 {p.coverImageSrc ? (
                   <div className={cn("relative w-full overflow-hidden rounded-sm border border-line bg-bg-raised", cls.aspect)}>
                     <Image

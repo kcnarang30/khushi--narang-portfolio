@@ -1,57 +1,54 @@
 @import "tailwindcss";
 
 /*
- * Palette derived from Khushi's own work, not invented:
- * - Cyber Angel (illustration): deep violet ground, cyan hair, hot-pink wings,
- *   chromatic-aberration glitch text, wireframe/grid overlay.
- * - Greek Comics: teal border, coral halftone lettering, mustard bursts,
- *   cracked-porcelain texture.
- * - knwn: pure black/white mascot family with ONE purple→cyan gradient accent.
- * - Internet Magazine: near-monochrome with a single yellow tag.
- * The recurring threads across all four: violet depth, cyan/teal as the one
- * consistent "signal" color, coral as a punch, amber as a highlighter.
- * Orange never appears in any of it — it was never hers, so it's gone.
+ * Palette rebuilt to match the Figma production reference — a nostalgic-but-
+ * contemporary digital desk, not a neon illustration world. Base is near-
+ * black ink and warm ivory type; the functional accent pair is a muted
+ * institutional moss green (primary) and a burnt coral/orange (secondary),
+ * with warm cream "paper" reserved for reversed panels and physical objects
+ * (polaroids, notes, tape). Project-specific accents stay data-driven per
+ * project rather than living here.
  */
 :root {
-  /* Ink — a deep violet-black ground, not flat grey-black */
-  --bg: #120e1a;
-  --bg-raised: #1c1526;
-  --bg-raised-2: #251c33;
+  /* Ink — near-black, warm rather than cold */
+  --bg: #0e0f0d;
+  --bg-raised: #171812;
+  --bg-raised-2: #1f2019;
 
-  /* Paper — reversed panels, exhibit tear-sheets */
-  --paper: #f2ede1;
-  --paper-dark: #e3d8c1;
+  /* Paper — reversed panels, polaroids, notes, tape */
+  --paper: #f0e9d8;
+  --paper-dark: #ded1ab;
 
-  --fg: #f4f1ea;
-  --fg-muted: #a099ac;
-  --fg-dim: #5e5570;
-  --line: #271f36;
-  --line-strong: #3a2e4d;
+  --fg: #f5f1e6;
+  --fg-muted: #9c9890;
+  --fg-dim: #58554b;
+  --line: #262620;
+  --line-strong: #3a382f;
 
-  /* Signal — the one consistent color across her actual illustration work */
-  --accent: #3fe0c5;
-  --accent-dim: #185c50;
+  /* Primary accent — muted institutional moss green */
+  --accent: #7e9a72;
+  --accent-dim: #364a30;
 
-  /* Ember — the coral/pink punch (Cyber Angel wings, Greek Comics lettering) */
-  --ember: #ff5f87;
-  --ember-dim: #6e2438;
+  /* Secondary accent — burnt coral/orange */
+  --ember: #e2643c;
+  --ember-dim: #6b2f1c;
 
-  /* Violet — the case file's redaction/mystery color (Cyber Angel's ground) */
-  --inst: #7c4fd1;
-  --inst-dim: #2c2050;
+  /* Redacted / honest-gap paper tone — a censored document, not a neon stripe */
+  --inst: #6f6553;
+  --inst-dim: #322d22;
 
-  /* Highlight — the marginalia / "DO NOT OPEN" amber (Greek Comics bursts) */
-  --live-signal: #ffcf4d;
+  /* Highlight — amber, marginalia / "do not open" / beta */
+  --live-signal: #e0a94a;
 
-  /* Spotlight-only floppy palette — tuned into the same family, still varied */
-  --floppy-1: #5aa9d6;
-  --floppy-2: #4fae8e;
-  --floppy-3: #e8a33d;
-  --floppy-4: #9066c9;
+  /* Spotlight-only floppy palette — kept varied, tuned warmer */
+  --floppy-1: #6f96c9;
+  --floppy-2: #7e9a72;
+  --floppy-3: #d68a3d;
+  --floppy-4: #a3785a;
 
-  /* Status — kept functional/semantic, separate from the expressive palette */
-  --live: #6fd196;
-  --beta: #ffcf4d;
+  /* Status — functional, separate from the expressive palette */
+  --live: #7ec17a;
+  --beta: #e0a94a;
 }
 
 @theme inline {
@@ -79,15 +76,15 @@
   --color-live: var(--live);
   --color-beta: var(--beta);
 
-  /* Big Shoulders — condensed masthead headlines, the paper's voice */
-  --font-display: var(--font-big-shoulders);
-  /* Source Serif 4 — case-file prose, exhibit captions, reading text */
+  /* Plus Jakarta Sans — bold, round, friendly display headlines */
+  --font-display: var(--font-jakarta);
+  /* Source Serif 4 — editorial reading text, italic annotations */
   --font-serif: var(--font-source-serif);
   /* IBM Plex Sans — interface: nav, buttons, short labels */
   --font-body: var(--font-plex-sans);
-  /* JetBrains Mono — archival tags AND live/system state */
+  /* JetBrains Mono — archival tags, technical/system state */
   --font-mono: var(--font-jetbrains);
-  /* Caveat — marginalia. Her voice in the margins, used throughout on purpose. */
+  /* Caveat — handwritten marginalia, used sparingly on purpose */
   --font-pen: var(--font-caveat);
 }
 
@@ -116,14 +113,14 @@ body {
   color: var(--fg);
   font-family: var(--font-body), system-ui, sans-serif;
   background-image:
-    radial-gradient(ellipse 70% 45% at 15% -10%, rgba(124,79,209,0.14), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 15%, rgba(63,224,197,0.06), transparent),
+    radial-gradient(ellipse 70% 45% at 15% -10%, rgba(126,154,114,0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 15%, rgba(226,100,60,0.05), transparent),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: var(--accent);
-  color: #120e1a;
+  color: #0e0f0d;
 }
 
 .focus-ring:focus-visible {
@@ -143,44 +140,9 @@ a, button {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
 }
 
-/* Redaction stripe — the case file's honest-gap motif */
+/* Redacted / honest-gap paper — a censored document, not a neon stripe */
 .redacted-stripe {
   background-image: repeating-linear-gradient(45deg, var(--inst), var(--inst) 7px, var(--inst-dim) 7px, var(--inst-dim) 14px);
-}
-
-/* Wireframe grid overlay — from Cyber Angel's background texture */
-.grid-overlay {
-  background-image:
-    linear-gradient(rgba(244,241,234,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244,241,234,0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-/* Chromatic-aberration glitch — from Cyber Angel's title treatment */
-.glitch-text {
-  position: relative;
-  display: inline-block;
-}
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  opacity: 0.7;
-  pointer-events: none;
-}
-.glitch-text::before {
-  color: var(--accent);
-  transform: translate(-2px, 0);
-  mix-blend-mode: screen;
-}
-.glitch-text::after {
-  color: var(--ember);
-  transform: translate(2px, 0);
-  mix-blend-mode: screen;
-}
-@media (prefers-reduced-motion: reduce) {
-  .glitch-text::before, .glitch-text::after { display: none; }
 }
 
 /* Tabular figures wherever digits line up */

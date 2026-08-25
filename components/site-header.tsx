@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { PhysicalButton } from "./physical-button";
 
 const primary = [
   { href: "/work", label: "Work" },
@@ -49,12 +50,9 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href={cta.href}
-            className="focus-ring rounded-sm border border-line-strong px-4 py-1.5 font-mono text-[12px] uppercase tracking-wide text-fg-muted transition-colors hover:border-accent hover:text-fg"
-          >
+          <PhysicalButton href={cta.href} variant="paper" className="px-4 py-1.5">
             {cta.label}
-          </Link>
+          </PhysicalButton>
         </nav>
 
         <button

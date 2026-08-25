@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { about } from "@/data/about";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
+import { Polaroid } from "@/components/polaroid";
+import { PaperNote } from "@/components/paper-note";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -21,25 +22,35 @@ export default function AboutPage() {
       <div className="mt-14 grid grid-cols-1 gap-12 md:grid-cols-5">
         <div className="md:col-span-3">
           <Reveal>
-            <p className="font-serif text-lg leading-relaxed">{about.bio[0]}</p>
-            <p className="mt-4 font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[1]}</p>
-            <p className="mt-4 font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[2]}</p>
+            <PaperNote rotate={-1.5} className="max-w-md">
+              <p className="font-serif text-lg italic leading-relaxed">{about.bio[0]}</p>
+            </PaperNote>
+            <p className="mt-6 max-w-md font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[1]}</p>
+            <p className="mt-4 max-w-md font-serif text-[15px] leading-relaxed text-fg-muted">{about.bio[2]}</p>
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="mt-10 grid grid-cols-2 gap-8 border-t border-line pt-8 sm:grid-cols-3">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Education</p>
-                <p className="mt-1 text-sm text-fg-muted">{about.education}</p>
-                <p className="text-xs text-fg-dim">{about.educationYears} · {about.gpa}</p>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Exploring</p>
-                <p className="mt-1 text-sm text-fg-muted">{about.exploring.join(" · ")}</p>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Interests</p>
-                <p className="mt-1 text-sm text-fg-muted">{about.interests.join(" · ")}</p>
+            <div className="mt-10 border-t border-line pt-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Education</p>
+              <p className="mt-1 text-sm text-fg-muted">{about.education}</p>
+              <p className="text-xs text-fg-dim">
+                {about.educationYears} · {about.gpa}
+              </p>
+            </div>
+
+            <div className="mt-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
+                Tools &amp; specialties
+              </p>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                {[...about.exploring, ...about.interests].map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-sm border border-line px-2.5 py-1 font-mono text-[11px] uppercase tracking-wide text-fg-muted"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </div>
           </Reveal>
@@ -83,15 +94,13 @@ export default function AboutPage() {
                 <ImagePlaceholder label="polaroid — 'yep that's me'" aspect="aspect-[3/4]" />
               </div>
               <div className="absolute -bottom-10 -right-8 w-28 rotate-[6deg] sm:-right-12 sm:w-32">
-                <ImagePlaceholder label="polaroid — 'meet cat the cat'" aspect="aspect-[3/4]" />
+                <ImagePlaceholder label="polaroid — 'meet the cat'" aspect="aspect-[3/4]" />
               </div>
-              <div className="absolute -left-10 top-16 w-24 -rotate-[8deg] sm:-left-14 sm:w-28">
-                <div className="relative aspect-square w-full overflow-hidden rounded-sm border border-line-strong">
-                  <Image src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" fill className="object-cover" sizes="112px" />
-                </div>
+              <div className="absolute -left-10 top-16 w-24 sm:-left-14 sm:w-28">
+                <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-8} sizes="112px" />
               </div>
               <Handwritten className="absolute -top-8 right-0 text-lg sm:text-xl" rotate={4}>
-                not in Figma —
+                real photos, mostly —
               </Handwritten>
             </div>
             <div className="mt-24 sm:mt-16">

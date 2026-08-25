@@ -16,16 +16,27 @@ export default function WorkPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
       <Reveal>
-        <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Work</p>
-        <h1 className="mt-2 max-w-2xl font-display text-3xl font-bold sm:text-5xl">
+        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-fg-dim">
+          <span className="rounded-sm border border-line px-1.5 py-0.5">/work</span>
+          <span>Case files</span>
+        </div>
+        <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold sm:text-5xl">
           Featured case studies, and the spotlight work sitting right behind them.
         </h1>
       </Reveal>
 
       {/* FEATURED */}
       <div className="mt-20 flex flex-col gap-24 sm:gap-32">
-        {featured.map((p) => (
-          <FeaturedProject key={p.slug} project={p} />
+        {featured.map((p, i) => (
+          <div key={p.slug}>
+            <p className="mb-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg-dim">
+              <span className="tnum text-accent">{String(i + 1).padStart(2, "0")}</span>
+              {" / "}
+              {p.category.replace("-", " ")}
+              {p.year ? ` · ${p.year}` : ""}
+            </p>
+            <FeaturedProject project={p} />
+          </div>
         ))}
       </div>
 
