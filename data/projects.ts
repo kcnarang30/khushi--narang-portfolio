@@ -565,7 +565,7 @@ export const projects: Project[] = [
   {
     slug: "furore",
     name: "Furore — Fest Branding",
-    oneLiner: "Full visual identity for the college fest — logo, brochure, merch, and social — themed Arabian Nights.",
+    oneLiner: "A full visual identity for a college fest built around an Arabian Nights theme — logo, brochure, merch, social, and one very busy genie.",
     category: "branding",
     origin: "college",
     organisation: "Centre for Performing Arts, DSCE",
@@ -610,7 +610,7 @@ export const projects: Project[] = [
   {
     slug: "product-defect-detector",
     name: "Product Defect Detector",
-    oneLiner: "An AI tool for manufacturing QA — upload an image, get a classification and a visual explanation.",
+    oneLiner: "An AI tool for manufacturing QA that doesn't just say defective — it shows you where it thinks the problem is.",
     category: "ai-tool",
     origin: "college",
     year: "Apr 2025",
@@ -651,7 +651,7 @@ export const projects: Project[] = [
   {
     slug: "clueminati",
     name: "Clueminati",
-    oneLiner: "A mystery-based puzzle event — concept, clues, and presentation decks, run live three times.",
+    oneLiner: "A mystery event where the PowerPoint wasn't a presentation. It was the game.",
     category: "presentation",
     origin: "college",
     organisation: "DSCE Content Team",
@@ -692,7 +692,7 @@ export const projects: Project[] = [
   {
     slug: "writers-corner",
     name: "Writer's Corner",
-    oneLiner: "A personal site bringing short fiction, event writing, and content work into one voice.",
+    oneLiner: "The internet corner where I put my writing when I don't know what else to do with it.",
     category: "writing",
     origin: "personal",
     status: "live",
