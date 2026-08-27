@@ -21,6 +21,7 @@ export function PhysicalButton({
   className,
   children,
   onClick,
+  type = "button",
 }: {
   href?: string;
   variant?: Variant;
@@ -28,12 +29,13 @@ export function PhysicalButton({
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
+  type?: "button" | "submit";
 }) {
   const cls = cn(base, variants[variant], className);
 
   if (!href) {
     return (
-      <button type="button" onClick={onClick} className={cls}>
+      <button type={type} onClick={onClick} className={cls}>
         {children}
       </button>
     );

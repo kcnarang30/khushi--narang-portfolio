@@ -64,6 +64,10 @@ export default function ContactPage() {
                   type="text"
                   name="name"
                   required
+                  minLength={2}
+                  maxLength={80}
+                  autoComplete="name"
+                  title="At least 2 characters"
                   placeholder="Enter your full name…"
                   className="focus-ring mt-1.5 w-full rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40"
                 />
@@ -76,6 +80,9 @@ export default function ContactPage() {
                   type="email"
                   name="email"
                   required
+                  maxLength={100}
+                  autoComplete="email"
+                  title="A valid email address, like you@example.com"
                   placeholder="you@example.com"
                   className="focus-ring mt-1.5 w-full rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40"
                 />
@@ -87,7 +94,10 @@ export default function ContactPage() {
                 <textarea
                   name="message"
                   required
+                  minLength={10}
+                  maxLength={2000}
                   rows={4}
+                  title="At least 10 characters — enough to say what you have in mind"
                   placeholder="Tell me about it…"
                   className="focus-ring mt-1.5 w-full resize-none rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40"
                 />
@@ -98,7 +108,10 @@ export default function ContactPage() {
               <Handwritten rotate={-2} className="text-lg">
                 P.S. I reply fast
               </Handwritten>
-              <PhysicalButton className="bg-ember text-black shadow-[0_3px_0_0_var(--ember-dim)] active:shadow-[0_1px_0_0_var(--ember-dim)]">
+              <PhysicalButton
+                type="submit"
+                className="bg-ember text-black shadow-[0_3px_0_0_var(--ember-dim)] active:shadow-[0_1px_0_0_var(--ember-dim)]"
+              >
                 Send Dispatch
               </PhysicalButton>
             </div>
