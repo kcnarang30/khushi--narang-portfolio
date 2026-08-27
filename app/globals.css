@@ -149,3 +149,19 @@ a, button {
 .tnum {
   font-variant-numeric: tabular-nums;
 }
+
+/* Infinite horizontal scroll — two copies of the same track laid end to
+   end, translated exactly one copy-width so the loop is seamless. Frozen
+   by the site-wide prefers-reduced-motion rule above. */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll 26s linear infinite;
+}

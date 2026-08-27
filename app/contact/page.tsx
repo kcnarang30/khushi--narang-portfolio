@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { links } from "@/data/links";
 import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
-import { NokiaPhone } from "@/components/nokia-phone";
+import { PhoneStage } from "@/components/phone-stage";
 import { PhysicalButton } from "@/components/physical-button";
 import { DispatchForm } from "@/components/dispatch-form";
 
@@ -25,27 +25,21 @@ export default function ContactPage() {
         </p>
       </Reveal>
 
-      <div className="relative mt-14 overflow-hidden">
-        <p
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2 select-none whitespace-nowrap font-display text-[15vw] font-extrabold uppercase leading-none tracking-tight text-fg-dim/[0.07] sm:text-8xl md:text-9xl"
-        >
-          Contact me · Contact me ·
-        </p>
-        <div className="relative grid grid-cols-1 items-start gap-10 lg:grid-cols-[19rem_1fr] lg:gap-14">
-          <Reveal>
-            <NokiaPhone formAnchorId="dispatch-form" />
-            <p className="mt-5 flex items-center gap-2 rounded-sm border border-line px-3 py-2.5 font-mono text-[11px] text-fg-muted">
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live-signal" aria-hidden />
-              Currently open to freelance contracts and full-time roles.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <DispatchForm />
-          </Reveal>
+      <Reveal>
+        <div className="relative mt-14">
+          <PhoneStage formAnchorId="dispatch-form" />
+          <p className="mt-5 flex items-center gap-2 rounded-sm border border-line px-3 py-2.5 font-mono text-[11px] text-fg-muted">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live-signal" aria-hidden />
+            Currently open to freelance contracts and full-time roles.
+          </p>
         </div>
-      </div>
+      </Reveal>
+
+      <Reveal delay={0.08}>
+        <div className="mt-14 max-w-2xl">
+          <DispatchForm />
+        </div>
+      </Reveal>
 
       <Reveal delay={0.12}>
         <div className="mt-16 flex flex-wrap items-center gap-3 border-t border-line pt-8">

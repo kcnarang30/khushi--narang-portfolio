@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type RefObject } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { links } from "@/data/links";
 
 /**
@@ -12,6 +13,12 @@ import { links } from "@/data/links";
  * CTA (matching the real site's gold, not the portfolio's coral). Every
  * action is real: mailto, external social links, and a scroll to the real
  * dispatch form.
+ *
+ * Draggable within its stage (containerRef) the same way the reference
+ * site's phone is — a real physical object you can pick up and toss
+ * around, not a static card. Unlike the decorative Draggable wrapper used
+ * elsewhere, this one stays in the accessibility tree: the phone's content
+ * is the primary contact block, not a fidget.
  */
 function useClock() {
   const [time, setTime] = useState<string | null>(null);
@@ -28,12 +35,32 @@ function useClock() {
   return time;
 }
 
-export function NokiaPhone({ formAnchorId, className }: { formAnchorId?: string; className?: string }) {
+export function NokiaPhone({
+  formAnchorId,
+  className,
+  containerRef,
+}: {
+  formAnchorId?: string;
+  className?: string;
+  containerRef?: RefObject<HTMLElement | null>;
+}) {
   const time = useClock();
+  const reduce = useReducedMotion();
 
   return (
-    <div className={className}>
-      <div className="grain-card rounded-[24px] border border-line-strong bg-bg-raised p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)] sm:p-6">
+    <motion.div
+      className={className}
+      drag={!!containerRef}
+      dragConstraints={containerRef}
+      dragElastic={reduce ? 0 : 0.12}
+      dragMomentum={false}
+      whileDrag={reduce ? undefined : { scale: 1.04, rotate: -2, zIndex: 30 }}
+      whileHover={containerRef && !reduce ? { scale: 1.015 } : undefined}
+      style={containerRef ? { touchAction: "none" } : undefined}
+    >
+      <div
+        className={`grain-card rounded-[24px] border border-line-strong bg-bg-raised p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)] sm:p-6 ${containerRef ? "cursor-grab active:cursor-grabbing" : ""}`}
+      >
         <div
           className="relative flex flex-col rounded-lg bg-accent px-5 py-4"
           style={{ aspectRatio: "4/3", fontFamily: "var(--font-vt323)" }}
@@ -87,6 +114,6 @@ export function NokiaPhone({ formAnchorId, className }: { formAnchorId?: string;
           </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
