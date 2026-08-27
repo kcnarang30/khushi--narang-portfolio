@@ -545,6 +545,9 @@ export const projects: Project[] = [
           body:
             "Rebuilt from scratch in Figma around a flexible grid system and consistent typography, after the cover direction shifted toward a vintage editorial style — realistic textures, a noir illustration approach — following several rounds of exploration that were initially visually overwhelming.",
           imageRef: "inscribe-cover-final",
+          imageSrc: "/projects/inscribe/inscribe-cover-final.jpg",
+          imageWidth: 919,
+          imageHeight: 1000,
           imageCaption: "Final cover, 6th edition — 'Serendipity Lost.'",
         },
         {
@@ -555,6 +558,7 @@ export const projects: Project[] = [
       ],
     },
     coverAssetRef: "inscribe-cover-final",
+    coverImageSrc: "/projects/inscribe/inscribe-cover-final.jpg",
     tags: ["Editorial Design", "Figma"],
     order: 30,
   },
@@ -583,16 +587,23 @@ export const projects: Project[] = [
           body:
             "A genie mascot built for the 'Sands of Time' theme, taken from a full illustration to a cropped, legible mark that survives brochures, t-shirts, and Instagram stories without losing detail.",
           imageRef: "furore-logo-final",
+          imageSrc: "/projects/furore/furore-logo-final.jpg",
+          imageWidth: 1000,
+          imageHeight: 758,
         },
         {
           heading: "Merch — restraint over impact",
           body:
             "The final t-shirt moved the full illustration to the back with the tagline 'Where Wishes Begin,' keeping the front to a small wordmark — legible in a crowd rather than only up close.",
           imageRef: "furore-merch",
+          imageSrc: "/projects/furore/furore-merch.jpg",
+          imageWidth: 1000,
+          imageHeight: 579,
         },
       ],
     },
     coverAssetRef: "furore-cover",
+    coverImageSrc: "/projects/furore/furore-logo-final.jpg",
     tags: ["Branding", "Illustrator"],
     order: 31,
   },
@@ -604,7 +615,7 @@ export const projects: Project[] = [
     origin: "college",
     year: "Apr 2025",
     status: "shipped",
-    role: "Python, OpenCV, Grad-CAM, Figma",
+    role: "Python, Streamlit, PIL, Grad-CAM",
     featured: false,
     spotlight: false,
     archive: true,
@@ -618,8 +629,12 @@ export const projects: Project[] = [
         {
           heading: "What it does",
           body:
-            "Upload a photo of a hardware component (GPU, motherboard, or pins) and the tool classifies it as defective or not, with a confidence score and a Grad-CAM heatmap showing exactly which region of the image drove the model's decision.",
+            "Upload a photo of a hardware component (GPU, motherboard, or pins) and the tool classifies it as defective or not, with a confidence score and a Grad-CAM heatmap showing exactly which region of the image drove the model's decision. Built with Python, Streamlit, and PIL around a custom-trained model, running at 95–99% accuracy with under a second per prediction.",
           imageRef: "defect-detector-ui",
+          imageSrc: "/projects/product-defect-detector/defect-detector-ui.jpg",
+          imageWidth: 1000,
+          imageHeight: 630,
+          imageCaption: "A defective motherboard, correctly flagged at 92.95% confidence.",
         },
         {
           heading: "Why the heatmap",
@@ -629,6 +644,7 @@ export const projects: Project[] = [
       ],
     },
     coverAssetRef: "defect-detector-ui",
+    coverImageSrc: "/projects/product-defect-detector/defect-detector-ui.jpg",
     tags: ["AI", "Python", "Grad-CAM"],
     order: 32,
   },
@@ -654,8 +670,12 @@ export const projects: Project[] = [
         {
           heading: "What I did",
           body:
-            "Created the concept, wrote all ten clues as a connected narrative, and designed the PowerPoint decks that ran the live event — rules, scoring, and puzzles built to function as a real-time interface for 40+ participants.",
+            "Created the concept, wrote all ten clues as a connected narrative, and designed the PowerPoint decks that ran the live event — rules, scoring, and puzzles built to function as a real-time interface for 40+ participants. Co-hosted and facilitated live, handling real-time scoring, hint distribution, and buzzer-based responses, and led a volunteer team through setup and flow in a theatrically decorated space.",
           imageRef: "clueminati-deck",
+          imageSrc: "/projects/clueminati/clueminati-deck.jpg",
+          imageWidth: 947,
+          imageHeight: 1000,
+          imageCaption: "Three runs, three reskins — same ten-clue structure and scoring underneath.",
         },
         {
           heading: "Run three times",
@@ -665,6 +685,7 @@ export const projects: Project[] = [
       ],
     },
     coverAssetRef: "clueminati-deck",
+    coverImageSrc: "/projects/clueminati/clueminati-deck.jpg",
     tags: ["Presentation Design", "Event Design"],
     order: 33,
   },
@@ -684,6 +705,7 @@ export const projects: Project[] = [
     liveUrl: "https://kcnarang3.wixsite.com/writing-por",
     caseStudy: false,
     coverAssetRef: "writers-corner-cover",
+    coverImageSrc: "/projects/writers-corner/writers-corner-cover.jpg",
     tags: ["Writing", "Wix"],
     order: 34,
   },
@@ -781,8 +803,8 @@ export const projects: Project[] = [
   },
   {
     slug: "sip-coffee",
-    name: "Sip Coffee",
-    oneLiner: "TODO — concept named but not yet documented.",
+    name: "Cuff / Sip",
+    oneLiner: "A coffee-brand wordmark concept, pairing two logo directions — 'Cuff' and 'Sip' — into one identity.",
     category: "branding",
     origin: "personal",
     status: "concept",
@@ -792,9 +814,11 @@ export const projects: Project[] = [
     playground: true,
     live: false,
     caseStudy: false,
-    tags: [],
+    coverAssetRef: "sip-coffee-logo",
+    coverImageSrc: "/projects/sip-coffee/sip-coffee-logo.png",
+    tags: ["Branding", "Typography"],
     order: 54,
-    todo: ["Source description, images, and status for this project before publishing"],
+    todo: ["Confirm full concept description and status for this project before publishing"],
   },
 ];
 

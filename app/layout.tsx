@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat, VT323 } from "next/font/google";
+import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat, VT323, Anton } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { DispatchProvider } from "@/components/dispatch-provider";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -44,6 +45,14 @@ const vt323 = VT323({
   weight: ["400"],
 });
 
+// Tight condensed poster face — the "printed directly on the paper sheet"
+// headline moment (desk scenes), not the general display face.
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Khushi Narang — Product Designer",
@@ -63,7 +72,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable} ${vt323.variable}`}>
+    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable} ${vt323.variable} ${anton.variable}`}>
       <body className="antialiased">
         <a
           href="#main"
@@ -71,9 +80,11 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        <DispatchProvider>
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </DispatchProvider>
         <SpeedInsights />
       </body>
     </html>

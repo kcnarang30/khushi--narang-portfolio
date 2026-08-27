@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { links } from "@/data/links";
 import { PhysicalButton } from "./physical-button";
+import { EmailDispatchLink } from "./email-dispatch-link";
 
 export function SiteFooter() {
   return (
@@ -9,12 +10,7 @@ export function SiteFooter() {
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-display text-2xl font-bold">Say hi.</p>
-            <a
-              href={`mailto:${links.email}`}
-              className="focus-ring mt-2 inline-block rounded font-mono text-sm text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
-            >
-              {links.email}
-            </a>
+            <EmailDispatchLink className="focus-ring mt-2 inline-block rounded font-mono text-sm text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent" />
           </div>
           <div className="flex flex-wrap gap-2.5">
             <PhysicalButton href={links.linkedin} external variant="paper" className="px-3 py-1.5 text-[11px]">

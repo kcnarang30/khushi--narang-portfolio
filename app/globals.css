@@ -40,15 +40,32 @@
   /* Highlight — amber, marginalia / "do not open" / beta */
   --live-signal: #e0a94a;
 
-  /* Spotlight-only floppy palette — kept varied, tuned warmer */
-  --floppy-1: #6f96c9;
-  --floppy-2: #7e9a72;
-  --floppy-3: #d68a3d;
-  --floppy-4: #a3785a;
+  /* Spotlight-only floppy palette — bold and varied on purpose now
+     (scrapbook/Y2K direction, confirmed 2026-08-27). */
+  --floppy-1: #2f6fed;
+  --floppy-2: #3ecf5c;
+  --floppy-3: #ff3d81;
+  --floppy-4: #ff5a3c;
 
   /* Status — functional, separate from the expressive palette */
   --live: #7ec17a;
   --beta: #e0a94a;
+
+  /* Desk environment — the dark green "surface" a physical sheet sits on
+     in scene compositions (hero, archive). Distinct from --bg on purpose:
+     this is a place an object rests, not the site's own ink. */
+  --desk-green: #102821;
+  --desk-green-raised: #16332a;
+  --desk-grid-line: rgba(255, 255, 255, 0.05);
+
+  /* Scrapbook/Y2K saturated accents — reserved for "main" playful sections
+     (hero, playground, spotlight). Organizational/"folder" sections and
+     professional/informational blocks stay on the cream/muted tokens
+     above, never these. */
+  --hot-pink: #ff2f92;
+  --signal-red: #ff3b30;
+  --bright-green: #3ecf5c;
+  --bright-blue: #2f6fed;
 }
 
 @theme inline {
@@ -75,6 +92,12 @@
   --color-floppy-4: var(--floppy-4);
   --color-live: var(--live);
   --color-beta: var(--beta);
+  --color-desk-green: var(--desk-green);
+  --color-desk-green-raised: var(--desk-green-raised);
+  --color-hot-pink: var(--hot-pink);
+  --color-signal-red: var(--signal-red);
+  --color-bright-green: var(--bright-green);
+  --color-bright-blue: var(--bright-blue);
 
   /* Plus Jakarta Sans — bold, round, friendly display headlines */
   --font-display: var(--font-jakarta);
@@ -86,6 +109,8 @@
   --font-mono: var(--font-jetbrains);
   /* Caveat — handwritten marginalia, used sparingly on purpose */
   --font-pen: var(--font-caveat);
+  /* Anton — tight condensed poster type, printed-on-paper headlines only */
+  --font-poster: var(--font-anton);
 }
 
 * {
@@ -136,8 +161,13 @@ a, button {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
+/* A real scanned paper-fiber photograph (CC0, ambientCG Paper001), not a
+   procedural filter — multiply-blended so the existing paper color shows
+   through the actual grain instead of a flat SVG turbulence approximation. */
 .grain-paper {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-image: url("/textures/paper-grain.jpg");
+  background-size: 340px 340px;
+  background-blend-mode: multiply;
 }
 
 /* Redacted / honest-gap paper — a censored document, not a neon stripe */
@@ -164,4 +194,100 @@ a, button {
 
 .marquee-track {
   animation: marquee-scroll 62s linear infinite;
+}
+
+/* The dark green surface a physical sheet rests on — a faint graph-paper
+   grid, not a flat fill, so the environment itself reads as a workspace. */
+.desk-environment {
+  background-color: var(--desk-green);
+  background-image:
+    linear-gradient(var(--desk-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--desk-grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* A real cork photograph (CC0, ambientCG Cork002) — genuine fleck and
+   pore detail a procedural filter can't fake — plus a directional-
+   lighting vignette so the board reads as lit from above. */
+.corkboard {
+  background-color: #96633a;
+  background-image:
+    radial-gradient(ellipse 90% 70% at 50% 15%, rgba(255, 226, 178, 0.2), transparent),
+    radial-gradient(ellipse 100% 90% at 50% 100%, rgba(0, 0, 0, 0.4), transparent),
+    url("/textures/cork.jpg");
+  background-size: 100% 100%, 100% 100%, 480px 480px;
+}
+
+/* A real wood-grain photograph (CC0, ambientCG WoodFloor044) framing a
+   corkboard section — the physical edge of the board. Padding-based
+   rather than border-image, so corners stay clean at any section size. */
+.wood-frame {
+  background-image: url("/textures/wood.jpg");
+  background-size: 340px 340px;
+  padding: 16px;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7), inset 0 0 0 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Real cardboard photograph (CC0, ambientCG Cardboard004) — for file-
+   folder / case-file surfaces. */
+.cardboard-texture {
+  background-color: #b08a5e;
+  background-image: url("/textures/cardboard.jpg");
+  background-size: 420px 420px;
+  background-blend-mode: multiply;
+}
+
+/* The three-layer shadow a physical object sitting on a surface actually
+   casts: a tight high-density contact shadow where it touches, a medium
+   shadow for the object's own thickness, and a wide soft ambient shadow
+   from the room's general light — not one flat box-shadow. */
+.shadow-physical {
+  box-shadow:
+    0 1px 1px rgba(20, 14, 8, 0.35),
+    0 10px 20px -8px rgba(20, 14, 8, 0.4),
+    0 36px 70px -24px rgba(20, 14, 8, 0.5);
+}
+.shadow-physical-lg {
+  box-shadow:
+    0 2px 2px rgba(20, 14, 8, 0.4),
+    0 18px 32px -12px rgba(20, 14, 8, 0.45),
+    0 60px 110px -30px rgba(20, 14, 8, 0.6);
+}
+
+/* Small crosshair registration marks at the corners of a desk scene —
+   the "this is a printed sheet" detail from the reference. */
+.desk-crosshair {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  opacity: 0.35;
+}
+.desk-crosshair::before,
+.desk-crosshair::after {
+  content: "";
+  position: absolute;
+  background: var(--fg);
+}
+.desk-crosshair::before {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+.desk-crosshair::after {
+  top: 50%;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+/* A torn top edge on a sheet of paper — irregular, not a straight cut. */
+.torn-edge-top {
+  clip-path: polygon(
+    0% 6px, 4% 0%, 9% 5px, 15% 1px, 21% 6px, 27% 0%, 34% 4px, 40% 1px,
+    47% 6px, 53% 2px, 60% 5px, 67% 0%, 73% 4px, 80% 1px, 87% 6px, 93% 2px,
+    100% 5px, 100% 100%, 0% 100%
+  );
 }

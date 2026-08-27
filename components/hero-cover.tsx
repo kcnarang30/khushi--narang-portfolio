@@ -1,105 +1,131 @@
-"use client";
-
-import { useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { Marginalia } from "./marginalia";
 import { PhysicalButton } from "./physical-button";
+import { Tape } from "./tape";
+import { PaperClip } from "./paper-clip";
+import { Stamp } from "./stamp";
+import { Sticker } from "./sticker";
+import { Polaroid } from "./polaroid";
+import { DeskScene } from "./desk-scene";
+import { SettleIn } from "./settle-in";
+
+const LABELS = ["Product", "Events", "Web", "Systems", "Experiments"];
 
 /**
- * A small pile of real objects sitting slightly askew on the desk — not a
- * perfectly aligned mockup grid. Each piece has its own independent hover
- * (lift + straighten), no swap mechanic.
+ * The homepage as a physical scene: a dark green desk environment holding
+ * one large paper sheet (a second sheet visible behind it), clipped and
+ * taped down, with real objects — a real photo, a status stamp — overlapping
+ * its edges at genuine translateZ depth inside
+ * DeskScene's perspective stage. Everything printed on the sheet reads as
+ * print, not web UI: huge condensed poster type, small mono metadata top
+ * and bottom, category labels as archival tags.
  */
 export function HeroCover() {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -30]);
-
   return (
-    <section ref={ref} className="relative overflow-hidden border-b border-line">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:gap-8">
-        {/* Text column */}
-        <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-fg-dim">
-            Product designer — Bengaluru
-          </p>
-          <h1 className="relative mt-4 font-display text-[13vw] font-extrabold leading-[0.98] tracking-tight sm:text-6xl md:text-[4.4rem]">
-            Turning messy problems into{" "}
-            <span className="text-accent">intuitive</span> experiences.
-          </h1>
-          <Marginalia className="mt-1 inline-flex text-lg sm:text-xl" rotate={-4}>
-            (obvious, in hindsight)
-          </Marginalia>
-          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-fg-muted">
-            I like asking annoying questions until the problem starts making sense.
-            Currently designing at <span className="font-medium text-fg">YourStory</span> —
-            product work, event experiences, and the occasional AI tool that has no
-            business being this fun to build.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <PhysicalButton href="/work">See the work</PhysicalButton>
-            <PhysicalButton href="/about" variant="outline">
-              More about me
-            </PhysicalButton>
-          </div>
-        </div>
+    <section className="desk-environment relative overflow-hidden py-40 sm:py-64">
+      <span className="desk-crosshair" style={{ top: 22, left: 22 }} aria-hidden />
+      <span className="desk-crosshair" style={{ top: 22, right: 22 }} aria-hidden />
+      <span className="desk-crosshair" style={{ bottom: 22, left: 22 }} aria-hidden />
+      <span className="desk-crosshair" style={{ bottom: 22, right: 22 }} aria-hidden />
 
-        {/* The pile */}
-        <motion.div style={{ y: reduce ? 0 : y }} className="relative mx-auto h-[22rem] w-full max-w-sm sm:h-[26rem]">
-          <span aria-hidden className="absolute right-10 top-2 h-2.5 w-2.5 rounded-full bg-ember" />
-
-          {/* paper sheet, back layer */}
-          <div
-            className="absolute left-2 top-10 h-64 w-48 rotate-[-9deg] bg-paper shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:rotate-[-6deg]"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(transparent, transparent 21px, var(--paper-dark) 22px)",
-            }}
-            aria-hidden
-          />
-
-          {/* first real screen, taped */}
-          <div className="group/tape absolute left-10 top-4 w-44 rotate-[6deg] bg-white p-1.5 pb-6 shadow-[0_24px_44px_-18px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:-translate-y-1 hover:rotate-[3deg]">
-            <span
+      <DeskScene className="mx-auto max-w-4xl px-5 sm:px-8">
+        <div className="relative mt-6 sm:mt-4">
+          {/* second sheet, peeking out behind at real depth */}
+          <SettleIn delay={0} y={10} rotate={0} scale={0.98} className="absolute inset-0">
+            <div
               aria-hidden
-              className="absolute -top-2.5 left-1/2 h-5 w-12 -translate-x-1/2 -rotate-3 bg-fg-muted/25"
+              className="grain-paper h-full w-full bg-paper-dark"
+              style={{ transform: "translateZ(-60px) rotate(2.4deg) translate(10px, 16px)" }}
             />
-            <div className="relative aspect-[9/16] w-full overflow-hidden bg-bg-raised">
-              <Image
-                src="/projects/shurukar/shurukar-onboarding.png"
-                alt="ShuruKar onboarding screen"
-                fill
-                sizes="176px"
-                className="object-cover object-left"
-              />
-            </div>
-          </div>
+          </SettleIn>
 
-          {/* second real screen, front layer */}
-          <div className="absolute bottom-6 right-2 w-48 -rotate-[7deg] rounded-[8px] border-[6px] border-bg-raised-2 bg-bg-raised-2 shadow-[0_30px_50px_-16px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:translate-y-[-4px] hover:-rotate-[4deg]">
-            <div className="relative aspect-[9/17] w-full overflow-hidden rounded-[3px]">
-              <Image
-                src="/projects/shurukar/shurukar-resources.png"
-                alt="ShuruKar resources hub screen"
-                fill
-                sizes="192px"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
-
-          <Link
-            href="/work/shurukar"
-            className="focus-ring absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-sm bg-bg-raised px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-dim shadow-[0_8px_16px_-8px_rgba(0,0,0,0.5)] transition-colors hover:text-accent"
+          {/* the main sheet */}
+          <SettleIn delay={0.1} y={28} rotate={-6} scale={0.95}>
+          <div
+            className="grain-paper shadow-physical-lg relative bg-paper p-8 sm:p-14 md:p-20"
+            style={{ transform: "rotate(-1.2deg)" }}
           >
-            ShuruKar, in beta →
-          </Link>
-        </motion.div>
-      </div>
+            <PaperClip rotate={-16} className="-left-4 -top-5 h-11 w-11 sm:-left-6 sm:-top-6 sm:h-12 sm:w-12" />
+            <Tape rotate={4} className="-top-3 right-12 w-16 sm:right-16" />
+
+            <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[10.5px] uppercase tracking-widest text-bg/55">
+              <span>Khushi Narang</span>
+              <span>Product Designer</span>
+            </div>
+
+            <h1 className="mt-16 font-poster uppercase leading-[0.82] text-bg [font-size:clamp(2.5rem,8vw,6rem)] sm:mt-20">
+              Give me a
+              <br />
+              messy problem.
+            </h1>
+            <p className="mt-2 font-poster uppercase leading-[0.82] text-hot-pink [font-size:clamp(1.7rem,5.4vw,4rem)]">
+              I&rsquo;ll probably ask
+              <br />
+              too many questions.
+            </p>
+
+            <div className="mt-14 flex flex-wrap gap-2">
+              {LABELS.map((label) => (
+                <span
+                  key={label}
+                  className="border border-bg/25 px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-wide text-bg/70"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            <p className="mt-8 max-w-sm font-serif text-[14.5px] leading-relaxed text-bg/65">
+              Currently at <span className="font-semibold text-bg">YourStory</span>. TechSparks 2026 is
+              live now — 10,000+ people, this October.
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <PhysicalButton href="/work">See the work</PhysicalButton>
+              <PhysicalButton href="/about" variant="ink">
+                More about me
+              </PhysicalButton>
+            </div>
+
+            <div className="mt-16 flex flex-wrap justify-between gap-2 border-t border-bg/15 pt-4 font-mono text-[9.5px] uppercase tracking-wide text-bg/40">
+              <span>Bengaluru / India</span>
+              <span>Currently @ YourStory</span>
+            </div>
+          </div>
+          </SettleIn>
+
+          {/* status stamp, overlapping the top edge */}
+          <SettleIn delay={0.32} y={-14} rotate={30} scale={0.5} className="absolute -top-9 left-10 sm:-top-11 sm:left-14">
+            <Stamp tone="green" rotate={-9} size="5.25rem">
+              Status
+              <br />
+              Open to work
+            </Stamp>
+          </SettleIn>
+
+          <SettleIn delay={0.42} y={-10} rotate={40} scale={0.4} className="absolute -top-5 right-24 sm:right-32">
+            <Sticker variant="star" color="var(--bright-blue)" rotate={14} size="2.5rem" className="static" />
+          </SettleIn>
+          <SettleIn delay={0.48} y={10} rotate={-30} scale={0.4} className="absolute bottom-6 -left-6 hidden sm:block">
+            <Sticker variant="smiley" color="var(--live-signal)" rotate={-10} size="2.25rem" className="static" />
+          </SettleIn>
+
+          {/* real photo, pinned, hidden on the smallest screens to avoid clutter */}
+          <SettleIn
+            delay={0.58}
+            y={-24}
+            rotate={-14}
+            scale={0.8}
+            className="absolute -top-7 right-2 hidden w-20 sm:block sm:-right-6"
+          >
+            <div style={{ transform: "translateZ(90px) rotate(-8deg)" }}>
+              <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-8} sizes="80px" />
+            </div>
+          </SettleIn>
+
+          <SettleIn delay={0.68} y={6} rotate={0} scale={1} className="absolute -bottom-8 left-3 sm:left-5">
+            <span className="font-mono text-[9.5px] text-fg/35">IDX — 01</span>
+          </SettleIn>
+        </div>
+      </DeskScene>
     </section>
   );
 }

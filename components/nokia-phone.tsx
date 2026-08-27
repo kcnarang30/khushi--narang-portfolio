@@ -10,8 +10,9 @@ import { links } from "@/data/links";
  * site's actual font, not a generic mono), normal-case Plex Sans on the
  * buttons at real size (not tiny tracked-out caption text), amber for the
  * CTA (matching the real site's gold, not the portfolio's coral). Every
- * action is real: mailto, external social links, and Contact Me opens the
- * real Dispatch Messenger form as a popup.
+ * action is real: external social links, and both the screen's email text
+ * and Contact Me open the real Dispatch Messenger form as a popup — no
+ * mailto link, since it depends on a mail client nobody has configured.
  *
  * Draggable within its stage (containerRef) the same way the reference
  * site's phone is — a real physical object, not a static card. Three
@@ -132,13 +133,14 @@ export function NokiaPhone({
             </div>
             <div className="flex flex-1 flex-col items-center justify-center text-center">
               <p className="text-[18px] leading-none text-black/60 sm:text-[20px]">Contact me via email</p>
-              <a
-                href={`mailto:${links.email}`}
+              <button
+                type="button"
+                onClick={onContactClick}
                 onPointerDown={(e) => e.stopPropagation()}
                 className="focus-ring mt-2 inline-block break-all rounded-sm text-[26px] leading-none text-black underline decoration-black/30 underline-offset-4 hover:decoration-black sm:text-[32px]"
               >
                 {links.email}
-              </a>
+              </button>
             </div>
           </div>
 

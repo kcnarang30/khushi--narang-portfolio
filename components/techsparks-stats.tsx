@@ -16,12 +16,12 @@ export function TechSparksStats() {
       <div className="flex flex-wrap gap-x-10 gap-y-4">
         {stats.map((s) => (
           <div key={s.label}>
-            <p className="font-display text-3xl font-extrabold leading-none sm:text-4xl">{s.n}</p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-fg-dim">{s.label}</p>
+            <p className="font-display text-3xl font-extrabold leading-none text-bg sm:text-4xl">{s.n}</p>
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-bg/55">{s.label}</p>
           </div>
         ))}
       </div>
-      <p className="mt-5 font-serif text-[15px] italic text-fg-muted">
+      <p className="mt-5 font-serif text-[15px] italic text-bg/70">
         {verbs.join(" · ")} — three days, one theme.
       </p>
     </div>

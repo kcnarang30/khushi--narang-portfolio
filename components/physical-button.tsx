@@ -10,6 +10,7 @@ const variants = {
     "border border-line-strong px-5 py-3 text-fg-muted shadow-[0_3px_0_0_var(--line)] hover:text-fg hover:border-fg-dim active:shadow-[0_1px_0_0_var(--line)]",
   paper:
     "grain-paper bg-paper px-5 py-3 text-bg shadow-[0_3px_0_0_var(--paper-dark)] hover:brightness-95 active:shadow-[0_1px_0_0_var(--paper-dark)]",
+  ink: "border-2 border-bg bg-transparent px-5 py-3 text-bg shadow-[0_3px_0_0_rgba(14,15,13,0.4)] hover:bg-bg/5 active:shadow-[0_1px_0_0_rgba(14,15,13,0.4)]",
 } as const;
 
 type Variant = keyof typeof variants;

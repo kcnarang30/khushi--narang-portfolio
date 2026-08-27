@@ -28,7 +28,7 @@ export function Polaroid({
   const content = (
     <div
       className={cn(
-        "group/polaroid grain-paper inline-block bg-paper p-2.5 pb-8 shadow-[0_18px_32px_-16px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:!rotate-0 hover:shadow-[0_24px_40px_-16px_rgba(0,0,0,0.55)]",
+        "group/polaroid grain-paper block bg-paper p-2.5 pb-8 shadow-[0_18px_32px_-16px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:!rotate-0 hover:shadow-[0_24px_40px_-16px_rgba(0,0,0,0.55)]",
         className
       )}
       style={{ transform: `rotate(${rotate}deg)` }}
@@ -44,7 +44,7 @@ export function Polaroid({
 
   if (href) {
     return (
-      <Link href={href} className="focus-ring inline-block rounded-sm" aria-label={alt}>
+      <Link href={href} className="focus-ring block rounded-sm" aria-label={alt}>
         {content}
       </Link>
     );

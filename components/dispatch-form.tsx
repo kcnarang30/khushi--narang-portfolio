@@ -10,7 +10,7 @@ import { PhysicalButton } from "./physical-button";
  * own docs: "You can use it in client side code") — it's tied to where
  * submissions land, not a secret that grants access to anything.
  */
-const WEB3FORMS_ACCESS_KEY = "cf83921f-fb6f-4e1d-a152-2c733b33e3ea";
+const WEB3FORMS_ACCESS_KEY = "70b091c7-9183-4ed0-954a-e2a48bf7715f";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -140,8 +140,8 @@ export function DispatchForm() {
         {status === "error" && (
           <p className="font-mono text-[10.5px] text-ember">
             That didn&rsquo;t go through — email me directly instead:{" "}
-            <a href="mailto:kcnarang3@gmail.com" className="underline">
-              kcnarang3@gmail.com
+            <a href="mailto:khushi.c.narang@gmail.com" className="underline">
+              khushi.c.narang@gmail.com
             </a>
           </p>
         )}

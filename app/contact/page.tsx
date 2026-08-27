@@ -12,9 +12,9 @@ export default function ContactPage() {
     <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8 sm:py-20">
       <Reveal>
         <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">Contact</p>
-        <h1 className="mt-2 font-display text-4xl font-bold sm:text-6xl">
+        <h1 className="mt-2 font-poster uppercase leading-[0.9] tracking-tight text-fg [font-size:clamp(2.75rem,8vw,5.25rem)]">
           Let&rsquo;s talk.{" "}
-          <Handwritten rotate={-3} className="text-2xl sm:text-3xl">
+          <Handwritten rotate={-3} className="font-pen text-2xl normal-case sm:text-3xl">
             seriously, say hi
           </Handwritten>
         </h1>

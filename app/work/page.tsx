@@ -14,32 +14,39 @@ export default function WorkPage() {
   const archive = getArchive();
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-      <Reveal>
-        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-          <span className="rounded-sm border border-line px-1.5 py-0.5">/work</span>
-          <span>Case files</span>
-        </div>
-        <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold sm:text-5xl">
-          Featured case studies, and the spotlight work sitting right behind them.
-        </h1>
-      </Reveal>
-
-      {/* FEATURED */}
-      <div className="mt-20 flex flex-col gap-24 sm:gap-32">
-        {featured.map((p, i) => (
-          <div key={p.slug}>
-            <p className="mb-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg-dim">
-              <span className="tnum text-accent">{String(i + 1).padStart(2, "0")}</span>
-              {" / "}
-              {p.category.replace("-", " ")}
-              {p.year ? ` · ${p.year}` : ""}
-            </p>
-            <FeaturedProject project={p} />
+    <div>
+      <div className="mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-20">
+        <Reveal>
+          <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-fg-dim">
+            <span className="rounded-sm border border-line px-1.5 py-0.5">/work</span>
+            <span>Case files</span>
           </div>
-        ))}
+          <h1 className="mt-3 max-w-2xl font-display font-bold leading-[0.98] tracking-tight text-fg [font-size:clamp(2.25rem,6.5vw,4.25rem)]">
+            Featured case studies, and the spotlight work sitting right behind them.
+          </h1>
+        </Reveal>
       </div>
 
+      {/* FEATURED — an archive drawer on the desk */}
+      <div className="desk-environment relative mt-16 overflow-hidden py-16 sm:py-24">
+        <span className="desk-crosshair" style={{ top: 20, left: 20 }} aria-hidden />
+        <span className="desk-crosshair" style={{ top: 20, right: 20 }} aria-hidden />
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-24 px-5 sm:gap-32 sm:px-8">
+          {featured.map((p, i) => (
+            <div key={p.slug} className={i % 2 === 1 ? "sm:ml-10" : ""}>
+              <p className="mb-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg-muted">
+                <span className="tnum text-accent">{String(i + 1).padStart(2, "0")}</span>
+                {" / "}
+                {p.category.replace("-", " ")}
+                {p.year ? ` · ${p.year}` : ""}
+              </p>
+              <FeaturedProject project={p} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 pb-20 sm:px-8 sm:pb-24">
       {/* SPOTLIGHT */}
       <div className="mt-28">
         <Reveal>
@@ -98,6 +105,7 @@ export default function WorkPage() {
             </span>
           </Link>
         </Reveal>
+      </div>
       </div>
     </div>
   );
