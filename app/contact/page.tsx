@@ -4,6 +4,7 @@ import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
 import { NokiaPhone } from "@/components/nokia-phone";
 import { PhysicalButton } from "@/components/physical-button";
+import { DispatchForm } from "@/components/dispatch-form";
 
 export const metadata: Metadata = { title: "Contact" };
 
@@ -41,85 +42,7 @@ export default function ContactPage() {
           </Reveal>
 
           <Reveal delay={0.08}>
-          <form
-            id="dispatch-form"
-            action={`mailto:${links.email}`}
-            method="post"
-            encType="text/plain"
-            className="scroll-mt-24 rounded-md border border-line-strong bg-paper p-6 text-bg shadow-[0_30px_60px_-30px_rgba(0,0,0,0.5)] sm:p-8"
-          >
-            <div className="flex items-center justify-between border-b border-bg/10 pb-4">
-              <p className="font-display text-lg font-bold">Dispatch Messenger</p>
-              <span className="rounded-sm border border-ember px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-ember">
-                Dispatch
-              </span>
-            </div>
-
-            <div className="mt-6 flex flex-col gap-5">
-              <label className="block">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-bg/60">
-                  Your name / team
-                </span>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  minLength={2}
-                  maxLength={80}
-                  autoComplete="name"
-                  title="At least 2 characters"
-                  placeholder="Enter your full name…"
-                  className="focus-ring mt-1.5 w-full rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40"
-                />
-              </label>
-              <label className="block">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-bg/60">
-                  Email address
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  maxLength={100}
-                  autoComplete="email"
-                  title="A valid email address, like you@example.com"
-                  placeholder="you@example.com"
-                  className="focus-ring mt-1.5 w-full rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40"
-                />
-              </label>
-              <label className="block">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-bg/60">
-                  What are we building together?
-                </span>
-                <textarea
-                  name="message"
-                  required
-                  minLength={10}
-                  maxLength={2000}
-                  rows={4}
-                  title="At least 10 characters — enough to say what you have in mind"
-                  placeholder="Tell me about it…"
-                  className="focus-ring mt-1.5 w-full resize-none rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40"
-                />
-              </label>
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-              <Handwritten rotate={-2} className="text-lg">
-                P.S. I reply fast
-              </Handwritten>
-              <PhysicalButton
-                type="submit"
-                className="bg-ember text-black shadow-[0_3px_0_0_var(--ember-dim)] active:shadow-[0_1px_0_0_var(--ember-dim)]"
-              >
-                Send Dispatch
-              </PhysicalButton>
-            </div>
-            <p className="mt-4 font-mono text-[10px] text-bg/40">
-              Opens your email client with this pre-filled — there&rsquo;s no backend wired up yet,
-              so nothing is silently lost.
-            </p>
-          </form>
+            <DispatchForm />
           </Reveal>
         </div>
       </div>
