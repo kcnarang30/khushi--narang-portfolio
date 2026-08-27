@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat } from "next/font/google";
+import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat, VT323 } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
@@ -37,6 +37,13 @@ const caveat = Caveat({
   weight: ["600", "700"],
 });
 
+// Real LCD-screen pixel font — scoped to the Nokia phone's screen only.
+const vt323 = VT323({
+  variable: "--font-vt323",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Khushi Narang — Product Designer",
@@ -56,7 +63,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable}`}>
+    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable} ${vt323.variable}`}>
       <body className="antialiased">
         <a
           href="#main"
