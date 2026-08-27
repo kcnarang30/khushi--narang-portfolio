@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type RefObject } from "react";
 import { motion, useAnimation, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { links } from "@/data/links";
@@ -11,8 +10,8 @@ import { links } from "@/data/links";
  * site's actual font, not a generic mono), normal-case Plex Sans on the
  * buttons at real size (not tiny tracked-out caption text), amber for the
  * CTA (matching the real site's gold, not the portfolio's coral). Every
- * action is real: mailto, external social links, and a scroll to the real
- * dispatch form.
+ * action is real: mailto, external social links, and Contact Me opens the
+ * real Dispatch Messenger form as a popup.
  *
  * Draggable within its stage (containerRef) the same way the reference
  * site's phone is — a real physical object, not a static card. Three
@@ -41,11 +40,11 @@ function useClock() {
 }
 
 export function NokiaPhone({
-  formAnchorId,
+  onContactClick,
   className,
   containerRef,
 }: {
-  formAnchorId?: string;
+  onContactClick?: () => void;
   className?: string;
   containerRef?: RefObject<HTMLElement | null>;
 }) {
@@ -135,6 +134,7 @@ export function NokiaPhone({
               <p className="text-[18px] leading-none text-black/60 sm:text-[20px]">Contact me via email</p>
               <a
                 href={`mailto:${links.email}`}
+                onPointerDown={(e) => e.stopPropagation()}
                 className="focus-ring mt-2 inline-block break-all rounded-sm text-[26px] leading-none text-black underline decoration-black/30 underline-offset-4 hover:decoration-black sm:text-[32px]"
               >
                 {links.email}
@@ -156,6 +156,7 @@ export function NokiaPhone({
               href={links.behance}
               target="_blank"
               rel="noopener noreferrer"
+              onPointerDown={(e) => e.stopPropagation()}
               className="focus-ring flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-bg-raised-2 font-body text-[14px] font-medium text-fg-muted transition-all hover:text-fg active:scale-90"
             >
               Be
@@ -164,16 +165,19 @@ export function NokiaPhone({
               href={links.instagram}
               target="_blank"
               rel="noopener noreferrer"
+              onPointerDown={(e) => e.stopPropagation()}
               className="focus-ring flex h-11 shrink-0 items-center justify-center rounded-full bg-bg-raised-2 px-4 font-body text-[14px] font-medium text-fg-muted transition-all hover:text-fg active:scale-90"
             >
               Instagram
             </a>
-            <Link
-              href={formAnchorId ? `#${formAnchorId}` : "#"}
+            <button
+              type="button"
+              onClick={onContactClick}
+              onPointerDown={(e) => e.stopPropagation()}
               className="focus-ring ml-auto flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-live-signal px-5 font-body text-[13px] font-semibold text-black transition-transform hover:brightness-105 active:translate-y-[2px] sm:text-[14px]"
             >
               Contact Me
-            </Link>
+            </button>
           </div>
         </motion.div>
       </motion.div>

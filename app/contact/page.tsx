@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { links } from "@/data/links";
 import { Reveal } from "@/components/reveal";
 import { Handwritten } from "@/components/handwritten";
-import { PhoneStage } from "@/components/phone-stage";
+import { ContactDispatch } from "@/components/contact-dispatch";
 import { PhysicalButton } from "@/components/physical-button";
-import { DispatchForm } from "@/components/dispatch-form";
 
 export const metadata: Metadata = { title: "Contact" };
 
@@ -27,21 +26,11 @@ export default function ContactPage() {
 
       <Reveal>
         <div className="relative mt-14">
-          <PhoneStage formAnchorId="dispatch-form" />
-          <p className="mt-5 flex items-center gap-2 rounded-sm border border-line px-3 py-2.5 font-mono text-[11px] text-fg-muted">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live-signal" aria-hidden />
-            Currently open to freelance contracts and full-time roles.
-          </p>
+          <ContactDispatch />
         </div>
       </Reveal>
 
       <Reveal delay={0.08}>
-        <div className="mt-14 max-w-2xl">
-          <DispatchForm />
-        </div>
-      </Reveal>
-
-      <Reveal delay={0.12}>
         <div className="mt-16 flex flex-wrap items-center gap-3 border-t border-line pt-8">
           <PhysicalButton href={links.behance} external variant="paper">
             Behance

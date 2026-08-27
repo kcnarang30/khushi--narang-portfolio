@@ -46,13 +46,13 @@ export function DispatchForm() {
 
   return (
     <form
-      id="dispatch-form"
       onSubmit={handleSubmit}
-      className="scroll-mt-24 rounded-md border border-line-strong bg-paper p-6 text-bg shadow-[0_30px_60px_-30px_rgba(0,0,0,0.5)] sm:p-8"
+      className="grain-card w-full rounded-[24px] border border-line-strong bg-bg-raised p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)] sm:p-8"
     >
-      <div className="flex items-center justify-between border-b border-bg/10 pb-4">
-        <p className="font-display text-lg font-bold">Dispatch Messenger</p>
-        <span className="rounded-sm border border-ember px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-ember">
+      <div className="flex items-center justify-between border-b border-line pb-4">
+        <p className="font-display text-lg font-bold text-fg">Dispatch Messenger</p>
+        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-fg-dim">
+          <span className="h-1.5 w-1.5 rounded-full bg-live-signal" aria-hidden />
           Dispatch
         </span>
       </div>
@@ -69,7 +69,7 @@ export function DispatchForm() {
 
       <div className="mt-6 flex flex-col gap-5">
         <label className="block">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-bg/60">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
             Your name / team
           </span>
           <input
@@ -82,11 +82,11 @@ export function DispatchForm() {
             title="At least 2 characters"
             placeholder="Enter your full name…"
             disabled={status === "sending"}
-            className="focus-ring mt-1.5 w-full rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40 disabled:opacity-60"
+            className="focus-ring mt-1.5 w-full rounded-sm border border-line-strong bg-bg-raised-2 px-3 py-2.5 text-[14px] text-fg placeholder:text-fg-dim disabled:opacity-60"
           />
         </label>
         <label className="block">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-bg/60">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
             Email address
           </span>
           <input
@@ -98,11 +98,11 @@ export function DispatchForm() {
             title="A valid email address, like you@example.com"
             placeholder="you@example.com"
             disabled={status === "sending"}
-            className="focus-ring mt-1.5 w-full rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40 disabled:opacity-60"
+            className="focus-ring mt-1.5 w-full rounded-sm border border-line-strong bg-bg-raised-2 px-3 py-2.5 text-[14px] text-fg placeholder:text-fg-dim disabled:opacity-60"
           />
         </label>
         <label className="block">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-bg/60">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
             What are we building together?
           </span>
           <textarea
@@ -114,7 +114,7 @@ export function DispatchForm() {
             title="At least 10 characters — enough to say what you have in mind"
             placeholder="Tell me about it…"
             disabled={status === "sending"}
-            className="focus-ring mt-1.5 w-full resize-none rounded-sm border border-bg/15 bg-paper-dark/30 px-3 py-2.5 text-[14px] text-bg placeholder:text-bg/40 disabled:opacity-60"
+            className="focus-ring mt-1.5 w-full resize-none rounded-sm border border-line-strong bg-bg-raised-2 px-3 py-2.5 text-[14px] text-fg placeholder:text-fg-dim disabled:opacity-60"
           />
         </label>
       </div>
@@ -125,7 +125,7 @@ export function DispatchForm() {
         </Handwritten>
         <PhysicalButton
           type="submit"
-          className="bg-ember text-black shadow-[0_3px_0_0_var(--ember-dim)] active:shadow-[0_1px_0_0_var(--ember-dim)] disabled:opacity-60"
+          className="bg-live-signal text-black shadow-[0_3px_0_0_#8a6423] active:shadow-[0_1px_0_0_#8a6423] disabled:opacity-60"
         >
           {status === "sending" ? "Sending…" : "Send Dispatch"}
         </PhysicalButton>
@@ -133,12 +133,12 @@ export function DispatchForm() {
 
       <div aria-live="polite" className="mt-4">
         {status === "success" && (
-          <p className="font-mono text-[10.5px] text-accent-dim">
+          <p className="font-mono text-[10.5px] text-accent">
             Sent — landed straight in my inbox. I&rsquo;ll get back to you soon.
           </p>
         )}
         {status === "error" && (
-          <p className="font-mono text-[10.5px] text-ember-dim">
+          <p className="font-mono text-[10.5px] text-ember">
             That didn&rsquo;t go through — email me directly instead:{" "}
             <a href="mailto:kcnarang3@gmail.com" className="underline">
               kcnarang3@gmail.com
@@ -146,7 +146,7 @@ export function DispatchForm() {
           </p>
         )}
         {status === "idle" && (
-          <p className="font-mono text-[10px] text-bg/40">
+          <p className="font-mono text-[10px] text-fg-dim">
             Sends straight to my inbox — no email client popup, no backend to babysit.
           </p>
         )}

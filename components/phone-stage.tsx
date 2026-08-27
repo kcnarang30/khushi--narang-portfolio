@@ -16,10 +16,10 @@ const MARQUEE_TEXT = "Contact me • ".repeat(10);
  * card inside the page's normal content column.
  */
 export function PhoneStage({
-  formAnchorId,
+  onContactClick,
   className,
 }: {
-  formAnchorId?: string;
+  onContactClick?: () => void;
   className?: string;
 }) {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -49,7 +49,7 @@ export function PhoneStage({
       </div>
 
       <NokiaPhone
-        formAnchorId={formAnchorId}
+        onContactClick={onContactClick}
         containerRef={stageRef}
         className="w-full max-w-[380px] shrink-0 sm:max-w-[440px]"
       />
