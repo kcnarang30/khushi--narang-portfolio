@@ -16,7 +16,6 @@ import { ConsolePing } from "./console-ping";
 import { Draggable } from "./draggable";
 import { Sticker } from "./sticker";
 import { ImagePlaceholder } from "./image-placeholder";
-import { cn } from "@/lib/utils";
 
 /**
  * Not a portfolio section — a desk. Every real playground piece gets its
@@ -25,8 +24,14 @@ import { cn } from "@/lib/utils";
  * images and copy all come from data/projects.ts; the handwritten notes
  * are honest reactions to real status (a "concept" stays a concept), not
  * claims about a process no one can verify. Everything on the board is
- * draggable, including the real pieces — content-bearing ones stay in the
- * accessibility tree (the drag is a bonus, not a way to hide the content).
+ * draggable — content-bearing pieces stay in the accessibility tree, the
+ * drag is a bonus, not a way to hide the content.
+ *
+ * Every object here is a plain <Draggable> positioned directly (no nested
+ * scroll-reveal animation) — Framer Motion's `drag` and a `whileInView`
+ * `animate` fight over the same x/y motion values when stacked on one
+ * element or nested across two, so it's left out here in favour of the
+ * drag actually working everywhere, which is the part that matters.
  */
 
 const knwn = getPlayground().find((p) => p.slug === "knwn")!;
@@ -35,10 +40,23 @@ const greekComics = getPlayground().find((p) => p.slug === "greek-comics")!;
 const internetMagazine = getPlayground().find((p) => p.slug === "internet-magazine")!;
 const sipCoffee = getPlayground().find((p) => p.slug === "sip-coffee")!;
 
-/** A little pinned/taped label with a real one-liner — never a big caption block. */
-function Tag({ text, className }: { text: string; className?: string }) {
+/** A little paper label carrying a real one-liner — never bare text floating on cork. */
+function Tag({ text, name, status, rotate = -1, className }: { text: string; name?: string; status?: string; rotate?: number; className?: string }) {
   return (
-    <p className={cn("max-w-[13rem] font-mono text-[10px] leading-snug text-white/55", className)}>{text}</p>
+    <div
+      className={`grain-paper inline-block max-w-[14rem] bg-paper px-2.5 py-2 shadow-[0_10px_20px_-12px_rgba(0,0,0,0.45)] ${className ?? ""}`}
+      style={{ transform: `rotate(${rotate}deg)` }}
+    >
+      {name && (
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="font-display text-sm font-bold leading-tight text-bg">{name}</p>
+          {status && (
+            <span className="shrink-0 font-mono text-[8.5px] uppercase tracking-widest text-bg/45">{status}</span>
+          )}
+        </div>
+      )}
+      <p className={`font-mono text-[10px] leading-snug text-bg/65 ${name ? "mt-1" : ""}`}>{text}</p>
+    </div>
   );
 }
 
@@ -56,9 +74,9 @@ function FloppyScrap({ color, title }: { color: string; title: string }) {
 }
 
 /** An empty slot, honestly labelled, waiting for a real image — not a fake project. */
-function PendingScrap({ label, rotate = -3, className }: { label: string; rotate?: number; className?: string }) {
+function PendingScrap({ label, rotate = -3 }: { label: string; rotate?: number }) {
   return (
-    <div className={className} style={{ transform: `rotate(${rotate}deg)` }}>
+    <div style={{ transform: `rotate(${rotate}deg)` }}>
       <PaperClip rotate={rotate * 2} className="-left-3 -top-3 h-9 w-9" />
       <div className="bg-white p-2 shadow-[0_18px_34px_-16px_rgba(0,0,0,0.5)]">
         <ImagePlaceholder label={label} aspect="aspect-[4/5]" className="w-40" />
@@ -90,34 +108,19 @@ export function PlaygroundCanvas() {
 
           <Draggable
             containerRef={deskRef}
-            reveal
-            revealDelay={0.15}
-            revealFrom={{ y: -14, rotate: -8, scale: 0.8 }}
             contentBearing
             className="right-[8%] top-[13%] hidden w-28 sm:block sm:right-[16%] sm:top-[8%]"
           >
             <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-8} sizes="112px" />
           </Draggable>
 
-          <Draggable
-            containerRef={deskRef}
-            reveal
-            revealDelay={0.25}
-            revealFrom={{ y: 12, rotate: 4, scale: 0.85 }}
-            className="left-[6%] top-[16%] sm:left-[12%] sm:top-[24%]"
-          >
+          <Draggable containerRef={deskRef} extraTilt={4} className="left-[6%] top-[16%] sm:left-[12%] sm:top-[24%]">
             <PaperNote rotate={4} className="w-36 sm:w-40">
               <p className="font-pen text-base leading-tight">why did I make this?</p>
             </PaperNote>
           </Draggable>
 
-          <Draggable
-            containerRef={deskRef}
-            reveal
-            revealDelay={0.3}
-            revealFrom={{ y: 10, rotate: -3 }}
-            className="right-[6%] top-[18%] sm:right-[24%] sm:top-[22%]"
-          >
+          <Draggable containerRef={deskRef} contentBearing className="right-[6%] top-[18%] sm:right-[24%] sm:top-[22%]">
             <ConsolePing />
           </Draggable>
 
@@ -132,9 +135,8 @@ export function PlaygroundCanvas() {
           {/* knwn — the big one, pinned flat, no border pretending to be a frame */}
           <Draggable
             containerRef={deskRef}
-            reveal
-            revealFrom={{ x: -24, rotate: -6 }}
             contentBearing
+            extraTilt={-3}
             className="left-[3%] top-[21%] w-[74%] sm:left-[4%] sm:top-[30%] sm:w-[26rem]"
           >
             <div style={{ transform: "rotate(-2.5deg)" }}>
@@ -142,26 +144,18 @@ export function PlaygroundCanvas() {
               <PushPin color="yellow" size="1.2rem" className="-top-2 right-10" />
               <div className="border-[10px] border-white bg-white shadow-[0_28px_50px_-18px_rgba(0,0,0,0.6)]">
                 <div className="relative aspect-[4/5] w-full overflow-hidden">
-                  <Image src={knwn.coverImageSrc!} alt={knwn.name} fill sizes="420px" className="object-cover" />
+                  <Image src={knwn.coverImageSrc!} alt={knwn.name} fill sizes="420px" className="object-cover"  draggable={false} />
                 </div>
               </div>
-              <div className="mt-2 flex items-baseline justify-between gap-3">
-                <p className="font-display text-base font-bold text-white">{knwn.name}</p>
-                <span className="shrink-0 font-mono text-[9px] uppercase tracking-widest text-white/40">
-                  {knwn.status}
-                </span>
-              </div>
-              <Tag text={knwn.oneLiner} />
+              <Tag text={knwn.oneLiner} name={knwn.name} status={knwn.status} rotate={1} className="mt-2" />
             </div>
           </Draggable>
 
           {/* internet-magazine — tucked half under cyber-angel, torn top edge */}
           <Draggable
             containerRef={deskRef}
-            reveal
-            revealDelay={0.1}
-            revealFrom={{ x: 20, rotate: 5 }}
             contentBearing
+            extraTilt={5}
             className="left-[6%] top-[44%] w-[46%] sm:left-[36%] sm:top-[28%] sm:w-52"
           >
             <div style={{ transform: "rotate(4deg)" }}>
@@ -174,20 +168,18 @@ export function PlaygroundCanvas() {
                     fill
                     sizes="220px"
                     className="object-cover"
-                  />
+                   draggable={false} />
                 </div>
               </div>
-              <Tag text={internetMagazine.oneLiner} className="mt-2" />
+              <Tag text={internetMagazine.oneLiner} name={internetMagazine.name} status={internetMagazine.status} rotate={-1} className="mt-2" />
             </div>
           </Draggable>
 
           {/* cyber-angel — taped, tilted harder, with a real reaction note */}
           <Draggable
             containerRef={deskRef}
-            reveal
-            revealDelay={0.15}
-            revealFrom={{ x: 26, rotate: 8 }}
             contentBearing
+            extraTilt={8}
             className="right-[4%] top-[34%] w-[58%] sm:right-[8%] sm:top-[32%] sm:w-64"
           >
             <div style={{ transform: "rotate(6deg)" }}>
@@ -195,23 +187,21 @@ export function PlaygroundCanvas() {
               <Tape rotate={5} className="-top-2.5 right-6 w-14" />
               <div className="bg-white p-2 shadow-[0_26px_48px_-16px_rgba(0,0,0,0.6)]">
                 <div className="relative aspect-[3/4] w-full overflow-hidden">
-                  <Image src={cyberAngel.coverImageSrc!} alt={cyberAngel.name} fill sizes="260px" className="object-cover" />
+                  <Image src={cyberAngel.coverImageSrc!} alt={cyberAngel.name} fill sizes="260px" className="object-cover"  draggable={false} />
                 </div>
               </div>
               <Marginalia rotate={-4} className="mt-2">
                 made this at 2am
               </Marginalia>
-              <Tag text={cyberAngel.oneLiner} className="mt-1" />
+              <Tag text={cyberAngel.oneLiner} name={cyberAngel.name} status={cyberAngel.status} rotate={2} className="mt-1" />
             </div>
           </Draggable>
 
           {/* greek-comics — stacked, suggesting a series, not a one-off */}
           <Draggable
             containerRef={deskRef}
-            reveal
-            revealDelay={0.2}
-            revealFrom={{ y: 26, rotate: -4 }}
             contentBearing
+            extraTilt={-4}
             className="left-[5%] top-[64%] w-[62%] sm:left-[4%] sm:top-[62%] sm:w-56"
           >
             <div style={{ transform: "rotate(-3deg)" }}>
@@ -225,21 +215,19 @@ export function PlaygroundCanvas() {
                       fill
                       sizes="230px"
                       className="object-cover"
-                    />
+                     draggable={false} />
                   </div>
                 </div>
               </PaperStack>
-              <Tag text={greekComics.oneLiner} className="mt-2" />
+              <Tag text={greekComics.oneLiner} name={greekComics.name} status={greekComics.status} rotate={-1} className="mt-2" />
             </div>
           </Draggable>
 
           {/* sip-coffee — the honest half-finished one, small and taped, said so out loud */}
           <Draggable
             containerRef={deskRef}
-            reveal
-            revealDelay={0.25}
-            revealFrom={{ x: -18, rotate: -6 }}
             contentBearing
+            extraTilt={-6}
             className="right-[6%] top-[62%] w-[48%] sm:right-[12%] sm:top-[60%] sm:w-48"
           >
             <div style={{ transform: "rotate(3deg)" }}>
@@ -252,44 +240,27 @@ export function PlaygroundCanvas() {
                     fill
                     sizes="200px"
                     className="object-contain p-2"
-                  />
+                   draggable={false} />
                 </div>
               </div>
               <Marginalia rotate={3} className="mt-1.5">
                 still thinking about this
               </Marginalia>
+              <Tag text={sipCoffee.oneLiner} name={sipCoffee.name} status={sipCoffee.status} rotate={-2} className="mt-2" />
             </div>
           </Draggable>
 
           {/* two open slots — real pieces to come, honestly marked, not invented */}
-          <Draggable
-            containerRef={deskRef}
-            reveal
-            revealDelay={0.1}
-            revealFrom={{ y: 18, rotate: 5 }}
-            className="left-[8%] top-[82%] sm:left-[58%] sm:top-[46%]"
-          >
+          <Draggable containerRef={deskRef} extraTilt={5} className="left-[8%] top-[82%] sm:left-[58%] sm:top-[46%]">
             <PendingScrap label="more coming" rotate={5} />
           </Draggable>
 
-          <Draggable
-            containerRef={deskRef}
-            reveal
-            revealDelay={0.15}
-            revealFrom={{ y: 18, rotate: -6 }}
-            className="right-[6%] top-[89%] sm:left-[64%] sm:top-[68%]"
-          >
+          <Draggable containerRef={deskRef} extraTilt={-6} className="right-[6%] top-[89%] sm:left-[64%] sm:top-[68%]">
             <PendingScrap label="more coming" rotate={-6} />
           </Draggable>
 
           {/* the closing scrap — an honest instruction, not a section header */}
-          <Draggable
-            containerRef={deskRef}
-            reveal
-            revealDelay={0.1}
-            revealFrom={{ y: 16, rotate: -3 }}
-            className="left-[4%] top-[97%] sm:left-[6%] sm:top-[86%]"
-          >
+          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[4%] top-[97%] sm:left-[6%] sm:top-[86%]">
             <PaperNote rotate={-3} className="w-40 sm:w-44">
               <p className="font-pen text-base leading-tight">go ahead — move these around.</p>
             </PaperNote>
