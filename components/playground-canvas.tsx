@@ -109,25 +109,25 @@ export function PlaygroundCanvas() {
           <Draggable
             containerRef={deskRef}
             contentBearing
-            className="hidden w-28 sm:block sm:left-[4.7%] sm:top-[14.6%]"
+            className="hidden w-28 sm:block sm:left-[4.7%] sm:top-[16%]"
           >
             <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-8} sizes="112px" />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={4} className="left-[6%] top-[6.8%] sm:left-[21.4%] sm:top-[14.6%]">
+          <Draggable containerRef={deskRef} extraTilt={4} className="left-[6%] top-[6.8%] sm:left-[21.4%] sm:top-[16%]">
             <PaperNote rotate={4} className="w-36 sm:w-40">
               <p className="font-pen text-base leading-tight">why did I make this?</p>
             </PaperNote>
           </Draggable>
 
-          <Draggable containerRef={deskRef} contentBearing className="left-[6%] top-[9.1%] sm:left-[43.7%] sm:top-[14.6%]">
+          <Draggable containerRef={deskRef} contentBearing className="left-[6%] top-[9.1%] sm:left-[43.7%] sm:top-[16%]">
             <ConsolePing />
           </Draggable>
 
           {/* ── THE DESK — one continuous surface, nothing shares a shape ── */}
           <p
             aria-hidden
-            className="pointer-events-none absolute left-1 top-[10.5%] font-mono text-[9px] uppercase tracking-widest text-white/35 sm:top-[21%]"
+            className="pointer-events-none absolute left-1 top-[10.5%] font-mono text-[9px] uppercase tracking-widest text-white/35 sm:top-[22.4%]"
           >
             everything below is real — nothing staged for the photo
           </p>
@@ -137,7 +137,7 @@ export function PlaygroundCanvas() {
             containerRef={deskRef}
             contentBearing
             extraTilt={-3}
-            className="left-[6%] top-[11.3%] w-[74%] sm:left-[4.7%] sm:top-[22.9%] sm:w-[26rem]"
+            className="left-[6%] top-[11.3%] w-[74%] sm:left-[4.7%] sm:top-[24.3%] sm:w-[26rem]"
           >
             <div style={{ transform: "rotate(-2.5deg)" }}>
               <PushPin color="yellow" size="1.2rem" className="-top-2 left-10" />
@@ -156,7 +156,7 @@ export function PlaygroundCanvas() {
             containerRef={deskRef}
             contentBearing
             extraTilt={5}
-            className="left-[9%] top-[21.6%] w-[46%] sm:left-[58%] sm:top-[22.9%] sm:w-52"
+            className="left-[9%] top-[21.6%] w-[46%] sm:left-[58%] sm:top-[24.3%] sm:w-52"
           >
             <div style={{ transform: "rotate(4deg)" }}>
               <PaperClip rotate={-14} className="-left-3 -top-3 h-9 w-9" />
@@ -180,7 +180,7 @@ export function PlaygroundCanvas() {
             containerRef={deskRef}
             contentBearing
             extraTilt={8}
-            className="left-[5%] top-[29.8%] w-[58%] sm:left-[60%] sm:top-[36.5%] sm:w-64"
+            className="left-[5%] top-[29.8%] w-[58%] sm:left-[60%] sm:top-[37.9%] sm:w-64"
           >
             <div style={{ transform: "rotate(6deg)" }}>
               <Tape rotate={-6} className="-top-2.5 left-6 w-14" />
@@ -202,7 +202,7 @@ export function PlaygroundCanvas() {
             containerRef={deskRef}
             contentBearing
             extraTilt={-4}
-            className="left-[9%] top-[40.4%] w-[62%] sm:left-[7.5%] sm:top-[49.1%] sm:w-56"
+            className="left-[9%] top-[40.4%] w-[62%] sm:left-[7.5%] sm:top-[50.5%] sm:w-56"
           >
             <div style={{ transform: "rotate(-3deg)" }}>
               <PaperStack layers={2} sheetClassName="bg-paper" className="w-full">
@@ -228,7 +228,7 @@ export function PlaygroundCanvas() {
             containerRef={deskRef}
             contentBearing
             extraTilt={-6}
-            className="left-[11%] top-[50.1%] w-[48%] sm:left-[54%] sm:top-[56%] sm:w-48"
+            className="left-[11%] top-[50.1%] w-[48%] sm:left-[54%] sm:top-[57.4%] sm:w-48"
           >
             <div style={{ transform: "rotate(3deg)" }}>
               <Tape rotate={-4} className="-top-2 left-1/2 w-12 -translate-x-1/2" />
@@ -251,39 +251,39 @@ export function PlaygroundCanvas() {
           </Draggable>
 
           {/* two open slots — real pieces to come, honestly marked, not invented */}
-          <Draggable containerRef={deskRef} extraTilt={5} className="left-[10%] top-[58.6%] sm:left-[8%] sm:top-[65.1%]">
+          <Draggable containerRef={deskRef} extraTilt={5} className="left-[10%] top-[58.6%] sm:left-[8%] sm:top-[66.5%]">
             <PendingScrap label="more coming" rotate={5} />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={-6} className="left-[8%] top-[64.3%] sm:left-[58.5%] sm:top-[67.7%]">
+          <Draggable containerRef={deskRef} extraTilt={-6} className="left-[8%] top-[64.3%] sm:left-[58.5%] sm:top-[69.1%]">
             <PendingScrap label="more coming" rotate={-6} />
           </Draggable>
 
           {/* the closing scrap — an honest instruction, not a section header */}
-          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[12%] top-[70.9%] sm:left-[10%] sm:top-[75.2%]">
+          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[12%] top-[70.9%] sm:left-[10%] sm:top-[76.6%]">
             <PaperNote rotate={-3} className="w-40 sm:w-44">
               <p className="font-pen text-base leading-tight">go ahead — move these around.</p>
             </PaperNote>
           </Draggable>
 
           {/* ── retro-tech corner ── */}
-          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[7%] top-[74.5%] sm:left-[6%] sm:top-[80.7%]">
+          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[7%] top-[74.5%] sm:left-[6%] sm:top-[82.1%]">
             <GameBoy />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={-3} className="left-[6%] top-[83.4%] sm:left-[40%] sm:top-[85.9%]">
+          <Draggable containerRef={deskRef} extraTilt={-3} className="left-[6%] top-[83.4%] sm:left-[40%] sm:top-[87.3%]">
             <CassetteDeck containerRef={deskRef} />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={5} className="left-[6%] top-[91.6%] sm:left-[75%] sm:top-[80.7%]">
+          <Draggable containerRef={deskRef} extraTilt={5} className="left-[6%] top-[91.6%] sm:left-[75%] sm:top-[82.1%]">
             <FloppyScrap color="var(--floppy-3)" title="misc." />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={4} className="left-[44%] top-[91.6%] sm:left-[79%] sm:top-[84.9%]">
+          <Draggable containerRef={deskRef} extraTilt={4} className="left-[44%] top-[91.6%] sm:left-[79%] sm:top-[86.3%]">
             <FloppyScrap color="var(--floppy-1)" title="backup — do not lose" />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={-7} className="left-[10%] top-[95.1%] sm:left-[74%] sm:top-[89.8%]">
+          <Draggable containerRef={deskRef} extraTilt={-7} className="left-[10%] top-[95.1%] sm:left-[74%] sm:top-[91.2%]">
             <FloppyScrap color="var(--floppy-4)" title="scrapped ideas" />
           </Draggable>
 
