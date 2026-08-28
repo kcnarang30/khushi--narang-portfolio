@@ -95,7 +95,7 @@ export function PlaygroundCanvas() {
         <Sticker variant="smiley" color="var(--bright-blue)" rotate={9} size="2.25rem" className="right-8 top-28 sm:right-14" />
         <Sticker variant="star" color="var(--bright-green)" rotate={16} size="2rem" className="bottom-24 left-10 hidden sm:block" />
 
-        <div ref={deskRef} className="relative mx-auto h-[210rem] max-w-[92rem] px-5 pb-24 pt-16 sm:h-[118rem] sm:px-10 sm:pt-24">
+        <div ref={deskRef} className="relative mx-auto h-[270rem] max-w-[92rem] px-5 pb-24 pt-16 sm:h-[118rem] sm:px-10 sm:pt-24">
           {/* ── HERO — huge type sitting directly on the board ── */}
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">Playground</p>
           <h1 className="mt-2 max-w-3xl font-poster uppercase leading-[0.82] text-paper [font-size:clamp(2.6rem,9vw,6.5rem)]">
@@ -267,23 +267,23 @@ export function PlaygroundCanvas() {
           </Draggable>
 
           {/* ── retro-tech corner ── */}
-          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[4%] top-[104%] sm:left-[38%] sm:top-[84%]">
+          <Draggable containerRef={deskRef} extraTilt={-4} className="left-[4%] top-[81%] sm:left-[38%] sm:top-[84%]">
             <GameBoy />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={-3} className="right-[8%] top-[110%] sm:right-[6%] sm:top-[80%]">
+          <Draggable containerRef={deskRef} extraTilt={-3} className="right-[8%] top-[86%] sm:right-[6%] sm:top-[80%]">
             <CassetteDeck containerRef={deskRef} />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={5} className="left-[10%] top-[121%] sm:left-[38%] sm:top-[104%]">
+          <Draggable containerRef={deskRef} extraTilt={5} className="left-[10%] top-[93%] sm:left-[38%] sm:top-[91%]">
             <FloppyScrap color="var(--floppy-3)" title="misc." />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={4} className="right-[12%] top-[124%] sm:right-[26%] sm:top-[106%]">
+          <Draggable containerRef={deskRef} extraTilt={4} className="right-[12%] top-[95%] sm:right-[26%] sm:top-[93%]">
             <FloppyScrap color="var(--floppy-1)" title="backup — do not lose" />
           </Draggable>
 
-          <Draggable containerRef={deskRef} extraTilt={-7} className="left-[6%] top-[132%] sm:left-[54%] sm:top-[108%]">
+          <Draggable containerRef={deskRef} extraTilt={-7} className="left-[6%] top-[98%] sm:left-[54%] sm:top-[95%]">
             <FloppyScrap color="var(--floppy-4)" title="scrapped ideas" />
           </Draggable>
 
