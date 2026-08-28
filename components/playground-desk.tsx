@@ -40,10 +40,17 @@ export function DeskFloppy({
 /** A loose cassette tape, not docked in the deck — just clutter on the board. */
 function LooseCassette({ className }: { className?: string }) {
   return (
-    <div className={cn("w-24 rounded-[3px] bg-[#2a2a2a] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]", className)}>
-      <div className="flex items-center justify-between rounded-sm bg-[#e8dcc0] px-2.5 py-3">
-        <span className="h-3.5 w-3.5 rounded-full border-2 border-black/50" />
-        <span className="h-3.5 w-3.5 rounded-full border-2 border-black/50" />
+    <div className={cn("w-24 rounded-[3px] bg-[#242424] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]", className)}>
+      <div className="rounded-sm bg-[#e8dcc0] px-2 py-2">
+        <div className="flex items-center justify-between">
+          <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
+            <span className="h-[3px] w-[3px] rounded-full bg-black/50" />
+          </span>
+          <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
+            <span className="h-[3px] w-[3px] rounded-full bg-black/50" />
+          </span>
+        </div>
+        <div className="mx-auto mt-1 h-[2px] w-10 bg-black/30" />
       </div>
       <p className="mt-1 text-center font-pen text-[10px] leading-none text-white/70">side b</p>
     </div>
@@ -63,10 +70,17 @@ export function PlaygroundDesk() {
       </p>
 
       {/* Mobile: everything stacked in its own vertical band, nothing covers a
-          button. Desktop (sm+): the original scattered layout. */}
-      <div className="absolute left-1/2 top-[20%] -translate-x-1/2 -translate-y-1/2 sm:top-1/2">
+          button. Desktop (sm+): the original scattered layout. Positioned with
+          negative margin instead of a translate — Draggable's own transform
+          drives drag/hover, so a static translate on the same element would
+          fight it. */}
+      <Draggable
+        containerRef={deskRef}
+        className="left-1/2 top-[10%] -ml-[146px] sm:top-[26%]"
+        extraTilt={-4}
+      >
         <GameBoy />
-      </div>
+      </Draggable>
 
       <Draggable containerRef={deskRef} className="left-[4%] top-[2%] sm:top-[12%]" extraTilt={-6}>
         <Polaroid src="/about/ribbon-night.jpg" alt="" rotate={-7} sizes="128px" className="w-28" />
@@ -90,10 +104,13 @@ export function PlaygroundDesk() {
         </PaperNote>
       </Draggable>
 
-      <CassetteDeck
+      <Draggable
         containerRef={deskRef}
-        className="left-1/2 top-[50%] -translate-x-1/2 sm:left-auto sm:top-[42%] sm:right-[9%] sm:translate-x-0"
-      />
+        className="left-1/2 top-[50%] -ml-[56px] sm:left-auto sm:top-[42%] sm:right-[9%] sm:ml-0"
+        extraTilt={-3}
+      >
+        <CassetteDeck containerRef={deskRef} />
+      </Draggable>
     </div>
   );
 }

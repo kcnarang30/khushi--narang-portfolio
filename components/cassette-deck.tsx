@@ -120,36 +120,78 @@ export function CassetteDeck({
     <div className={cn("absolute", className)}>
       <div className="relative">
       {/* Player */}
-      <div className="grain-card w-28 rounded-md border border-line-strong p-3" style={{ background: "#5a4a3a" }}>
-        <p className="mb-2 text-center font-mono text-[7px] uppercase tracking-widest text-white/40">
-          desk deck
-        </p>
+      <div
+        className="grain-card w-36 rounded-lg border border-line-strong p-3.5 shadow-[0_20px_36px_-16px_rgba(0,0,0,0.55)]"
+        style={{ background: "linear-gradient(160deg, #4a4038 0%, #2e2822 100%)" }}
+      >
+        <div className="mb-2 flex items-center justify-between">
+          <p className="font-mono text-[7px] uppercase tracking-widest text-white/40">Desk Deck</p>
+          <span
+            aria-hidden
+            className="h-[5px] w-[5px] rounded-full"
+            style={{
+              background: docked ? "#ff5a5a" : "#3a332c",
+              boxShadow: docked ? "0 0 4px 1px rgba(255,90,90,0.7)" : "none",
+            }}
+          />
+        </div>
+
+        {/* Window — reels visible even empty, glassy inset look */}
         <div
           ref={slotRef}
-          className="flex h-10 items-center justify-center rounded-sm border-2 border-dashed"
+          className="relative flex h-11 items-center justify-center overflow-hidden rounded-[3px]"
           style={{
-            borderColor: docked ? "transparent" : "rgba(255,255,255,0.25)",
-            background: "#241c14",
+            background: "#151210",
+            boxShadow: "inset 0 2px 5px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.04)",
           }}
         >
           <span
+            aria-hidden
+            className="absolute left-3 h-4 w-4 rounded-full border-2"
+            style={{ borderColor: docked ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.12)" }}
+          />
+          <span
+            aria-hidden
+            className="absolute right-3 h-4 w-4 rounded-full border-2"
+            style={{ borderColor: docked ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.12)" }}
+          />
+          <span
             className={cn(
-              "font-mono text-[7.5px] uppercase tracking-widest text-white/50",
+              "relative font-mono text-[6.5px] uppercase tracking-widest text-white/45",
               docked && !reduce && "animate-pulse"
             )}
           >
             {docked ? "♪ playing" : "insert cassette"}
           </span>
         </div>
-        {docked && (
+
+        {/* Transport row — Eject is real, the rest are decorative texture */}
+        <div className="mt-2.5 flex items-center gap-1">
+          <span aria-hidden className="flex h-5 flex-1 items-center justify-center rounded-sm bg-black/25 font-mono text-[8px] text-white/35">
+            ◂◂
+          </span>
+          <span aria-hidden className="flex h-5 flex-1 items-center justify-center rounded-sm bg-black/25 font-mono text-[8px] text-white/35">
+            {docked ? "❚❚" : "▸"}
+          </span>
+          <span aria-hidden className="flex h-5 flex-1 items-center justify-center rounded-sm bg-black/25 font-mono text-[8px] text-white/35">
+            ▸▸
+          </span>
           <button
             type="button"
             onClick={eject}
-            className="focus-ring mt-2 w-full rounded-sm bg-[#3a2f24] py-1 font-mono text-[8px] uppercase tracking-widest text-white/50 transition-colors hover:text-white/80"
+            disabled={!docked}
+            className="focus-ring flex h-5 flex-1 items-center justify-center rounded-sm bg-[#3a2f24] font-mono text-[7.5px] uppercase tracking-wide text-white/50 transition-colors enabled:hover:text-white/85 disabled:opacity-40"
           >
             Eject
           </button>
-        )}
+        </div>
+
+        {/* Speaker grille */}
+        <div aria-hidden className="mt-2.5 grid grid-cols-8 gap-[2.5px]">
+          {Array.from({ length: 16 }).map((_, i) => (
+            <span key={i} className="h-[2.5px] w-[2.5px] rounded-full bg-black/40" />
+          ))}
+        </div>
       </div>
 
       {/* Cassette — draggable, snaps onto the slot */}
@@ -163,14 +205,21 @@ export function CassetteDeck({
         whileDrag={reduce ? undefined : { scale: 1.08, zIndex: 40 }}
         whileHover={reduce ? undefined : { scale: 1.02 }}
         style={{ x, y, touchAction: "none" }}
-        className="absolute -bottom-14 left-1/2 w-20 -translate-x-1/2 cursor-grab touch-none select-none active:cursor-grabbing"
+        className="absolute -bottom-16 left-1/2 -ml-12 w-24 cursor-grab touch-none select-none active:cursor-grabbing"
       >
-        <div className="rounded-[3px] bg-[#2a2a2a] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]">
-          <div className="flex items-center justify-between rounded-sm bg-[#e8dcc0] px-2.5 py-3">
-            <span className="h-4 w-4 rounded-full border-2 border-black/50" />
-            <span className="h-4 w-4 rounded-full border-2 border-black/50" />
+        <div className="rounded-[3px] bg-[#242424] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]">
+          <div className="rounded-sm bg-[#e8dcc0] px-2 py-2">
+            <div className="flex items-center justify-between">
+              <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
+                <span className="h-[3px] w-[3px] rounded-full bg-black/50" />
+              </span>
+              <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
+                <span className="h-[3px] w-[3px] rounded-full bg-black/50" />
+              </span>
+            </div>
+            <div className="mx-auto mt-1 h-[2px] w-10 bg-black/30" />
           </div>
-          <p className="mt-1 text-center font-pen text-[11px] leading-none text-white/70">mixtape</p>
+          <p className="mt-1 text-center font-pen text-[11px] leading-none text-white/70">mixtape — side b</p>
         </div>
       </motion.div>
       </div>
