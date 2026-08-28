@@ -133,20 +133,20 @@ export default function Home() {
       </section>
 
       {/* CONTACT — the back page of the portfolio */}
-      <section className="mx-auto max-w-6xl px-5 pb-28 pt-4 sm:px-8">
+      <section className="mx-auto max-w-6xl px-5 pb-32 pt-8 sm:px-8">
         <Reveal>
-          <div className="relative border-t border-line pt-14">
+          <div className="relative border-t border-line pt-20">
             <span className="inline-flex items-center gap-1.5 rounded-sm border border-line-strong px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-fg-dim" style={{ transform: "rotate(-1deg)" }}>
               <span className="h-1.5 w-1.5 rounded-full bg-live-signal" aria-hidden />
               Status: open to work
             </span>
-            <h2 className="mt-5 max-w-3xl font-display font-bold uppercase leading-[0.92] tracking-tight text-fg [font-size:clamp(2.75rem,11vw,6rem)]">
+            <h2 className="mt-8 max-w-3xl font-display font-bold uppercase leading-[0.92] tracking-tight text-fg [font-size:clamp(2.75rem,11vw,6rem)]">
               Got a good <span className="text-accent">problem?</span>
             </h2>
-            <p className="mt-6 max-w-md text-sm leading-relaxed text-fg-muted">
+            <p className="mt-8 max-w-md text-sm leading-relaxed text-fg-muted">
               Internships, freelance, full-time — if it&rsquo;s a good problem, I&rsquo;m in.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-5">
+            <div className="mt-12 flex flex-wrap items-center gap-5">
               <PhysicalButton href="/contact" className="px-6">
                 Contact me
               </PhysicalButton>

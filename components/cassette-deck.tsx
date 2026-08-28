@@ -1,24 +1,47 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { motion, useMotionValue, animate as fmAnimate, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * Drag the cassette onto the player and it docks in and plays — a short,
+ * Drag either cassette onto the player and it docks in and plays — a short,
  * original chiptune synthesized live via Web Audio (square-wave oscillator),
- * not a real/licensed track. Drag it back off, or hit Eject, to stop.
+ * not a real/licensed track. Each tape is its own song; dragging a
+ * different one in swaps the tune. Drag it back off, or hit Eject, to stop.
  */
 
-const NOTES = [392, 440, 494, 523, 494, 440, 392, 330];
 const NOTE_MS = 220;
+
+const TAPES = [
+  {
+    id: "a",
+    label: "mixtape — side a",
+    notes: [392, 440, 494, 523, 494, 440, 392, 330],
+    restClassName: "left-1/2 -ml-12 -bottom-16",
+  },
+  {
+    id: "b",
+    label: "mixtape — side b",
+    notes: [330, 370, 415, 440, 494, 440, 415, 370],
+    restClassName: "left-1/2 -ml-12 -top-16",
+  },
+];
 
 function useChiptune() {
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
   const stepRef = useRef(0);
 
-  const play = useCallback(() => {
+  const play = useCallback((notes: number[]) => {
     if (typeof window === "undefined") return;
     if (!ctxRef.current) {
       const AudioCtx =
@@ -28,9 +51,11 @@ function useChiptune() {
     }
     const ctx = ctxRef.current;
     if (ctx.state === "suspended") ctx.resume();
+    if (timerRef.current !== null) window.clearInterval(timerRef.current);
+    stepRef.current = 0;
 
     const tick = () => {
-      const freq = NOTES[stepRef.current % NOTES.length];
+      const freq = notes[stepRef.current % notes.length];
       stepRef.current++;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -58,20 +83,25 @@ function useChiptune() {
   return { play, stop };
 }
 
-export function CassetteDeck({
-  containerRef,
-  className,
-}: {
-  containerRef: RefObject<HTMLElement | null>;
-  className?: string;
-}) {
-  const [docked, setDocked] = useState(false);
-  const slotRef = useRef<HTMLDivElement>(null);
+type TapeHandle = { eject: () => void };
+
+const CassetteTape = forwardRef<
+  TapeHandle,
+  {
+    label: string;
+    id: string;
+    docked: boolean;
+    restClassName: string;
+    slotRef: RefObject<HTMLDivElement | null>;
+    containerRef: RefObject<HTMLElement | null>;
+    onDock: (id: string) => void;
+    onUndock: (id: string) => void;
+  }
+>(function CassetteTape({ label, id, docked, restClassName, slotRef, containerRef, onDock, onUndock }, ref) {
   const cassetteRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const reduce = useReducedMotion();
-  const { play, stop } = useChiptune();
 
   function overlapsSlot() {
     if (!slotRef.current || !cassetteRef.current) return false;
@@ -98,27 +128,101 @@ export function CassetteDeck({
           fmAnimate(y, y.get() + dy, { type: "spring", stiffness: 400, damping: 30 });
         }
       }
-      setDocked(true);
-      play();
+      onDock(id);
     } else if (!overlapping && docked) {
-      setDocked(false);
-      stop();
+      onUndock(id);
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    eject() {
+      if (!reduce) {
+        fmAnimate(y, y.get() - 44, { type: "spring", stiffness: 300, damping: 22 });
+      } else {
+        y.set(y.get() - 44);
+      }
+    },
+  }));
+
+  return (
+    <motion.div
+      ref={cassetteRef}
+      aria-hidden
+      drag
+      dragConstraints={containerRef}
+      dragMomentum={false}
+      onDragEnd={handleDragEnd}
+      whileDrag={reduce ? undefined : { scale: 1.08, zIndex: 40 }}
+      whileHover={reduce ? undefined : { scale: 1.02 }}
+      style={{ x, y, touchAction: "none" }}
+      className={cn("absolute w-24 cursor-grab touch-none select-none active:cursor-grabbing", restClassName)}
+    >
+      <div className="rounded-[3px] bg-[#242424] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]">
+        <div className="rounded-sm bg-[#e8dcc0] px-2 py-2">
+          <div className="flex items-center justify-between">
+            <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
+              <span
+                className={cn("h-[3px] w-[3px] rounded-full bg-black/50", docked && !reduce && "animate-spin")}
+                style={{ animationDuration: "1.1s" }}
+              />
+            </span>
+            <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
+              <span
+                className={cn("h-[3px] w-[3px] rounded-full bg-black/50", docked && !reduce && "animate-spin")}
+                style={{ animationDuration: "1.1s" }}
+              />
+            </span>
+          </div>
+          <div className="mx-auto mt-1 h-[2px] w-10 bg-black/30" />
+        </div>
+        <p className="mt-1 text-center font-pen text-[11px] leading-none text-white/70">{label}</p>
+      </div>
+    </motion.div>
+  );
+});
+
+export function CassetteDeck({
+  containerRef,
+  className,
+}: {
+  containerRef: RefObject<HTMLElement | null>;
+  className?: string;
+}) {
+  const [dockedId, setDockedId] = useState<string | null>(null);
+  const slotRef = useRef<HTMLDivElement>(null);
+  const tapeRefs = useRef<Record<string, TapeHandle | null>>({});
+  const { play, stop } = useChiptune();
+  const docked = dockedId !== null;
+
+  const handleDock = useCallback(
+    (id: string) => {
+      const tape = TAPES.find((t) => t.id === id);
+      if (!tape) return;
+      setDockedId((current) => {
+        if (current && current !== id) tapeRefs.current[current]?.eject();
+        return id;
+      });
+      play(tape.notes);
+    },
+    [play]
+  );
+
+  const handleUndock = useCallback(
+    (id: string) => {
+      setDockedId((current) => (current === id ? null : current));
+      stop();
+    },
+    [stop]
+  );
+
   function eject() {
-    setDocked(false);
+    if (dockedId) tapeRefs.current[dockedId]?.eject();
+    setDockedId(null);
     stop();
-    if (!reduce) {
-      fmAnimate(y, y.get() - 44, { type: "spring", stiffness: 300, damping: 22 });
-    } else {
-      y.set(y.get() - 44);
-    }
   }
 
   return (
-    <div className={cn("absolute", className)}>
-      <div className="relative">
+    <div className={cn("relative w-36", className)}>
       {/* Player */}
       <div
         className="grain-card w-36 rounded-lg border border-line-strong p-3.5 shadow-[0_20px_36px_-16px_rgba(0,0,0,0.55)]"
@@ -155,13 +259,8 @@ export function CassetteDeck({
             className="absolute right-3 h-4 w-4 rounded-full border-2"
             style={{ borderColor: docked ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.12)" }}
           />
-          <span
-            className={cn(
-              "relative font-mono text-[6.5px] uppercase tracking-widest text-white/45",
-              docked && !reduce && "animate-pulse"
-            )}
-          >
-            {docked ? "♪ playing" : "insert cassette"}
+          <span className="relative font-mono text-[6.5px] uppercase tracking-widest text-white/45">
+            {docked ? `♪ ${TAPES.find((t) => t.id === dockedId)?.label.split(" — ")[1]}` : "insert cassette"}
           </span>
         </div>
 
@@ -194,35 +293,22 @@ export function CassetteDeck({
         </div>
       </div>
 
-      {/* Cassette — draggable, snaps onto the slot */}
-      <motion.div
-        ref={cassetteRef}
-        aria-hidden
-        drag
-        dragConstraints={containerRef}
-        dragMomentum={false}
-        onDragEnd={handleDragEnd}
-        whileDrag={reduce ? undefined : { scale: 1.08, zIndex: 40 }}
-        whileHover={reduce ? undefined : { scale: 1.02 }}
-        style={{ x, y, touchAction: "none" }}
-        className="absolute -bottom-16 left-1/2 -ml-12 w-24 cursor-grab touch-none select-none active:cursor-grabbing"
-      >
-        <div className="rounded-[3px] bg-[#242424] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]">
-          <div className="rounded-sm bg-[#e8dcc0] px-2 py-2">
-            <div className="flex items-center justify-between">
-              <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
-                <span className="h-[3px] w-[3px] rounded-full bg-black/50" />
-              </span>
-              <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
-                <span className="h-[3px] w-[3px] rounded-full bg-black/50" />
-              </span>
-            </div>
-            <div className="mx-auto mt-1 h-[2px] w-10 bg-black/30" />
-          </div>
-          <p className="mt-1 text-center font-pen text-[11px] leading-none text-white/70">mixtape — side b</p>
-        </div>
-      </motion.div>
-      </div>
+      {TAPES.map((tape) => (
+        <CassetteTape
+          key={tape.id}
+          ref={(el) => {
+            tapeRefs.current[tape.id] = el;
+          }}
+          id={tape.id}
+          label={tape.label}
+          docked={dockedId === tape.id}
+          restClassName={tape.restClassName}
+          slotRef={slotRef}
+          containerRef={containerRef}
+          onDock={handleDock}
+          onUndock={handleUndock}
+        />
+      ))}
     </div>
   );
 }
