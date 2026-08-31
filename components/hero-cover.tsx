@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef } from "react";
 import { PhysicalButton } from "./physical-button";
 import { Tape } from "./tape";
 import { PaperClip } from "./paper-clip";
@@ -6,6 +9,7 @@ import { Sticker } from "./sticker";
 import { Polaroid } from "./polaroid";
 import { DeskScene } from "./desk-scene";
 import { SettleIn } from "./settle-in";
+import { Draggable } from "./draggable";
 
 const LABELS = ["Product", "Events", "Web", "Systems", "Experiments"];
 
@@ -19,8 +23,10 @@ const LABELS = ["Product", "Events", "Web", "Systems", "Experiments"];
  * and bottom, category labels as archival tags.
  */
 export function HeroCover() {
+  const heroRef = useRef<HTMLElement>(null);
+
   return (
-    <section className="desk-environment relative overflow-hidden py-40 sm:py-64">
+    <section ref={heroRef} className="desk-environment relative overflow-hidden py-40 sm:py-64">
       <span className="desk-crosshair" style={{ top: 22, left: 22 }} aria-hidden />
       <span className="desk-crosshair" style={{ top: 22, right: 22 }} aria-hidden />
       <span className="desk-crosshair" style={{ bottom: 22, left: 22 }} aria-hidden />
@@ -74,8 +80,8 @@ export function HeroCover() {
             </div>
 
             <p className="mt-8 max-w-sm font-serif text-[14.5px] leading-relaxed text-bg/65">
-              Currently at <span className="font-semibold text-bg">YourStory</span>. TechSparks 2026 is
-              live now — 10,000+ people, this October.
+              Currently at <span className="font-semibold text-bg">YourStory</span>. Building TechSparks
+              2026 — 10,000+ people, this October.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-3">
@@ -108,7 +114,7 @@ export function HeroCover() {
             <Sticker variant="smiley" color="var(--live-signal)" rotate={-10} size="2.25rem" className="static" />
           </SettleIn>
 
-          {/* real photo, pinned, hidden on the smallest screens to avoid clutter */}
+          {/* real photo, pinned, hidden on the smallest screens to avoid clutter — pick it up and move it */}
           <SettleIn
             delay={0.58}
             y={-24}
@@ -116,9 +122,11 @@ export function HeroCover() {
             scale={0.8}
             className="absolute -top-7 right-2 hidden w-20 sm:block sm:-right-6"
           >
-            <div style={{ transform: "translateZ(90px) rotate(-8deg)" }}>
-              <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-8} sizes="80px" />
-            </div>
+            <Draggable containerRef={heroRef} contentBearing extraTilt={10} className="relative">
+              <div style={{ transform: "translateZ(90px) rotate(-8deg)" }}>
+                <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-8} sizes="80px" />
+              </div>
+            </Draggable>
           </SettleIn>
 
           <SettleIn delay={0.68} y={6} rotate={0} scale={1} className="absolute -bottom-8 left-3 sm:left-5">

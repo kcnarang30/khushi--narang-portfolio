@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { Project } from "@/data/types";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,8 @@ export function FloppyCard({ project, index }: { project: Project; index: number
   const rotateX = useSpring(useMotionValue(0), { stiffness: 300, damping: 20 });
   const rotateY = useSpring(useMotionValue(0), { stiffness: 300, damping: 20 });
   const lift = useSpring(useMotionValue(0), { stiffness: 300, damping: 22 });
+  const shadowOpacity = useTransform(lift, [-6, 0], [0.75, 0.4]);
+  const shadowScale = useTransform(lift, [-6, 0], [1.06, 1]);
 
   function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (reduce || !ref.current) return;
@@ -38,7 +40,13 @@ export function FloppyCard({ project, index }: { project: Project; index: number
 
   const content = (
     <>
-      <div style={{ perspective: 700 }}>
+      <div style={{ perspective: 700 }} className="relative">
+        {/* ambient contact shadow on the desk beneath the disk — grows and softens as the disk lifts on hover, instead of one flat shadow at every depth */}
+        <motion.div
+          aria-hidden
+          className="absolute inset-x-2 bottom-0 top-1 -z-10 rounded-[3px] bg-black/40 blur-md"
+          style={reduce ? { rotate: rest, opacity: 0.4 } : { rotate: rest, opacity: shadowOpacity, scale: shadowScale }}
+        />
         <motion.div
           ref={ref}
           onMouseMove={onMouseMove}

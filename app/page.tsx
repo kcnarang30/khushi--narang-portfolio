@@ -5,7 +5,7 @@ import { HeroCover } from "@/components/hero-cover";
 import { FeaturedProject } from "@/components/featured-project";
 import { FloppyCard } from "@/components/floppy-card";
 import { Polaroid } from "@/components/polaroid";
-import { Handwritten } from "@/components/handwritten";
+import { DeskThought } from "@/components/desk-thought";
 import { PhysicalButton } from "@/components/physical-button";
 import { Reveal } from "@/components/reveal";
 import { PaperClip } from "@/components/paper-clip";
@@ -123,9 +123,7 @@ export default function Home() {
                 <div className="absolute -bottom-8 -right-6 w-32 sm:-right-10">
                   <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={7} sizes="128px" />
                 </div>
-                <Handwritten className="absolute -top-6 -left-8 text-lg sm:text-xl" rotate={-6}>
-                  currently thinking about —
-                </Handwritten>
+                <DeskThought className="absolute -top-6 -left-8" />
               </div>
             </div>
           </div>
