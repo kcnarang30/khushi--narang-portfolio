@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { getPlayground } from "@/data/projects";
+import { about } from "@/data/about";
 import { Polaroid } from "./polaroid";
 import { PaperNote } from "./paper-note";
 import { PaperClip } from "./paper-clip";
@@ -16,6 +17,9 @@ import { ConsolePing } from "./console-ping";
 import { Draggable } from "./draggable";
 import { Sticker } from "./sticker";
 import { ImagePlaceholder } from "./image-placeholder";
+import { DeskTerminal } from "./desk-terminal";
+import { DoNotOpen } from "./do-not-open";
+import { RedactedText } from "./redacted-text";
 
 /**
  * Not a portfolio section — a desk. Every real playground piece gets its
@@ -105,6 +109,10 @@ export function PlaygroundCanvas() {
             <br />
             to see if I could.
           </h1>
+          <p className="mt-3 max-w-xl font-mono text-[11px] uppercase tracking-widest text-white/40">
+            click things. some of them{" "}
+            <RedactedText className="normal-case tracking-normal">actually do something</RedactedText>.
+          </p>
 
           <Draggable
             containerRef={deskRef}
@@ -122,6 +130,11 @@ export function PlaygroundCanvas() {
 
           <Draggable containerRef={deskRef} contentBearing className="left-[6%] top-[9.1%] sm:left-[43.7%] sm:top-[16%]">
             <ConsolePing />
+          </Draggable>
+
+          {/* a real doorway out — not a prop, every line is a working route */}
+          <Draggable containerRef={deskRef} contentBearing extraTilt={2} className="left-[6%] top-[80%] sm:left-[72%] sm:top-[16%]">
+            <DeskTerminal className="w-52 sm:w-56" />
           </Draggable>
 
           {/* ── THE DESK — one continuous surface, nothing shares a shape ── */}
@@ -273,6 +286,16 @@ export function PlaygroundCanvas() {
 
           <Draggable containerRef={deskRef} extraTilt={-3} className="left-[6%] top-[83.4%] sm:left-[40%] sm:top-[87.3%]">
             <CassetteDeck containerRef={deskRef} />
+          </Draggable>
+
+          {/* sealed by default — real content, never a decoy */}
+          <Draggable containerRef={deskRef} extraTilt={-2} className="left-[6%] top-[88%] w-[62%] sm:left-[57%] sm:top-[82.5%] sm:w-40">
+            <DoNotOpen label="do not open" className="border-line-strong/70">
+              <p className="font-mono text-[11px] leading-relaxed text-fg-muted">
+                since you opened it — {about.outsideOfWork.find((i) => i.includes("screenshots"))?.toLowerCase()}.
+                that&rsquo;s it. that&rsquo;s the secret.
+              </p>
+            </DoNotOpen>
           </Draggable>
 
           <Draggable containerRef={deskRef} extraTilt={5} className="left-[6%] top-[91.6%] sm:left-[75%] sm:top-[82.1%]">
