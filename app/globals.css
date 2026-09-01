@@ -66,6 +66,35 @@
   --signal-red: #ff3b30;
   --bright-green: #3ecf5c;
   --bright-blue: #2f6fed;
+
+  /* ── Editorial system ──────────────────────────────────────────────
+     Reference-derived direction (rachelchen.tech): a quiet off-white
+     ground, one soft ink for all text (never pure black, muted text is
+     the same ink at lower opacity — not a separate grey), one warm
+     rust accent used sparingly. Replaces the desk/scrapbook system on
+     pages rebuilt under this direction; unrebuilt pages keep the
+     tokens above untouched. */
+  --ed-bg: #fafcfd;
+  --ed-bg-raised: #f2f5f6;
+  --ed-ink: #32404f;
+  --ed-ink-muted: rgba(50, 64, 79, 0.58);
+  --ed-ink-faint: rgba(50, 64, 79, 0.34);
+  --ed-line: rgba(50, 64, 79, 0.12);
+  --ed-accent: #e65f2e;
+  --ed-accent-ink: #ffffff;
+
+  /* ── Marginalia ─────────────────────────────────────────────────────
+     Original identity, not the reference's palette or type. Warm paper
+     ground (not cream, not blue-white), a warm near-black ink (not
+     slate-blue), and exactly one accent — a red-pen coral reserved for
+     the single hand-drawn mark per page, not a general UI colour. */
+  --mg-bg: #faf6f0;
+  --mg-bg-raised: #f2ece1;
+  --mg-ink: #241f18;
+  --mg-ink-muted: rgba(36, 31, 24, 0.58);
+  --mg-ink-faint: rgba(36, 31, 24, 0.34);
+  --mg-line: rgba(36, 31, 24, 0.12);
+  --mg-accent: #b8402a;
 }
 
 @theme inline {
@@ -111,6 +140,42 @@
   --font-pen: var(--font-caveat);
   /* Anton — tight condensed poster type, printed-on-paper headlines only */
   --font-poster: var(--font-anton);
+
+  --color-ed-bg: var(--ed-bg);
+  --color-ed-bg-raised: var(--ed-bg-raised);
+  --color-ed-ink: var(--ed-ink);
+  --color-ed-ink-muted: var(--ed-ink-muted);
+  --color-ed-ink-faint: var(--ed-ink-faint);
+  --color-ed-line: var(--ed-line);
+  --color-ed-accent: var(--ed-accent);
+  --color-ed-accent-ink: var(--ed-accent-ink);
+
+  /* Newsreader — editorial serif headlines, the reference's Tiempos Text
+     stand-in (Tiempos is a paid Klim face; Newsreader is the closest
+     open alternative: similar warmth, a genuine italic). */
+  --font-editorial-serif: var(--font-newsreader);
+  /* Geist / Geist Mono — same faces the reference actually uses, both
+     now free on Google Fonts. */
+  --font-editorial-sans: var(--font-geist-ed);
+  --font-editorial-mono: var(--font-geist-mono-ed);
+
+  --color-mg-bg: var(--mg-bg);
+  --color-mg-bg-raised: var(--mg-bg-raised);
+  --color-mg-ink: var(--mg-ink);
+  --color-mg-ink-muted: var(--mg-ink-muted);
+  --color-mg-ink-faint: var(--mg-ink-faint);
+  --color-mg-line: var(--mg-line);
+  --color-mg-accent: var(--mg-accent);
+
+  /* Fraunces — soft, warm display serif. Distinct from the reference's
+     Tiempos-style editorial serif: rounder, friendlier, not a news face. */
+  --font-marginalia-serif: var(--font-fraunces);
+  /* Public Sans — humanist UI sans, sentence case throughout (not the
+     reference's uppercase mono nav). */
+  --font-marginalia-sans: var(--font-public-sans);
+  /* Kalam — the one handwritten voice on the page, spent on exactly one
+     margin note per featured project. Never a headline face. */
+  --font-marginalia-hand: var(--font-kalam);
 }
 
 * {
@@ -134,7 +199,7 @@ html {
 }
 
 body {
-  background: var(--bg);
+  background: var(--mg-bg);
   color: var(--fg);
   font-family: var(--font-body), system-ui, sans-serif;
   background-image:
@@ -281,6 +346,22 @@ a, button {
   height: 1px;
   width: 100%;
   transform: translateY(-50%);
+}
+
+/* Marginalia: hand-drawn underline draws itself in on hover of a `group`
+   ancestor — see components/marginalia/hand-underline.tsx. */
+.hand-underline-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.group:hover .hand-underline-path {
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hand-underline-path {
+    transition: none;
+  }
 }
 
 /* A torn top edge on a sheet of paper — irregular, not a straight cut. */

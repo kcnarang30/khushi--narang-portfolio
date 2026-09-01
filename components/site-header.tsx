@@ -3,83 +3,104 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { PhysicalButton } from "./physical-button";
+import { HandUnderline } from "./marginalia/hand-underline";
 
 const primary = [
   { href: "/work", label: "Work" },
-  { href: "/about", label: "About" },
   { href: "/playground", label: "Playground" },
+  { href: "/about", label: "About" },
   { href: "/archive", label: "Archive" },
 ];
-
-const cta = { href: "/contact", label: "Let's talk" };
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-bg/92 backdrop-blur-sm">
-      <div className="mx-auto hidden max-w-6xl items-center justify-between px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim sm:flex sm:px-8">
-        <span>Case files — product design</span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-live-signal" aria-hidden />
-          Status: open to work
-        </span>
-      </div>
-      <div className="mx-auto flex max-w-6xl items-center justify-between border-t border-line px-5 py-4 sm:border-t-0 sm:px-8 sm:py-3.5">
-        <Link
-          href="/"
-          className="focus-ring rounded font-display text-xl font-bold uppercase tracking-tight sm:text-2xl"
-          onClick={() => setOpen(false)}
-        >
-          Khushi Narang<span className="text-accent">.</span>
+    <header className="sticky top-0 z-50 border-b border-mg-line bg-mg-bg/90 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-8">
+        <Link href="/" className="focus-ring rounded" onClick={() => setOpen(false)}>
+          <span className="font-marginalia-serif text-[19px] italic text-mg-ink">Khushi Narang</span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          {primary.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "focus-ring rounded font-mono text-[12px] uppercase tracking-wide transition-colors",
-                pathname?.startsWith(item.href) ? "text-accent" : "text-fg-muted hover:text-fg"
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <PhysicalButton href={cta.href} variant="paper" className="px-4 py-1.5">
-            {cta.label}
-          </PhysicalButton>
+        <nav className="hidden items-center gap-8 md:flex">
+          {primary.map((item) => {
+            const active = pathname?.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "focus-ring group relative rounded font-marginalia-sans text-[14.5px] transition-colors",
+                  active ? "text-mg-ink" : "text-mg-ink-muted hover:text-mg-ink"
+                )}
+              >
+                {item.label}
+                <HandUnderline active={active} />
+              </Link>
+            );
+          })}
+          <Link
+            href="/contact"
+            className="focus-ring flex items-center gap-2 rounded font-marginalia-sans text-[14.5px] text-mg-ink-muted transition-colors hover:text-mg-ink"
+          >
+            <span className="h-[7px] w-[7px] rounded-full bg-mg-accent" aria-hidden />
+            Open to work
+          </Link>
         </nav>
 
         <button
-          className="focus-ring rounded p-2 md:hidden"
+          className="focus-ring relative z-10 rounded p-2 md:hidden"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-label="Toggle menu"
         >
-          <span className="block h-px w-6 bg-fg" />
-          <span className="mt-1.5 block h-px w-6 bg-fg" />
+          <motion.span
+            className="block h-px w-6 origin-center bg-mg-ink"
+            animate={{ rotate: open ? 45 : 0, y: open ? 4 : 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          />
+          <motion.span
+            className="mt-1.5 block h-px w-6 origin-center bg-mg-ink"
+            animate={{ rotate: open ? -45 : 0, y: open ? -4 : 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          />
         </button>
       </div>
 
-      {open && (
-        <nav className="flex flex-col gap-1 border-t border-line px-5 py-4 md:hidden">
-          {[...primary, cta].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="focus-ring rounded py-2 font-mono text-sm uppercase tracking-wide text-fg-muted hover:text-fg"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.nav
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            className="overflow-hidden border-t border-mg-line md:hidden"
+          >
+            <div className="flex flex-col gap-1 px-5 py-4">
+              {primary.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="focus-ring rounded py-2 font-marginalia-sans text-[15px] text-mg-ink-muted hover:text-mg-ink"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                href="/contact"
+                onClick={() => setOpen(false)}
+                className="focus-ring rounded py-2 font-marginalia-sans text-[15px] text-mg-ink-muted hover:text-mg-ink"
+              >
+                Contact
+              </Link>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

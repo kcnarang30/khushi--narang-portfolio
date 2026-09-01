@@ -1,175 +1,132 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { about } from "@/data/about";
-import { Reveal } from "@/components/reveal";
-import { Polaroid } from "@/components/polaroid";
-import { PaperClip } from "@/components/paper-clip";
-import { Tape } from "@/components/tape";
-import { Stamp } from "@/components/stamp";
-import { DeskScene } from "@/components/desk-scene";
+import { Reveal } from "@/components/marginalia/reveal";
+import { TapedPhoto } from "@/components/marginalia/taped-photo";
+import { InkMark } from "@/components/marginalia/ink-mark";
 import { EmailDispatchLink } from "@/components/email-dispatch-link";
 
 export const metadata: Metadata = { title: "About" };
 
+const TAG_ROTATIONS = [-2, 1.5, -1, 2, -1.5, 1, -2.5, 1.5, 2, -1, 1, -1.5];
+
 export default function AboutPage() {
   return (
-    <div>
-      {/* The personal file — found inside the archive */}
-      <section className="desk-environment relative overflow-hidden py-20 sm:py-28">
-        <span className="desk-crosshair" style={{ top: 22, left: 22 }} aria-hidden />
-        <span className="desk-crosshair" style={{ top: 22, right: 22 }} aria-hidden />
-        <span className="desk-crosshair" style={{ bottom: 22, left: 22 }} aria-hidden />
-        <span className="desk-crosshair" style={{ bottom: 22, right: 22 }} aria-hidden />
+    <div className="bg-mg-bg">
+      <div className="mx-auto max-w-3xl px-5 pb-24 pt-16 sm:px-8 sm:pt-24">
+        <Reveal>
+          <p className="font-marginalia-sans text-[13px] text-mg-ink-faint">Personal file</p>
+          <h1 className="relative mt-3 max-w-xl font-marginalia-serif text-[32px] leading-[1.15] text-mg-ink sm:text-[38px]">
+            I like asking{" "}
+            <span className="relative inline-block">
+              questions
+              <InkMark variant="circle" trigger="view" delay={0.5} className="scale-x-125" />
+            </span>{" "}
+            until the problem starts making sense.
+          </h1>
+        </Reveal>
 
-        <DeskScene className="mx-auto max-w-3xl px-5 sm:px-8">
-          <div className="relative">
-            <div
-              aria-hidden
-              className="grain-paper absolute inset-0 bg-paper-dark"
-              style={{ transform: "translateZ(-50px) rotate(2deg) translate(8px, 12px)" }}
-            />
-            <div className="grain-paper shadow-physical-lg relative bg-paper p-7 sm:p-12" style={{ transform: "rotate(1deg)" }}>
-              <PaperClip rotate={-12} className="-left-4 -top-5 h-11 w-11 sm:-left-6 sm:-top-6" />
-              <Tape rotate={-3} className="-top-3 right-10 w-16" />
-
-              <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[10.5px] uppercase tracking-widest text-bg/55">
-                <span>Khushi Narang</span>
-                <span>Personal file</span>
-              </div>
-
-              <h1 className="mt-8 font-poster uppercase leading-[0.86] text-bg [font-size:clamp(2rem,6.4vw,3.6rem)]">
-                I like asking questions until the problem starts making sense.
-              </h1>
-
-              <p className="mt-6 max-w-md font-serif text-lg italic leading-relaxed text-bg/75">{about.bio[0]}</p>
-
-              <div className="mt-8 flex flex-wrap gap-2">
-                {about.outsideOfWork.map((label) => (
-                  <span
-                    key={label}
-                    className="border border-bg/25 px-2.5 py-1 font-mono text-[9px] uppercase tracking-wide text-bg/65"
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-10 flex flex-wrap justify-between gap-2 border-t border-bg/15 pt-4 font-mono text-[9.5px] uppercase tracking-wide text-bg/40">
-                <span>{about.location}</span>
-                <span>{about.education}</span>
-              </div>
-            </div>
-
-            <Stamp tone="accent" rotate={7} size="4.5rem" className="absolute -top-8 -right-3 sm:-right-8">
-              Still
-              <br />
-              figuring it out
-            </Stamp>
-
-            <div
-              className="absolute -bottom-9 -left-5 w-24 sm:-left-10 sm:w-28"
-              style={{ transform: "translateZ(70px) rotate(-7deg)" }}
-            >
-              <Polaroid src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-7} sizes="112px" />
-            </div>
-
-            <div
-              className="absolute -bottom-10 right-4 hidden w-20 sm:block sm:right-16"
-              style={{ transform: "translateZ(60px) rotate(8deg)" }}
-            >
-              <Polaroid src="/about/yep-thats-me.jpg" alt="Yep, that's me" rotate={8} sizes="80px" />
-            </div>
-          </div>
-        </DeskScene>
-      </section>
-
-      <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8 sm:py-20">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-5">
-          <div className="md:col-span-3">
-            <Reveal>
-              {about.bio.slice(1).map((p, i) => (
-                <p key={i} className="max-w-md font-serif text-[15px] leading-relaxed text-fg-muted first:mt-0 [&:not(:first-child)]:mt-4">
+        <div className="mt-14 grid grid-cols-1 gap-12 sm:grid-cols-12">
+          <div className="sm:col-span-7">
+            <Reveal delay={0.05}>
+              {about.bio.map((p, i) => (
+                <p
+                  key={i}
+                  className="max-w-md font-marginalia-sans text-[15px] leading-relaxed text-mg-ink-muted first:mt-0 [&:not(:first-child)]:mt-4"
+                >
                   {p}
                 </p>
               ))}
             </Reveal>
-
-            <Reveal delay={0.05}>
-              <div className="mt-10 border-t border-line pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Education</p>
-                <p className="mt-1 text-sm text-fg-muted">{about.education}</p>
-                <p className="text-xs text-fg-dim">
-                  {about.educationYears} · {about.gpa}
-                </p>
-              </div>
-
-              <div className="mt-8">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
-                  Tools &amp; specialties
-                </p>
-                <div className="mt-2.5 flex flex-wrap gap-2">
-                  {[...about.exploring, ...about.interests].map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-sm border border-line px-2.5 py-1 font-mono text-[11px] uppercase tracking-wide text-fg-muted"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <div className="mt-10 border-t border-line pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">Currently</p>
-                <ul className="mt-3 flex flex-col gap-3">
-                  {about.currentRoles.map((r) => (
-                    <li key={r.org} className="flex items-baseline justify-between gap-3 text-sm">
-                      <span>
-                        <span className="text-fg">{r.title}</span>{" "}
-                        <span className="text-fg-dim">— {r.org}</span>
-                      </span>
-                      <span className="shrink-0 font-mono text-[11px] text-fg-dim">{r.period}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-
+          </div>
+          <div className="flex flex-col items-center gap-10 sm:col-span-5 sm:pt-2 lg:flex-row lg:items-start lg:justify-center">
             <Reveal delay={0.15}>
-              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-line pt-8 font-mono text-sm text-fg-muted">
-                <span>{about.statsProjects}</span>
-                <span>{about.statsLive} live</span>
-                <span>{about.location}</span>
-                <Link
-                  href="/certificates"
-                  className="focus-ring rounded text-[13px] uppercase tracking-wide text-fg-dim underline decoration-fg-dim/40 underline-offset-4 hover:text-accent"
-                >
-                  Certificates →
-                </Link>
+              <TapedPhoto src="/about/ribbon-night.jpg" alt="Out and about, Bengaluru" rotate={-3} width={170} height={215} delay={0.1} />
+            </Reveal>
+            <Reveal delay={0.2} className="lg:mt-8">
+              <TapedPhoto src="/about/yep-thats-me.jpg" alt="Yep, that's me" rotate={3} tapeSide="right" width={150} height={190} delay={0.15} />
+            </Reveal>
+          </div>
+        </div>
+
+        <Reveal delay={0.1} className="mt-14 border-t border-mg-line pt-8">
+          <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">Outside of work</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {about.outsideOfWork.map((label, i) => (
+              <span
+                key={label}
+                className="inline-block rounded-full border border-mg-line bg-mg-bg-raised px-3 py-1 font-marginalia-sans text-[12.5px] text-mg-ink-muted"
+                style={{ transform: `rotate(${TAG_ROTATIONS[i % TAG_ROTATIONS.length]}deg)` }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+
+        <div className="mt-14 grid grid-cols-1 gap-12 sm:grid-cols-12">
+          <div className="sm:col-span-7">
+            <Reveal>
+              <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">Education</p>
+              <p className="mt-1.5 font-marginalia-sans text-[15px] text-mg-ink">{about.education}</p>
+              <p className="font-marginalia-sans text-[13px] text-mg-ink-faint">
+                {about.educationYears} &middot; {about.gpa}
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.05} className="mt-10">
+              <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">Tools &amp; specialties</p>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                {[...about.exploring, ...about.interests].map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-[1px] border border-mg-line px-2.5 py-1 font-marginalia-sans text-[12.5px] text-mg-ink-muted"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </Reveal>
 
-            <Reveal delay={0.18}>
-              <div className="mt-10 border-t border-line pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">What I want next</p>
-                <p className="mt-2 max-w-md text-sm leading-relaxed text-fg-muted">
-                  Something worth the questions I&rsquo;d ask about it.
-                </p>
-                <EmailDispatchLink className="focus-ring mt-3 inline-block rounded font-mono text-[13px] text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent" />
-              </div>
+            <Reveal delay={0.1} className="mt-10">
+              <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">Currently</p>
+              <ul className="mt-3 flex flex-col gap-2.5">
+                {about.currentRoles.map((r) => (
+                  <li key={r.org} className="flex items-baseline justify-between gap-4 font-marginalia-sans text-[14.5px]">
+                    <span>
+                      <span className="text-mg-ink">{r.title}</span>{" "}
+                      <span className="text-mg-ink-faint">&mdash; {r.org}</span>
+                    </span>
+                    <span className="shrink-0 text-[13px] text-mg-ink-faint">{r.period}</span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            <Reveal delay={0.15} className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 font-marginalia-sans text-[14px] text-mg-ink-muted">
+              <span>{about.statsProjects}</span>
+              <span>{about.statsLive} live</span>
+              <span>{about.location}</span>
+              <Link href="/certificates" className="group focus-ring relative rounded text-mg-ink-faint hover:text-mg-ink-muted">
+                Certificates &rarr;
+              </Link>
+            </Reveal>
+
+            <Reveal delay={0.2} className="mt-10 border-t border-mg-line pt-8">
+              <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">What I want next</p>
+              <p className="mt-2 max-w-md font-marginalia-sans text-[14.5px] leading-relaxed text-mg-ink-muted">
+                Something worth the questions I&rsquo;d ask about it.
+              </p>
+              <EmailDispatchLink className="focus-ring mt-3 inline-block rounded font-marginalia-sans text-[13.5px] text-mg-accent underline decoration-mg-accent/40 underline-offset-4 hover:decoration-mg-accent" />
             </Reveal>
           </div>
 
-          <div className="relative md:col-span-2">
-            <Reveal delay={0.1}>
-              <div className="mx-auto max-w-[13rem]">
-                <Polaroid src="/about/meet-cat.jpg" alt="Meet the cat" rotate={6} sizes="208px" />
-              </div>
-              <div className="mx-auto mt-10 max-w-[13rem]">
-                <Polaroid src="/about/hard-at-work.jpg" alt="Hard at work" rotate={-1} sizes="208px" />
-              </div>
+          <div className="flex flex-col items-center gap-14 sm:col-span-5 sm:items-end">
+            <Reveal delay={0.2}>
+              <TapedPhoto src="/about/meet-cat.jpg" alt="Meet the cat" rotate={4} tapeSide="left" width={175} height={215} delay={0.1} />
+            </Reveal>
+            <Reveal delay={0.25}>
+              <TapedPhoto src="/about/hard-at-work.jpg" alt="Hard at work" rotate={-3} tapeSide="right" width={175} height={215} delay={0.15} />
             </Reveal>
           </div>
         </div>

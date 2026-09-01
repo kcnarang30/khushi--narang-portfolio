@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat, VT323, Anton } from "next/font/google";
+import { Plus_Jakarta_Sans, Source_Serif_4, IBM_Plex_Sans, JetBrains_Mono, Caveat, VT323, Anton, Fraunces, Public_Sans, Kalam } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
@@ -53,6 +53,28 @@ const anton = Anton({
   weight: ["400"],
 });
 
+// ── Marginalia system — header + homepage first, rest of the site to follow.
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+// The one handwritten voice — spent on a single correction mark in the
+// hero and the hover-underline stroke, nowhere else.
+const kalam = Kalam({
+  variable: "--font-kalam",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Khushi Narang — Product Designer",
@@ -72,7 +94,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable} ${vt323.variable} ${anton.variable}`}>
+    <html lang="en" className={`${jakarta.variable} ${sourceSerif.variable} ${plexSans.variable} ${jetbrains.variable} ${caveat.variable} ${vt323.variable} ${anton.variable} ${fraunces.variable} ${publicSans.variable} ${kalam.variable}`}>
       <body className="antialiased">
         <a
           href="#main"

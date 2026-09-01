@@ -24,19 +24,19 @@ export function DoNotOpen({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="focus-ring group flex w-full flex-col items-start gap-3 rounded-sm border-2 border-dashed border-line-strong p-5 text-left transition-colors hover:border-live-signal"
+          className="focus-ring group flex w-full flex-col items-start gap-3 rounded-[2px] border-2 border-dashed border-mg-line p-5 text-left transition-colors hover:border-mg-accent/60"
         >
-          <span className="rounded-sm border border-live-signal/60 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-live-signal">
+          <span className="rounded-[2px] border border-mg-accent/60 px-2 py-1 font-marginalia-sans text-[10.5px] uppercase tracking-wide text-mg-accent">
             {label}
           </span>
-          <span className="font-mono text-[11px] uppercase tracking-wide text-fg-dim transition-colors group-hover:text-fg-muted">
-            obviously, you&rsquo;re going to open it →
+          <span className="font-marginalia-sans text-[12px] text-mg-ink-faint transition-colors group-hover:text-mg-ink-muted">
+            obviously, you&rsquo;re going to open it &rarr;
           </span>
         </button>
       ) : (
-        <div className="rounded-sm border-2 border-live-signal/50 bg-bg-raised p-5">
-          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-live-signal">
-            {label} — opened anyway
+        <div className="rounded-[2px] border-2 border-mg-accent/50 bg-mg-bg-raised p-5">
+          <span className="font-marginalia-sans text-[10.5px] uppercase tracking-wide text-mg-accent">
+            {label} &mdash; opened anyway
           </span>
           <div className="mt-3">{children}</div>
         </div>

@@ -1,44 +1,40 @@
 import Link from "next/link";
 import { links } from "@/data/links";
-import { PhysicalButton } from "./physical-button";
 import { EmailDispatchLink } from "./email-dispatch-link";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+    <footer className="border-t border-mg-line">
+      <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="font-display text-2xl font-bold">Say hi.</p>
-            <EmailDispatchLink className="focus-ring mt-2 inline-block rounded font-mono text-sm text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent" />
+            <p className="font-marginalia-serif text-2xl italic text-mg-ink">Say hi.</p>
+            <EmailDispatchLink className="focus-ring mt-2 inline-block rounded font-marginalia-sans text-sm text-mg-accent underline decoration-mg-accent/40 underline-offset-4 hover:decoration-mg-accent" />
           </div>
-          <div className="flex flex-wrap gap-2.5">
-            <PhysicalButton href={links.linkedin} external variant="paper" className="px-3 py-1.5 text-[11px]">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 font-marginalia-sans text-[13px] text-mg-ink-muted">
+            <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-mg-ink">
               LinkedIn
-            </PhysicalButton>
-            <PhysicalButton href={links.behance} external variant="paper" className="px-3 py-1.5 text-[11px]">
+            </a>
+            <a href={links.behance} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-mg-ink">
               Behance
-            </PhysicalButton>
-            <PhysicalButton href={links.instagram} external variant="paper" className="px-3 py-1.5 text-[11px]">
+            </a>
+            <a href={links.instagram} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-mg-ink">
               Instagram
-            </PhysicalButton>
-            <PhysicalButton href={links.github} external variant="paper" className="px-3 py-1.5 text-[11px]">
+            </a>
+            <a href={links.github} target="_blank" rel="noopener noreferrer" className="focus-ring rounded hover:text-mg-ink">
               GitHub
-            </PhysicalButton>
-            <PhysicalButton href={links.resumeHref} external variant="paper" className="px-3 py-1.5 text-[11px]">
-              Resume
-            </PhysicalButton>
+            </a>
           </div>
         </div>
-        <div className="mt-10 flex flex-col-reverse items-start justify-between gap-3 border-t border-line pt-6 sm:flex-row sm:items-center">
-          <p className="font-mono text-[11px] text-fg-dim">
-            © {new Date().getFullYear()} Khushi Narang. Built by hand, one project at a time.
+        <div className="mt-10 flex flex-col-reverse items-start justify-between gap-3 border-t border-mg-line pt-6 sm:flex-row sm:items-center">
+          <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">
+            &copy; {new Date().getFullYear()} Khushi Narang. Built by hand, one project at a time.
           </p>
-          <div className="flex gap-4 font-mono text-[11px] text-fg-dim">
-            <Link href="/work" className="focus-ring rounded hover:text-fg-muted">
+          <div className="flex gap-4 font-marginalia-sans text-[12px] text-mg-ink-faint">
+            <Link href="/work" className="focus-ring rounded hover:text-mg-ink-muted">
               Work
             </Link>
-            <Link href="/archive" className="focus-ring rounded hover:text-fg-muted">
+            <Link href="/archive" className="focus-ring rounded hover:text-mg-ink-muted">
               Archive
             </Link>
           </div>

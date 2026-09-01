@@ -36,13 +36,13 @@ export function DispatchModal({ open, onClose }: { open: boolean; onClose: () =>
       aria-modal="true"
       aria-label="Send a message"
       onClick={onClose}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-bg/96 p-5 backdrop-blur-sm sm:p-10"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-mg-ink/85 p-5 backdrop-blur-sm sm:p-10"
     >
       <button
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="focus-ring absolute right-5 top-5 rounded-sm border border-line-strong px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest text-fg-muted transition-colors hover:text-fg"
+        className="focus-ring absolute right-5 top-5 rounded-full border border-white/25 px-3 py-1.5 font-marginalia-sans text-[12px] text-white/70 transition-colors hover:text-white"
       >
         Close ✕
       </button>

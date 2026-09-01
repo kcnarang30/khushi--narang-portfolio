@@ -5,7 +5,9 @@ import Link from "next/link";
 import { projects } from "@/data/projects";
 import { ProjectCategory } from "@/data/types";
 import { IndexRow } from "@/components/index-card";
-import { Reveal } from "@/components/reveal";
+import { Reveal } from "@/components/marginalia/reveal";
+import { FolderTabs } from "@/components/marginalia/folder-tabs";
+import { HandUnderline } from "@/components/marginalia/hand-underline";
 import { cn } from "@/lib/utils";
 
 const CATEGORY_LABELS: Record<ProjectCategory, string> = {
@@ -41,15 +43,7 @@ const years = Array.from(new Set(sorted.map((p) => yearGroup(p.year))));
 const categories = Array.from(new Set(projects.map((p) => p.category))) as ProjectCategory[];
 const liveCount = projects.filter((p) => p.live).length;
 
-function YearFolder({
-  year,
-  items,
-  defaultOpen,
-}: {
-  year: string;
-  items: typeof sorted;
-  defaultOpen: boolean;
-}) {
+function YearFolder({ year, items, defaultOpen }: { year: string; items: typeof sorted; defaultOpen: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
@@ -59,32 +53,26 @@ function YearFolder({
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         className={cn(
-          "focus-ring -mx-2 flex w-full items-center gap-2 rounded-t-sm px-2 py-1.5 text-left transition-colors",
-          open ? "bg-bg-raised" : "hover:bg-bg-raised/50"
+          "focus-ring -mx-2 flex w-full items-center gap-2 rounded-t-[2px] px-2 py-1.5 text-left transition-colors",
+          open ? "bg-mg-bg" : "hover:bg-mg-bg/60"
         )}
       >
         <span
           aria-hidden
           className={cn(
-            "inline-block font-mono text-[11px] text-accent transition-transform duration-200",
+            "inline-block font-marginalia-sans text-[11px] text-mg-accent transition-transform duration-200",
             open && "rotate-90"
           )}
         >
-          ▸
+          &#9656;
         </span>
-        <span className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-          {year}/
-          <span className="ml-2 text-fg-dim/60">
-            {items.length} {items.length === 1 ? "item" : "items"}
-          </span>
+        <span className="font-marginalia-sans text-[12px] text-mg-ink-faint">
+          {year}/<span className="ml-2 text-mg-ink-faint/70">{items.length} {items.length === 1 ? "item" : "items"}</span>
         </span>
       </button>
-      <div
-        className="grid transition-[grid-template-rows] duration-300 ease-out"
-        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-      >
+      <div className="grid transition-[grid-template-rows] duration-300 ease-out" style={{ gridTemplateRows: open ? "1fr" : "0fr" }}>
         <div className="overflow-hidden">
-          <div className={cn("-mx-2 rounded-b-sm px-2 pb-1 pt-2", open && "bg-bg-raised/40")}>
+          <div className={cn("-mx-2 rounded-b-[2px] px-2 pb-1 pt-2", open && "bg-mg-bg/50")}>
             {items.map((p) => (
               <IndexRow key={p.slug} project={p} />
             ))}
@@ -92,30 +80,6 @@ function YearFolder({
         </div>
       </div>
     </div>
-  );
-}
-
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "focus-ring rounded-sm border px-2.5 py-1 font-mono text-[11px] uppercase tracking-wide transition-colors",
-        active
-          ? "border-accent text-accent"
-          : "border-line text-fg-muted hover:border-line-strong hover:text-fg"
-      )}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -138,50 +102,56 @@ export function ArchiveExplorer() {
 
   return (
     <div>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 font-mono text-[10px] uppercase tracking-widest text-fg-dim">Year</span>
-          {["All", ...years].map((y) => (
-            <FilterChip key={y} active={year === y} onClick={() => setYear(y)}>
-              {y}
-            </FilterChip>
-          ))}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 font-mono text-[10px] uppercase tracking-widest text-fg-dim">Type</span>
-          <FilterChip active={type === "All"} onClick={() => setType("All")}>
+      <FolderTabs
+        options={[{ value: "All", label: "All years" }, ...years.map((y) => ({ value: y, label: y }))]}
+        active={year}
+        onChange={setYear}
+      />
+
+      <div className="rounded-b-[2px] rounded-tr-[2px] bg-mg-bg-raised px-4 py-6 sm:px-6">
+        <div className="flex flex-wrap items-center gap-x-1 gap-y-2 border-b border-mg-line pb-5">
+          <span className="mr-2 font-marginalia-sans text-[11.5px] text-mg-ink-faint">Filter by type:</span>
+          <button
+            onClick={() => setType("All")}
+            className={cn(
+              "rounded-full px-2.5 py-1 font-marginalia-sans text-[12px] transition-colors",
+              type === "All" ? "bg-mg-accent/15 text-mg-accent" : "text-mg-ink-faint hover:text-mg-ink-muted"
+            )}
+          >
             All
-          </FilterChip>
+          </button>
           {categories.map((c) => (
-            <FilterChip key={c} active={type === c} onClick={() => setType(c)}>
+            <button
+              key={c}
+              onClick={() => setType(c)}
+              className={cn(
+                "rounded-full px-2.5 py-1 font-marginalia-sans text-[12px] transition-colors",
+                type === c ? "bg-mg-accent/15 text-mg-accent" : "text-mg-ink-faint hover:text-mg-ink-muted"
+              )}
+            >
               {CATEGORY_LABELS[c]}
-            </FilterChip>
+            </button>
           ))}
+        </div>
+
+        <div className="mt-6 flex flex-col gap-3">
+          {Array.from(groups.entries()).map(([g, items], i) => (
+            <Reveal key={`${g}-${year}`} delay={i * 0.04}>
+              <YearFolder year={g} items={items} defaultOpen={year !== "All" || i === 0} />
+            </Reveal>
+          ))}
+          {filtered.length === 0 && <p className="font-marginalia-sans text-[13px] text-mg-ink-faint">Nothing filed under that combination.</p>}
         </div>
       </div>
 
-      <div className="mt-10 flex flex-col gap-3">
-        {Array.from(groups.entries()).map(([g, items], i) => (
-          <Reveal key={g} delay={i * 0.04}>
-            <YearFolder year={g} items={items} defaultOpen={i === 0} />
-          </Reveal>
-        ))}
-        {filtered.length === 0 && (
-          <p className="font-mono text-[12px] text-fg-dim">Nothing filed under that combination.</p>
-        )}
-      </div>
-
-      <div className="mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-8">
-        <p className="font-mono text-[11px] text-fg-dim">
-          {projects.length} projects catalogued · {liveCount} live now
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-mg-line pt-8">
+        <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">
+          {projects.length} projects catalogued &middot; {liveCount} live now
         </p>
-        <Link
-          href="/certificates"
-          className="focus-ring inline-flex items-center gap-1.5 rounded font-mono text-[11px] uppercase tracking-widest text-fg-muted hover:text-accent"
-        >
-          <span aria-hidden className="text-fg-dim">▸ </span>
-          certificates/
-          <span aria-hidden>→</span>
+        <Link href="/certificates" className="group focus-ring relative inline-flex items-center gap-1.5 rounded font-marginalia-sans text-[12.5px] text-mg-ink-muted hover:text-mg-ink">
+          Certificates
+          <HandUnderline />
+          <span aria-hidden>&rarr;</span>
         </Link>
       </div>
     </div>
