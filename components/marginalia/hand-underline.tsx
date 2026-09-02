@@ -19,7 +19,7 @@ export function HandUnderline({ className = "", active = false }: { className?: 
         d="M2 6.5 C 40 3, 80 8.5, 118 5 S 170 3.5, 198 6"
         fill="none"
         stroke="var(--mg-accent)"
-        strokeWidth="2.5"
+        strokeWidth="1.5"
         strokeLinecap="round"
         pathLength={1}
         className="hand-underline-path"

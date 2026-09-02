@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getFeatured, getSpotlight, getPlayground, getArchive } from "@/data/projects";
 import { WorkCard } from "@/components/marginalia/work-card";
+import { WorkIndexList } from "@/components/marginalia/work-index-list";
 import { HandUnderline } from "@/components/marginalia/hand-underline";
 import { Reveal } from "@/components/marginalia/reveal";
 
@@ -11,6 +12,8 @@ export default function WorkPage() {
   const browsable = [...getFeatured(), ...getSpotlight()];
   const withImages = browsable.filter((p) => p.coverImageSrc);
   const withoutImages = browsable.filter((p) => !p.coverImageSrc);
+  const caseFiles = withImages.filter((p) => p.caseStudy);
+  const spotlightOnly = withImages.filter((p) => !p.caseStudy);
   const playground = getPlayground();
   const archive = getArchive();
 
@@ -25,13 +28,36 @@ export default function WorkPage() {
         </Reveal>
       </div>
 
-      <div className="mx-auto max-w-5xl px-5 pb-8 sm:px-8">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {withImages.map((p, i) => (
-            <WorkCard key={p.slug} project={p} index={i} />
+      <div className="mx-auto max-w-4xl px-5 pb-8 sm:px-8">
+        <Reveal>
+          <p className="font-marginalia-sans text-[12px] uppercase tracking-wide text-mg-ink-faint">Case files &mdash; the full story behind each</p>
+          <WorkIndexList caseFiles={caseFiles} />
+        </Reveal>
+        <div className="mt-16 flex flex-col gap-24 sm:mt-20 sm:gap-36">
+          {caseFiles.map((p, i) => (
+            <div key={p.slug} id={p.slug} className="scroll-mt-24">
+              <WorkCard project={p} index={i} size="hero" />
+            </div>
           ))}
         </div>
+      </div>
 
+      {spotlightOnly.length > 0 && (
+        <div className="mx-auto max-w-5xl border-t border-mg-line px-5 pb-8 pt-16 sm:px-8 sm:pt-20">
+          <Reveal className="mb-8">
+            <p className="font-marginalia-sans text-[12px] uppercase tracking-wide text-mg-ink-faint">
+              Also shipped &mdash; live work, no case study written up yet
+            </p>
+          </Reveal>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3">
+            {spotlightOnly.map((p, i) => (
+              <WorkCard key={p.slug} project={p} index={i} size="compact" />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
         {withoutImages.length > 0 && (
           <Reveal className="mt-16 border-t border-mg-line pt-8">
             <p className="mb-4 font-marginalia-sans text-[12px] text-mg-ink-faint">Not yet photographed</p>

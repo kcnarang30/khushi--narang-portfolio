@@ -4,7 +4,13 @@ import { about } from "@/data/about";
 import { Reveal } from "@/components/marginalia/reveal";
 import { TapedPhoto } from "@/components/marginalia/taped-photo";
 import { InkMark } from "@/components/marginalia/ink-mark";
+import { CuriosityIndex } from "@/components/marginalia/curiosity-index";
 import { EmailDispatchLink } from "@/components/email-dispatch-link";
+
+const curiosities = [
+  ...about.exploring.map((label) => ({ label, kind: "Currently exploring" })),
+  ...about.interests.map((label) => ({ label, kind: "Also thinking about" })),
+];
 
 export const metadata: Metadata = { title: "About" };
 
@@ -29,14 +35,29 @@ export default function AboutPage() {
         <div className="mt-14 grid grid-cols-1 gap-12 sm:grid-cols-12">
           <div className="sm:col-span-7">
             <Reveal delay={0.05}>
-              {about.bio.map((p, i) => (
-                <p
-                  key={i}
-                  className="max-w-md font-marginalia-sans text-[15px] leading-relaxed text-mg-ink-muted first:mt-0 [&:not(:first-child)]:mt-4"
-                >
-                  {p}
-                </p>
-              ))}
+              {about.bio.map((p, i) => {
+                const markWord = "architecture";
+                const markIndex = p.indexOf(markWord);
+                return (
+                  <p
+                    key={i}
+                    className="max-w-md font-marginalia-sans text-[15px] leading-relaxed text-mg-ink-muted first:mt-0 [&:not(:first-child)]:mt-4"
+                  >
+                    {markIndex === -1 ? (
+                      p
+                    ) : (
+                      <>
+                        {p.slice(0, markIndex)}
+                        <span className="relative inline-block">
+                          {markWord}
+                          <InkMark variant="underline" trigger="view" delay={0.6} strokeWidth={1.5} />
+                        </span>
+                        {p.slice(markIndex + markWord.length)}
+                      </>
+                    )}
+                  </p>
+                );
+              })}
             </Reveal>
           </div>
           <div className="flex flex-col items-center gap-10 sm:col-span-5 sm:pt-2 lg:flex-row lg:items-start lg:justify-center">
@@ -55,8 +76,8 @@ export default function AboutPage() {
             {about.outsideOfWork.map((label, i) => (
               <span
                 key={label}
-                className="inline-block rounded-full border border-mg-line bg-mg-bg-raised px-3 py-1 font-marginalia-sans text-[12.5px] text-mg-ink-muted"
-                style={{ transform: `rotate(${TAG_ROTATIONS[i % TAG_ROTATIONS.length]}deg)` }}
+                className="inline-block rounded-full border border-mg-line bg-mg-bg-raised px-3 py-1 font-marginalia-sans text-[12.5px] text-mg-ink-muted transition-[transform,box-shadow] duration-200 ease-out [transform:rotate(var(--r))] hover:shadow-[0_4px_10px_-4px_rgba(36,31,24,0.3)] hover:[transform:rotate(var(--r))_translateY(-2px)]"
+                style={{ ["--r" as string]: `${TAG_ROTATIONS[i % TAG_ROTATIONS.length]}deg` }}
               >
                 {label}
               </span>
@@ -75,16 +96,9 @@ export default function AboutPage() {
             </Reveal>
 
             <Reveal delay={0.05} className="mt-10">
-              <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">Tools &amp; specialties</p>
-              <div className="mt-2.5 flex flex-wrap gap-2">
-                {[...about.exploring, ...about.interests].map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-[1px] border border-mg-line px-2.5 py-1 font-marginalia-sans text-[12.5px] text-mg-ink-muted"
-                  >
-                    {t}
-                  </span>
-                ))}
+              <p className="font-marginalia-sans text-[12px] text-mg-ink-faint">On my mind lately</p>
+              <div className="mt-2.5">
+                <CuriosityIndex items={curiosities} />
               </div>
             </Reveal>
 
@@ -105,7 +119,7 @@ export default function AboutPage() {
 
             <Reveal delay={0.15} className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 font-marginalia-sans text-[14px] text-mg-ink-muted">
               <span>{about.statsProjects}</span>
-              <span>{about.statsLive} live</span>
+              <span>{about.statsLive}</span>
               <span>{about.location}</span>
               <Link href="/certificates" className="group focus-ring relative rounded text-mg-ink-faint hover:text-mg-ink-muted">
                 Certificates &rarr;

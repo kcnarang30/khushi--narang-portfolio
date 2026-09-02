@@ -4,11 +4,13 @@ import { projects, getBySlug } from "@/data/projects";
 import { CaseHeader } from "@/components/marginalia/case-header";
 import { CaseSection } from "@/components/marginalia/case-section";
 import { CaseReflection } from "@/components/marginalia/case-reflection";
-import { Reveal } from "@/components/marginalia/reveal";
 import { CityChain, TechSparksStatRow } from "@/components/marginalia/case-extras";
+import { NextCaseFile } from "@/components/marginalia/next-case-file";
 import { ShuruKarDossier } from "@/components/shurukar-dossier";
 import { TechSparksExhibit } from "@/components/techsparks-exhibit";
 import { DevSparksExhibit } from "@/components/devsparks-exhibit";
+
+const caseFileOrder = projects.filter((p) => p.caseStudy).sort((a, b) => a.order - b.order);
 
 export function generateStaticParams() {
   return projects.filter((p) => p.caseStudy).map((p) => ({ slug: p.slug }));
@@ -35,6 +37,8 @@ export default async function CaseStudyPage({
   if (!project || !project.caseStudy || !project.caseStudyContent) notFound();
 
   const cs = project.caseStudyContent;
+  const currentIndex = caseFileOrder.findIndex((p) => p.slug === project.slug);
+  const next = caseFileOrder[(currentIndex + 1) % caseFileOrder.length];
 
   const extra =
     project.slug === "devsparks" && cs.hero.sub?.includes(" → ") ? (
@@ -68,20 +72,7 @@ export default async function CaseStudyPage({
         </div>
       )}
 
-      {project.todo && project.todo.length > 0 && (
-        <div className="mx-auto max-w-3xl px-5 pb-20 sm:px-8">
-          <Reveal className="border-t border-dashed border-mg-line pt-6">
-            <p className="font-marginalia-sans text-[11px] uppercase tracking-wide text-mg-ink-faint">
-              Open items before this goes fully live
-            </p>
-            <ul className="mt-2 flex flex-col gap-1 font-marginalia-sans text-[12.5px] text-mg-ink-faint">
-              {project.todo.map((t) => (
-                <li key={t}>&mdash; {t}</li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      )}
+      {next && next.slug !== project.slug && <NextCaseFile project={next} />}
     </article>
   );
 }

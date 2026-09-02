@@ -53,6 +53,8 @@ export interface Project {
   caseStudyContent?: CaseStudy;
   coverAssetRef?: string; // key into ASSET_MAP.md — no fabricated image paths
   coverImageSrc?: string; // real exported file in /public — only set once the asset actually exists
+  coverImageWidth?: number; // real pixel dimensions of coverImageSrc — lets it render at its actual aspect ratio instead of a forced crop
+  coverImageHeight?: number;
   tags?: string[];
   order: number;
   todo?: string[]; // explicit TODOs instead of invented facts

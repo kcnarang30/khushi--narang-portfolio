@@ -39,7 +39,7 @@ export function HeroCorrection() {
             d="M1 5.5 C 20 3, 45 7.5, 60 4.5 S 85 6.5, 99 5"
             fill="none"
             stroke="var(--mg-accent)"
-            strokeWidth="2.5"
+            strokeWidth="1.75"
             strokeLinecap="round"
             initial={reduce ? undefined : { pathLength: 0 }}
             animate={reduce ? undefined : { pathLength: 1 }}

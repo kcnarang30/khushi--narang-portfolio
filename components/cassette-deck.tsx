@@ -1,45 +1,33 @@
 "use client";
 
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
-import { motion, useMotionValue, animate as fmAnimate, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { HandUnderline } from "./marginalia/hand-underline";
 
 /**
- * Drag either cassette onto the player and it docks in and plays — a short,
- * original chiptune synthesized live via Web Audio (square-wave oscillator),
- * not a real/licensed track. Each tape is its own song; dragging a
- * different one in swaps the tune. Drag it back off, or hit Eject, to stop.
+ * Two short loops, synthesized live via Web Audio (square-wave oscillator) —
+ * not a real recording, and not represented as one. Instead of drawing a
+ * cassette deck, the visible object is the actual sound: real frequency
+ * data from the oscillator's own analyser, drawn as bars while it plays.
+ * That's the artifact — not a picture of a tape.
  */
 
 const NOTE_MS = 220;
+const BAR_COUNT = 28;
 
-const TAPES = [
-  {
-    id: "a",
-    label: "mixtape — side a",
-    notes: [392, 440, 494, 523, 494, 440, 392, 330],
-    restClassName: "left-1/2 -ml-12 -bottom-16",
-  },
-  {
-    id: "b",
-    label: "mixtape — side b",
-    notes: [330, 370, 415, 440, 494, 440, 415, 370],
-    restClassName: "left-1/2 -ml-12 -top-16",
-  },
+const TRACKS = [
+  { id: "a", label: "side a", notes: [392, 440, 494, 523, 494, 440, 392, 330] },
+  { id: "b", label: "side b", notes: [330, 370, 415, 440, 494, 440, 415, 370] },
 ];
 
 function useChiptune() {
   const ctxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
   const timerRef = useRef<number | null>(null);
   const stepRef = useRef(0);
+  // A worn deck's motor never runs at exactly one speed — this is that,
+  // read live on every note so dragging the knob bends pitch as it plays.
+  const speedRef = useRef(1);
 
   const play = useCallback((notes: number[]) => {
     if (typeof window === "undefined") return;
@@ -47,23 +35,29 @@ function useChiptune() {
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      ctxRef.current = new AudioCtx();
+      const ctx = new AudioCtx();
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 64;
+      analyser.connect(ctx.destination);
+      ctxRef.current = ctx;
+      analyserRef.current = analyser;
     }
     const ctx = ctxRef.current;
+    const analyser = analyserRef.current!;
     if (ctx.state === "suspended") ctx.resume();
     if (timerRef.current !== null) window.clearInterval(timerRef.current);
     stepRef.current = 0;
 
     const tick = () => {
-      const freq = notes[stepRef.current % notes.length];
+      const freq = notes[stepRef.current % notes.length] * speedRef.current;
       stepRef.current++;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "square";
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + NOTE_MS / 1000);
-      osc.connect(gain).connect(ctx.destination);
+      osc.connect(gain).connect(analyser);
       osc.start();
       osc.stop(ctx.currentTime + NOTE_MS / 1000);
     };
@@ -80,235 +74,161 @@ function useChiptune() {
 
   useEffect(() => stop, [stop]);
 
-  return { play, stop };
+  return { play, stop, analyserRef, speedRef };
 }
 
-type TapeHandle = { eject: () => void };
+const SPEED_MIN = -50;
+const SPEED_MAX = 50;
 
-const CassetteTape = forwardRef<
-  TapeHandle,
-  {
-    label: string;
-    id: string;
-    docked: boolean;
-    restClassName: string;
-    slotRef: RefObject<HTMLDivElement | null>;
-    containerRef: RefObject<HTMLElement | null>;
-    onDock: (id: string) => void;
-    onUndock: (id: string) => void;
-  }
->(function CassetteTape({ label, id, docked, restClassName, slotRef, containerRef, onDock, onUndock }, ref) {
-  const cassetteRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const reduce = useReducedMotion();
+/**
+ * A real pitch-bend control, not decoration — dragging it changes
+ * `speedRef` mid-playback, so you can hear the loop warp exactly like a
+ * cassette motor being nudged. Drag vertically; the notch rotates to match.
+ */
+function SpeedKnob({ speedRef }: { speedRef: React.RefObject<number> }) {
+  const [angle, setAngle] = useState(0);
+  const angleRef = useRef(0);
 
-  function overlapsSlot() {
-    if (!slotRef.current || !cassetteRef.current) return false;
-    const slot = slotRef.current.getBoundingClientRect();
-    const cass = cassetteRef.current.getBoundingClientRect();
-    const cx = cass.left + cass.width / 2;
-    const cy = cass.top + cass.height / 2;
-    return cx > slot.left && cx < slot.right && cy > slot.top && cy < slot.bottom;
+  function setValue(deg: number) {
+    const clamped = Math.max(SPEED_MIN, Math.min(SPEED_MAX, deg));
+    angleRef.current = clamped;
+    setAngle(clamped);
+    speedRef.current = 1 + clamped / 200;
   }
 
-  function handleDragEnd() {
-    const overlapping = overlapsSlot();
-    if (overlapping && !docked) {
-      if (slotRef.current && cassetteRef.current) {
-        const slot = slotRef.current.getBoundingClientRect();
-        const cass = cassetteRef.current.getBoundingClientRect();
-        const dx = slot.left + slot.width / 2 - (cass.left + cass.width / 2);
-        const dy = slot.top + slot.height / 2 - (cass.top + cass.height / 2);
-        if (reduce) {
-          x.set(x.get() + dx);
-          y.set(y.get() + dy);
-        } else {
-          fmAnimate(x, x.get() + dx, { type: "spring", stiffness: 400, damping: 30 });
-          fmAnimate(y, y.get() + dy, { type: "spring", stiffness: 400, damping: 30 });
-        }
+  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startAngle = angleRef.current;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+
+    function onMove(ev: PointerEvent) {
+      setValue(startAngle + (startY - ev.clientY) * 1.2);
+    }
+    function onUp() {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    }
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <div
+        onPointerDown={onPointerDown}
+        role="slider"
+        aria-label="Pitch"
+        aria-valuemin={SPEED_MIN}
+        aria-valuemax={SPEED_MAX}
+        aria-valuenow={Math.round(angle)}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowUp" || e.key === "ArrowRight") setValue(angleRef.current + 8);
+          if (e.key === "ArrowDown" || e.key === "ArrowLeft") setValue(angleRef.current - 8);
+        }}
+        className="focus-ring relative flex h-8 w-8 shrink-0 cursor-ns-resize touch-none items-center justify-center rounded-full border border-mg-line bg-mg-bg-raised"
+      >
+        <span
+          aria-hidden
+          className="absolute h-3 w-[1.5px] rounded-full bg-mg-accent"
+          style={{ top: 4, transformOrigin: "50% 12px", transform: `rotate(${angle * 1.4}deg)` }}
+        />
+      </div>
+      <span className="font-marginalia-sans text-[9px] uppercase tracking-wide text-mg-ink-faint">Pitch</span>
+    </div>
+  );
+}
+
+const RESTING_LEVELS = Array(BAR_COUNT).fill(2);
+
+function Waveform({ analyserRef, active }: { analyserRef: React.RefObject<AnalyserNode | null>; active: boolean }) {
+  const [levels, setLevels] = useState<number[]>(RESTING_LEVELS);
+  const frameRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!active) {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      return;
+    }
+    const analyser = analyserRef.current;
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.frequencyBinCount);
+
+    const tick = () => {
+      analyser.getByteFrequencyData(data);
+      const bars: number[] = [];
+      for (let i = 0; i < BAR_COUNT; i++) {
+        const v = data[i % data.length] ?? 0;
+        bars.push(Math.max(2, (v / 255) * 32));
       }
-      onDock(id);
-    } else if (!overlapping && docked) {
-      onUndock(id);
+      setLevels(bars);
+      frameRef.current = requestAnimationFrame(tick);
+    };
+    frameRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, [active, analyserRef]);
+
+  const display = active ? levels : RESTING_LEVELS;
+
+  return (
+    <div className="flex h-8 items-end gap-[3px]" aria-hidden>
+      {display.map((h, i) => (
+        <span
+          key={i}
+          className="w-[2.5px] shrink-0 rounded-[1px] bg-mg-accent transition-[height,opacity] duration-100"
+          style={{ height: h, opacity: active ? 0.85 : 0.25 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function CassetteDeck({ className }: { className?: string }) {
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const { play, stop, analyserRef, speedRef } = useChiptune();
+
+  function toggle(id: string) {
+    const track = TRACKS.find((t) => t.id === id);
+    if (!track) return;
+    if (playingId === id) {
+      stop();
+      setPlayingId(null);
+    } else {
+      play(track.notes);
+      setPlayingId(id);
     }
   }
 
-  useImperativeHandle(ref, () => ({
-    eject() {
-      if (!reduce) {
-        fmAnimate(y, y.get() - 44, { type: "spring", stiffness: 300, damping: 22 });
-      } else {
-        y.set(y.get() - 44);
-      }
-    },
-  }));
-
   return (
-    <motion.div
-      ref={cassetteRef}
-      aria-hidden
-      drag
-      dragConstraints={containerRef}
-      dragMomentum={false}
-      onDragEnd={handleDragEnd}
-      whileDrag={reduce ? undefined : { scale: 1.08, zIndex: 40 }}
-      whileHover={reduce ? undefined : { scale: 1.02 }}
-      style={{ x, y, touchAction: "none" }}
-      className={cn("absolute w-24 cursor-grab touch-none select-none active:cursor-grabbing", restClassName)}
-    >
-      <div className="rounded-[3px] bg-[#242424] p-1.5 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)]">
-        <div className="rounded-sm bg-[#e8dcc0] px-2 py-2">
-          <div className="flex items-center justify-between">
-            <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
-              <span
-                className={cn("h-[3px] w-[3px] rounded-full bg-black/50", docked && !reduce && "animate-spin")}
-                style={{ animationDuration: "1.1s" }}
-              />
-            </span>
-            <span className="relative flex h-4 w-4 items-center justify-center rounded-full border-2 border-black/50">
-              <span
-                className={cn("h-[3px] w-[3px] rounded-full bg-black/50", docked && !reduce && "animate-spin")}
-                style={{ animationDuration: "1.1s" }}
-              />
-            </span>
-          </div>
-          <div className="mx-auto mt-1 h-[2px] w-10 bg-black/30" />
-        </div>
-        <p className="mt-1 text-center font-pen text-[11px] leading-none text-white/70">{label}</p>
-      </div>
-    </motion.div>
-  );
-});
-
-export function CassetteDeck({
-  containerRef,
-  className,
-}: {
-  containerRef: RefObject<HTMLElement | null>;
-  className?: string;
-}) {
-  const [dockedId, setDockedId] = useState<string | null>(null);
-  const slotRef = useRef<HTMLDivElement>(null);
-  const tapeRefs = useRef<Record<string, TapeHandle | null>>({});
-  const { play, stop } = useChiptune();
-  const docked = dockedId !== null;
-
-  const handleDock = useCallback(
-    (id: string) => {
-      const tape = TAPES.find((t) => t.id === id);
-      if (!tape) return;
-      setDockedId((current) => {
-        if (current && current !== id) tapeRefs.current[current]?.eject();
-        return id;
-      });
-      play(tape.notes);
-    },
-    [play]
-  );
-
-  const handleUndock = useCallback(
-    (id: string) => {
-      setDockedId((current) => (current === id ? null : current));
-      stop();
-    },
-    [stop]
-  );
-
-  function eject() {
-    if (dockedId) tapeRefs.current[dockedId]?.eject();
-    setDockedId(null);
-    stop();
-  }
-
-  return (
-    <div className={cn("relative w-36", className)}>
-      {/* Player */}
-      <div
-        className="grain-card w-36 rounded-lg border border-line-strong p-3.5 shadow-[0_20px_36px_-16px_rgba(0,0,0,0.55)]"
-        style={{ background: "linear-gradient(160deg, #4a4038 0%, #2e2822 100%)" }}
-      >
-        <div className="mb-2 flex items-center justify-between">
-          <p className="font-mono text-[7px] uppercase tracking-widest text-white/40">Desk Deck</p>
-          <span
-            aria-hidden
-            className="h-[5px] w-[5px] rounded-full"
-            style={{
-              background: docked ? "#ff5a5a" : "#3a332c",
-              boxShadow: docked ? "0 0 4px 1px rgba(255,90,90,0.7)" : "none",
-            }}
-          />
-        </div>
-
-        {/* Window — reels visible even empty, glassy inset look */}
-        <div
-          ref={slotRef}
-          className="relative flex h-11 items-center justify-center overflow-hidden rounded-[3px]"
-          style={{
-            background: "#151210",
-            boxShadow: "inset 0 2px 5px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.04)",
-          }}
-        >
-          <span
-            aria-hidden
-            className="absolute left-3 h-4 w-4 rounded-full border-2"
-            style={{ borderColor: docked ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.12)" }}
-          />
-          <span
-            aria-hidden
-            className="absolute right-3 h-4 w-4 rounded-full border-2"
-            style={{ borderColor: docked ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.12)" }}
-          />
-          <span className="relative font-mono text-[6.5px] uppercase tracking-widest text-white/45">
-            {docked ? `♪ ${TAPES.find((t) => t.id === dockedId)?.label.split(" — ")[1]}` : "insert cassette"}
-          </span>
-        </div>
-
-        {/* Transport row — Eject is real, the rest are decorative texture */}
-        <div className="mt-2.5 flex items-center gap-1">
-          <span aria-hidden className="flex h-5 flex-1 items-center justify-center rounded-sm bg-black/25 font-mono text-[8px] text-white/35">
-            ◂◂
-          </span>
-          <span aria-hidden className="flex h-5 flex-1 items-center justify-center rounded-sm bg-black/25 font-mono text-[8px] text-white/35">
-            {docked ? "❚❚" : "▸"}
-          </span>
-          <span aria-hidden className="flex h-5 flex-1 items-center justify-center rounded-sm bg-black/25 font-mono text-[8px] text-white/35">
-            ▸▸
-          </span>
+    <div className={cn("w-fit", className)}>
+      <p className="font-marginalia-sans text-[11px] uppercase tracking-wide text-mg-ink-faint">A mixtape</p>
+      <div className="mt-2 flex items-baseline gap-5">
+        {TRACKS.map((track) => (
           <button
+            key={track.id}
             type="button"
-            onClick={eject}
-            disabled={!docked}
-            className="focus-ring flex h-5 flex-1 items-center justify-center rounded-sm bg-[#3a2f24] font-mono text-[7.5px] uppercase tracking-wide text-white/50 transition-colors enabled:hover:text-white/85 disabled:opacity-40"
+            onClick={() => toggle(track.id)}
+            aria-pressed={playingId === track.id}
+            className={cn(
+              "group focus-ring relative font-marginalia-serif text-[16px] transition-colors",
+              playingId === track.id ? "text-mg-accent" : "text-mg-ink hover:text-mg-ink"
+            )}
           >
-            Eject
+            {track.label}
+            <HandUnderline active={playingId === track.id} />
           </button>
-        </div>
-
-        {/* Speaker grille */}
-        <div aria-hidden className="mt-2.5 grid grid-cols-8 gap-[2.5px]">
-          {Array.from({ length: 16 }).map((_, i) => (
-            <span key={i} className="h-[2.5px] w-[2.5px] rounded-full bg-black/40" />
-          ))}
-        </div>
+        ))}
       </div>
-
-      {TAPES.map((tape) => (
-        <CassetteTape
-          key={tape.id}
-          ref={(el) => {
-            tapeRefs.current[tape.id] = el;
-          }}
-          id={tape.id}
-          label={tape.label}
-          docked={dockedId === tape.id}
-          restClassName={tape.restClassName}
-          slotRef={slotRef}
-          containerRef={containerRef}
-          onDock={handleDock}
-          onUndock={handleUndock}
-        />
-      ))}
+      <div className="mt-3 flex items-end gap-4">
+        <Waveform analyserRef={analyserRef} active={playingId !== null} />
+        <SpeedKnob speedRef={speedRef} />
+      </div>
+      <p className="mt-2 max-w-[13rem] font-marginalia-sans text-[12px] leading-snug text-mg-ink-muted">
+        Two loops I synthesized live, not a real recording &mdash; drag the knob to warp the pitch while it plays.
+      </p>
     </div>
   );
 }

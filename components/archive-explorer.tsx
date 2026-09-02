@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { projects } from "@/data/projects";
 import { ProjectCategory } from "@/data/types";
 import { IndexRow } from "@/components/index-card";
@@ -43,14 +44,20 @@ const years = Array.from(new Set(sorted.map((p) => yearGroup(p.year))));
 const categories = Array.from(new Set(projects.map((p) => p.category))) as ProjectCategory[];
 const liveCount = projects.filter((p) => p.live).length;
 
-function YearFolder({ year, items, defaultOpen }: { year: string; items: typeof sorted; defaultOpen: boolean }) {
-  const [open, setOpen] = useState(defaultOpen);
+/**
+ * A folder that's actually opened, not swapped in already-open — the tab
+ * selection changes an `open` prop on a folder that stays mounted the whole
+ * time, so picking a year plays the real accordion animation instead of a
+ * fade-in of pre-expanded content.
+ */
+function YearFolder({ year, items, open, onToggle }: { year: string; items: typeof sorted; open: boolean; onToggle: () => void }) {
+  const reduce = useReducedMotion();
 
   return (
     <div>
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
         aria-expanded={open}
         className={cn(
           "focus-ring -mx-2 flex w-full items-center gap-2 rounded-t-[2px] px-2 py-1.5 text-left transition-colors",
@@ -70,15 +77,30 @@ function YearFolder({ year, items, defaultOpen }: { year: string; items: typeof 
           {year}/<span className="ml-2 text-mg-ink-faint/70">{items.length} {items.length === 1 ? "item" : "items"}</span>
         </span>
       </button>
-      <div className="grid transition-[grid-template-rows] duration-300 ease-out" style={{ gridTemplateRows: open ? "1fr" : "0fr" }}>
-        <div className="overflow-hidden">
-          <div className={cn("-mx-2 rounded-b-[2px] px-2 pb-1 pt-2", open && "bg-mg-bg/50")}>
-            {items.map((p) => (
-              <IndexRow key={p.slug} project={p} />
-            ))}
-          </div>
-        </div>
-      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={reduce ? undefined : { height: 0, opacity: 0 }}
+            animate={reduce ? undefined : { height: "auto", opacity: 1 }}
+            exit={reduce ? undefined : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="-mx-2 rounded-b-[2px] bg-mg-bg/50 px-2 pb-1 pt-2">
+              {items.map((p, i) => (
+                <motion.div
+                  key={p.slug}
+                  initial={reduce ? undefined : { opacity: 0, y: -6 }}
+                  animate={reduce ? undefined : { opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: i * 0.025, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <IndexRow project={p} />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -86,19 +108,41 @@ function YearFolder({ year, items, defaultOpen }: { year: string; items: typeof 
 export function ArchiveExplorer() {
   const [year, setYear] = useState<string>("All");
   const [type, setType] = useState<string>("All");
+  // Independent of the year tab — lets someone open a second folder while
+  // browsing "All years" without the tab selection fighting their click.
+  const [manuallyOpen, setManuallyOpen] = useState<Set<string>>(() => new Set([years[0]]));
 
-  const filtered = sorted.filter((p) => {
-    if (year !== "All" && yearGroup(p.year) !== year) return false;
-    if (type !== "All" && p.category !== type) return false;
-    return true;
-  });
+  const byType = type === "All" ? sorted : sorted.filter((p) => p.category === type);
 
-  const groups = new Map<string, typeof filtered>();
-  for (const p of filtered) {
+  const groups = new Map<string, typeof sorted>();
+  for (const p of byType) {
     const g = yearGroup(p.year);
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g)!.push(p);
   }
+
+  function isOpen(g: string) {
+    if (year !== "All") return g === year;
+    return manuallyOpen.has(g);
+  }
+
+  function toggle(g: string) {
+    if (year !== "All") {
+      // A folder was opened by hand while a specific year tab is active —
+      // hand control back to manual mode instead of fighting the tab state.
+      setYear("All");
+      setManuallyOpen(new Set([g]));
+      return;
+    }
+    setManuallyOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(g)) next.delete(g);
+      else next.add(g);
+      return next;
+    });
+  }
+
+  const hasAnyResults = groups.size > 0;
 
   return (
     <div>
@@ -108,14 +152,18 @@ export function ArchiveExplorer() {
         onChange={setYear}
       />
 
-      <div className="rounded-b-[2px] rounded-tr-[2px] bg-mg-bg-raised px-4 py-6 sm:px-6">
-        <div className="flex flex-wrap items-center gap-x-1 gap-y-2 border-b border-mg-line pb-5">
+      <div className="relative">
+        {/* Paper depth — two sheets filed underneath the panel actually being read */}
+        <div aria-hidden className="absolute inset-x-3 -bottom-1.5 h-full rounded-b-[2px] rounded-tr-[2px] bg-mg-bg-raised opacity-60" style={{ transform: "rotate(-0.4deg)" }} />
+        <div aria-hidden className="absolute inset-x-1.5 -bottom-0.5 h-full rounded-b-[2px] rounded-tr-[2px] bg-mg-bg-raised opacity-80" style={{ transform: "rotate(0.3deg)" }} />
+        <div className="relative rounded-b-[2px] rounded-tr-[2px] bg-mg-bg-raised px-4 py-6 shadow-[0_1px_2px_rgba(36,31,24,0.06)] sm:px-6">
+        <div className="flex flex-wrap items-center gap-x-1 gap-y-1 border-b border-mg-line pb-5">
           <span className="mr-2 font-marginalia-sans text-[11.5px] text-mg-ink-faint">Filter by type:</span>
           <button
             onClick={() => setType("All")}
             className={cn(
-              "rounded-full px-2.5 py-1 font-marginalia-sans text-[12px] transition-colors",
-              type === "All" ? "bg-mg-accent/15 text-mg-accent" : "text-mg-ink-faint hover:text-mg-ink-muted"
+              "border-b-2 px-2 py-1 font-marginalia-sans text-[12px] transition-colors",
+              type === "All" ? "border-mg-accent text-mg-accent" : "border-transparent text-mg-ink-faint hover:text-mg-ink-muted"
             )}
           >
             All
@@ -125,8 +173,8 @@ export function ArchiveExplorer() {
               key={c}
               onClick={() => setType(c)}
               className={cn(
-                "rounded-full px-2.5 py-1 font-marginalia-sans text-[12px] transition-colors",
-                type === c ? "bg-mg-accent/15 text-mg-accent" : "text-mg-ink-faint hover:text-mg-ink-muted"
+                "border-b-2 px-2 py-1 font-marginalia-sans text-[12px] transition-colors",
+                type === c ? "border-mg-accent text-mg-accent" : "border-transparent text-mg-ink-faint hover:text-mg-ink-muted"
               )}
             >
               {CATEGORY_LABELS[c]}
@@ -135,12 +183,17 @@ export function ArchiveExplorer() {
         </div>
 
         <div className="mt-6 flex flex-col gap-3">
-          {Array.from(groups.entries()).map(([g, items], i) => (
-            <Reveal key={`${g}-${year}`} delay={i * 0.04}>
-              <YearFolder year={g} items={items} defaultOpen={year !== "All" || i === 0} />
-            </Reveal>
-          ))}
-          {filtered.length === 0 && <p className="font-marginalia-sans text-[13px] text-mg-ink-faint">Nothing filed under that combination.</p>}
+          {years.map((g, i) => {
+            const items = groups.get(g);
+            if (!items) return null;
+            return (
+              <Reveal key={g} delay={i * 0.04}>
+                <YearFolder year={g} items={items} open={isOpen(g)} onToggle={() => toggle(g)} />
+              </Reveal>
+            );
+          })}
+          {!hasAnyResults && <p className="font-marginalia-sans text-[13px] text-mg-ink-faint">Nothing filed under that combination.</p>}
+        </div>
         </div>
       </div>
 

@@ -33,7 +33,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "focus-ring group relative rounded font-marginalia-sans text-[14.5px] transition-colors",
+                  "focus-ring group relative inline-block rounded font-marginalia-sans text-[14.5px] transition-[color,transform] duration-150 active:scale-[0.94]",
                   active ? "text-mg-ink" : "text-mg-ink-muted hover:text-mg-ink"
                 )}
               >
@@ -52,7 +52,7 @@ export function SiteHeader() {
         </nav>
 
         <button
-          className="focus-ring relative z-10 rounded p-2 md:hidden"
+          className="focus-ring relative z-10 rounded p-2 transition-transform duration-150 active:scale-90 md:hidden"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-label="Toggle menu"
@@ -85,7 +85,7 @@ export function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="focus-ring rounded py-2 font-marginalia-sans text-[15px] text-mg-ink-muted hover:text-mg-ink"
+                  className="focus-ring rounded py-2 font-marginalia-sans text-[15px] text-mg-ink-muted transition-transform duration-150 active:scale-[0.97] active:text-mg-ink hover:text-mg-ink"
                 >
                   {item.label}
                 </Link>

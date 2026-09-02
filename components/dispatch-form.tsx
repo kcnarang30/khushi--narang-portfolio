@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * Real submissions via Web3Forms — no backend to build, but a real inbox on
@@ -50,8 +51,13 @@ export function DispatchForm() {
       <div className="flex items-center justify-between border-b border-mg-line pb-4">
         <p className="font-marginalia-serif text-[19px] text-mg-ink">Dispatch</p>
         <span className="inline-flex items-center gap-1.5 font-marginalia-sans text-[11px] uppercase tracking-wide text-mg-ink-faint">
-          <span className="h-1.5 w-1.5 rounded-full bg-mg-accent" aria-hidden />
-          Open
+          <motion.span
+            className="h-1.5 w-1.5 rounded-full bg-mg-accent"
+            animate={status === "sending" ? { opacity: [1, 0.3, 1] } : { opacity: 1 }}
+            transition={status === "sending" ? { duration: 0.8, repeat: Infinity } : undefined}
+            aria-hidden
+          />
+          {status === "sending" ? "Sending" : status === "success" ? "Dispatched" : "Open"}
         </span>
       </div>
 
@@ -107,21 +113,43 @@ export function DispatchForm() {
         <span className="font-marginalia-hand text-[18px] text-mg-accent" style={{ transform: "rotate(-2deg)", display: "inline-block" }}>
           P.S. I reply fast
         </span>
-        <button
+        <motion.button
           type="submit"
           disabled={status === "sending"}
-          className="focus-ring rounded-full bg-mg-accent px-6 py-2.5 font-marginalia-sans text-[13.5px] font-medium text-white transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+          animate={status === "sending" ? { scale: [1, 0.96, 1] } : { scale: 1 }}
+          transition={status === "sending" ? { duration: 0.9, repeat: Infinity, ease: "easeInOut" } : { duration: 0.15 }}
+          whileHover={status === "idle" ? { scale: 1.02 } : undefined}
+          whileTap={status === "idle" ? { scale: 0.98 } : undefined}
+          className="focus-ring rounded-full bg-mg-accent px-6 py-2.5 font-marginalia-sans text-[13.5px] font-medium text-white disabled:opacity-80"
         >
           {status === "sending" ? "Sending…" : "Send"}
-        </button>
+        </motion.button>
       </div>
 
       <div aria-live="polite" className="mt-4">
-        {status === "success" && (
-          <p className="font-marginalia-sans text-[12px] text-mg-accent">
-            Sent &mdash; landed straight in my inbox. I&rsquo;ll get back to you soon.
-          </p>
-        )}
+        <AnimatePresence>
+          {status === "success" && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center gap-3"
+            >
+              <motion.span
+                initial={{ scale: 0, rotate: 0 }}
+                animate={{ scale: 1, rotate: -9 }}
+                transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1], delay: 0.1 }}
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 font-marginalia-sans text-[8.5px] font-bold uppercase tracking-wide"
+                style={{ borderColor: "var(--mg-accent)", color: "var(--mg-accent)", mixBlendMode: "multiply" }}
+              >
+                Sent
+              </motion.span>
+              <p className="font-marginalia-sans text-[12px] text-mg-accent">
+                Landed straight in my inbox. I&rsquo;ll get back to you soon.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {status === "error" && (
           <p className="font-marginalia-sans text-[12px] text-mg-accent">
             That didn&rsquo;t go through &mdash; email me directly instead:{" "}

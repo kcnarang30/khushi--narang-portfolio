@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { getPlayground } from "@/data/projects";
 import { about } from "@/data/about";
 import { revealImage } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 import { GameBoy } from "./game-boy";
 import { CassetteDeck } from "./cassette-deck";
 import { ConsolePing } from "./console-ping";
@@ -15,77 +17,154 @@ import { InkMark } from "./marginalia/ink-mark";
 import { Reveal } from "./marginalia/reveal";
 
 /**
- * The workbench, not a corkboard — real hierarchy and real breathing room
- * instead of a dense free-for-all. Five real pieces, presented once each,
- * with one honest handwritten reaction where there's something worth
- * saying, not a note on every card. The two working devices (Snake, the
- * cassette synth) get their own quiet section instead of being scraps
- * fighting for space with everything else.
+ * The one page where the real things do the talking. No cards, no frames —
+ * each piece is the actual exported artwork, at its own real aspect ratio,
+ * scaled and rotated the way things end up when you empty a folder onto a
+ * desk. The interactive experiments (Snake, the synth) get the same rule:
+ * the real thing IS the object, annotated in the margin, not built a shell.
  */
 
-const ROTATIONS = [-1.5, 1, -0.5, 1.5, -1];
-
-function PieceCard({
-  src,
-  name,
-  oneLiner,
-  status,
-  note,
-  index,
-}: {
+type ArtifactProps = {
   src: string;
+  width: number;
+  height: number;
   name: string;
   oneLiner: string;
-  status: string;
-  note?: string;
+  tags?: string[];
+  rotate?: number;
+  tierWidth: number;
   index: number;
-}) {
+  note?: string;
+  noteOnHover?: boolean;
+  tiltable?: boolean;
+  onExpand?: () => void;
+  priority?: boolean;
+};
+
+function Artifact({
+  src,
+  width,
+  height,
+  name,
+  oneLiner,
+  tags,
+  rotate = 0,
+  tierWidth,
+  index,
+  note,
+  noteOnHover = false,
+  tiltable = false,
+  onExpand,
+  priority = false,
+}: ArtifactProps) {
   const reduce = useReducedMotion();
-  const rotate = ROTATIONS[index % ROTATIONS.length];
+  const [tilt, setTilt] = useState<{ x: number; y: number } | null>(null);
+  const [hovered, setHovered] = useState(false);
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!tiltable || reduce) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: py * -6, y: px * 6 });
+  }
 
   return (
-    <motion.div {...(reduce ? {} : revealImage(index * 0.06))}>
-      <div className="group relative" style={{ transform: `rotate(${rotate}deg)` }}>
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-mg-bg-raised shadow-[0_16px_32px_-16px_rgba(36,31,24,0.3)]">
-          <Image
-            src={src}
-            alt={name}
-            fill
-            sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 90vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-          />
-        </div>
+    <motion.div {...(reduce ? {} : revealImage(index * 0.07))} style={{ width: tierWidth }}>
+      <div
+        role={onExpand ? "button" : undefined}
+        tabIndex={onExpand ? 0 : undefined}
+        onClick={onExpand}
+        onKeyDown={(e) => onExpand && e.key === "Enter" && onExpand()}
+        onMouseMove={handleMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => {
+          setHovered(false);
+          setTilt(null);
+        }}
+        className={cn("inline-block", onExpand && "focus-ring cursor-pointer")}
+        style={{
+          transform: `rotate(${rotate}deg) rotateX(${tilt?.x ?? 0}deg) rotateY(${tilt?.y ?? 0}deg)`,
+          transition: tilt ? "transform 0.08s linear" : "transform 0.35s ease-out",
+          transformStyle: "preserve-3d",
+        }}
+      >
+        <Image
+          src={src}
+          alt={name}
+          width={width}
+          height={height}
+          priority={priority}
+          sizes={`${tierWidth}px`}
+          style={{
+            width: tierWidth,
+            height: "auto",
+            filter: "drop-shadow(0 22px 34px rgba(36,31,24,0.32))",
+          }}
+        />
+      </div>
+      <div className="mt-2.5" style={{ maxWidth: tierWidth }}>
+        <p className="font-marginalia-serif text-[14.5px] text-mg-ink">{name}</p>
+        {tags && tags.length > 0 && (
+          <p className="mt-0.5 font-marginalia-sans text-[11px] uppercase tracking-wide text-mg-ink-faint">
+            {tags.join(" · ")}
+          </p>
+        )}
+        <p className="mt-1 font-marginalia-sans text-[12px] leading-snug text-mg-ink-muted">{oneLiner}</p>
         {note && (
           <p
-            className="mt-2 font-marginalia-hand text-[17px] text-mg-accent"
-            style={{ transform: `rotate(${-rotate * 1.4}deg)` }}
+            className="mt-1.5 font-marginalia-hand text-[14px] text-mg-accent transition-opacity duration-300"
+            style={{ transform: "rotate(-1deg)", display: "inline-block", opacity: noteOnHover ? (hovered ? 1 : 0) : 1 }}
           >
             {note}
           </p>
         )}
-        <div className="mt-1.5 flex items-baseline justify-between gap-3">
-          <p className="font-marginalia-serif text-[16px] text-mg-ink">{name}</p>
-          <p className="shrink-0 font-marginalia-sans text-[11px] uppercase tracking-wide text-mg-ink-faint">{status}</p>
-        </div>
-        <p className="font-marginalia-sans text-[12.5px] leading-snug text-mg-ink-muted">{oneLiner}</p>
       </div>
     </motion.div>
   );
 }
 
-function PendingSlot({ index }: { index: number }) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div {...(reduce ? {} : revealImage(index * 0.06))}>
-      <div className="flex aspect-[4/5] w-full flex-col items-center justify-center gap-2 border border-dashed border-mg-line bg-mg-bg text-center">
-        <p className="font-marginalia-sans text-[11px] uppercase tracking-wide text-mg-ink-faint">More coming</p>
-      </div>
-    </motion.div>
+function Lightbox({ src, width, height, name, onClose }: { src: string; width: number; height: number; name: string; onClose: () => void }) {
+  if (typeof document === "undefined") return null;
+  return createPortal(
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="fixed inset-0 z-[200] flex items-center justify-center bg-mg-ink/85 p-6 sm:p-16"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            src={src}
+            alt={name}
+            width={width}
+            height={height}
+            style={{ width: "auto", height: "auto", maxWidth: "min(88vw, 620px)", maxHeight: "86vh" }}
+          />
+        </motion.div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="focus-ring absolute right-5 top-5 font-marginalia-sans text-[13px] uppercase tracking-wide text-white/70 hover:text-white sm:right-8 sm:top-8"
+        >
+          Close ✕
+        </button>
+      </motion.div>
+    </AnimatePresence>,
+    document.body
   );
 }
 
 export function PlaygroundCanvas() {
-  const deskRef = useRef<HTMLDivElement>(null);
   const pieces = getPlayground();
   const knwn = pieces.find((p) => p.slug === "knwn")!;
   const cyberAngel = pieces.find((p) => p.slug === "cyber-angel")!;
@@ -93,76 +172,131 @@ export function PlaygroundCanvas() {
   const internetMagazine = pieces.find((p) => p.slug === "internet-magazine")!;
   const sipCoffee = pieces.find((p) => p.slug === "sip-coffee")!;
 
+  const [expanded, setExpanded] = useState<{ src: string; width: number; height: number; name: string } | null>(null);
+
   return (
     <div className="bg-mg-bg">
-      <div className="mx-auto max-w-5xl px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-24">
+      <div className="mx-auto max-w-5xl px-5 pb-14 pt-16 sm:px-8 sm:pb-16 sm:pt-24">
         <Reveal>
           <p className="font-marginalia-sans text-[13px] text-mg-ink-faint">Playground</p>
           <h1 className="mt-2 max-w-xl font-marginalia-serif text-[32px] leading-tight text-mg-ink sm:text-[40px]">
             Things I made because I wanted to{" "}
-            <span className="relative inline-block">
+            <span className="relative inline-block whitespace-nowrap">
               see if I could
-              <InkMark variant="underline" trigger="view" delay={0.4} />
+              <InkMark variant="underline" trigger="view" delay={0.4} strokeWidth={1.75} />
             </span>
             .
           </h1>
           <p className="mt-4 max-w-md font-marginalia-sans text-[14.5px] text-mg-ink-muted">
-            The drawer everything else got stuffed into. Some of it is finished. Some of it just needed to exist.
+            The drawer everything else got stuffed into. Some of it plays. Some of it just needed to exist.
           </p>
         </Reveal>
       </div>
 
-      <div className="mx-auto max-w-5xl px-5 pb-20 sm:px-8">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          <PieceCard src={knwn.coverImageSrc!} name={knwn.name} oneLiner={knwn.oneLiner} status={knwn.status} index={0} />
-          <PieceCard
-            src={cyberAngel.coverImageSrc!}
-            name={cyberAngel.name}
-            oneLiner={cyberAngel.oneLiner}
-            status={cyberAngel.status}
-            note="made this at 2am"
-            index={1}
-          />
-          <PieceCard src={greekComics.coverImageSrc!} name={greekComics.name} oneLiner={greekComics.oneLiner} status={greekComics.status} index={2} />
-          <PieceCard
-            src={internetMagazine.coverImageSrc!}
-            name={internetMagazine.name}
-            oneLiner={internetMagazine.oneLiner}
-            status={internetMagazine.status}
-            index={3}
-          />
-          <PieceCard
-            src={sipCoffee.coverImageSrc!}
-            name={sipCoffee.name}
-            oneLiner={sipCoffee.oneLiner}
-            status={sipCoffee.status}
-            note="still thinking about this"
-            index={4}
-          />
-          <PendingSlot index={5} />
+      {/* The two things that actually do something — the real artifact is the interaction itself.
+          Narrower than the rest of the page on purpose: two small real objects sitting close
+          together on a desk, not two widgets stranded across a full-width canvas. */}
+      <div className="mx-auto max-w-md px-5 pb-16 sm:px-8">
+        <div className="flex flex-col gap-14 sm:flex-row sm:gap-16">
+          <Reveal>
+            <GameBoy />
+          </Reveal>
+          <Reveal delay={0.08}>
+            <CassetteDeck />
+          </Reveal>
         </div>
       </div>
 
-      {/* The workbench — the two things on this page that actually do something */}
-      <div ref={deskRef} className="border-t border-mg-line bg-mg-bg-raised">
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
-          <Reveal>
-            <p className="font-marginalia-sans text-[12px] uppercase tracking-wide text-mg-ink-faint">
-              The workbench &mdash; a couple of these actually do something
-            </p>
-          </Reveal>
-          <div className="mt-10 flex flex-col items-start gap-16 sm:flex-row sm:flex-wrap sm:gap-20">
-            <Reveal delay={0.05}>
-              <GameBoy />
-            </Reveal>
-            <Reveal delay={0.1}>
-              <CassetteDeck containerRef={deskRef} />
-            </Reveal>
+      {/* Prints & publications — an actual pile, not a grid */}
+      <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:px-8 sm:pt-10">
+        <Reveal>
+          <p className="font-marginalia-sans text-[12px] uppercase tracking-wide text-mg-ink-faint">Prints &amp; publications</p>
+        </Reveal>
+        <div className="relative mt-9 flex flex-wrap items-start gap-x-10 gap-y-14">
+          <Artifact
+            src={cyberAngel.coverImageSrc!}
+            width={961}
+            height={1296}
+            name={cyberAngel.name}
+            oneLiner={cyberAngel.oneLiner}
+            tags={cyberAngel.tags}
+            rotate={-1.5}
+            tierWidth={280}
+            index={0}
+            tiltable
+            priority
+            onExpand={() => setExpanded({ src: cyberAngel.coverImageSrc!, width: 961, height: 1296, name: cyberAngel.name })}
+          />
+          <div className="sm:mt-16">
+            <Artifact
+              src={greekComics.coverImageSrc!}
+              width={3000}
+              height={2250}
+              name={greekComics.name}
+              oneLiner={greekComics.oneLiner}
+              tags={greekComics.tags}
+              rotate={0.5}
+              tierWidth={300}
+              index={1}
+              onExpand={() => setExpanded({ src: greekComics.coverImageSrc!, width: 3000, height: 2250, name: greekComics.name })}
+            />
+          </div>
+          <div className="sm:mt-4">
+            <Artifact
+              src={internetMagazine.coverImageSrc!}
+              width={2400}
+              height={2400}
+              name={internetMagazine.name}
+              oneLiner={internetMagazine.oneLiner}
+              tags={internetMagazine.tags}
+              rotate={-0.5}
+              tierWidth={220}
+              index={2}
+              onExpand={() => setExpanded({ src: internetMagazine.coverImageSrc!, width: 2400, height: 2400, name: internetMagazine.name })}
+            />
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
+      {/* Identity work — quieter, smaller, a different kind of object entirely */}
+      <div className="mx-auto max-w-5xl px-5 pb-20 pt-14 sm:px-8 sm:pt-20">
+        <Reveal>
+          <p className="font-marginalia-sans text-[12px] uppercase tracking-wide text-mg-ink-faint">Identity work</p>
+        </Reveal>
+        <div className="mt-9 flex flex-wrap items-start gap-x-12 gap-y-10">
+          <Artifact
+            src={knwn.coverImageSrc!}
+            width={580}
+            height={332}
+            name={knwn.name}
+            oneLiner={knwn.oneLiner}
+            tags={knwn.tags}
+            rotate={0.5}
+            tierWidth={190}
+            index={0}
+            tiltable
+            onExpand={() => setExpanded({ src: knwn.coverImageSrc!, width: 580, height: 332, name: knwn.name })}
+          />
+          <Artifact
+            src={sipCoffee.coverImageSrc!}
+            width={1551}
+            height={1068}
+            name={sipCoffee.name}
+            oneLiner={sipCoffee.oneLiner}
+            tags={sipCoffee.tags}
+            rotate={-1}
+            tierWidth={210}
+            index={1}
+            note="still figuring out what this is"
+            noteOnHover
+            tiltable
+            onExpand={() => setExpanded({ src: sipCoffee.coverImageSrc!, width: 1551, height: 1068, name: sipCoffee.name })}
+          />
+        </div>
+      </div>
+
+      {/* The drawer — small, real, worth finding */}
+      <div className="mx-auto max-w-5xl border-t border-mg-line px-5 py-16 sm:px-8 sm:py-20">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           <Reveal>
             <ConsolePing />
@@ -180,6 +314,8 @@ export function PlaygroundCanvas() {
           </Reveal>
         </div>
       </div>
+
+      {expanded && <Lightbox {...expanded} onClose={() => setExpanded(null)} />}
     </div>
   );
 }

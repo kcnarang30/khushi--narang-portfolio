@@ -2,6 +2,28 @@
  * Shared motion vocabulary for the Marginalia system. Every component reaches
  * for these instead of inventing its own easing curve or duration — the
  * point isn't variety, it's one physical world behaving consistently.
+ *
+ * Contextual interaction vocabulary — what behaves how, and why:
+ *
+ * 1. EDITORIAL   underline / strike / circle / highlight (InkMark, HandUnderline)
+ *                — marks made by a hand on text. Home, About, case-study prose.
+ * 2. PHYSICAL    lift / press / slide / paper movement (TapedPhoto, tag pills,
+ *                Archive rows, Contact button) — things with weight and a
+ *                surface they rest on.
+ * 3. INTERFACE   toggle / state change / system response (FolderTabs, filter
+ *                pills, terminal, status dots) — things that behave like
+ *                software because they secretly are.
+ * 4. INVESTIGATIVE  reveal info on hover/click (Work's crop-shift + metadata,
+ *                case-study stat count-up, Archive's file position) — you
+ *                learn something you didn't already see.
+ * 5. PLAYFUL     Playground only — an object's interaction teaches you what
+ *                the object is, or it stays static.
+ *
+ * Home stays Editorial + a light touch of Physical (the hero correction is
+ * the one Editorial signature move — it doesn't repeat elsewhere). Work is
+ * Investigative-led. Case studies are Investigative + Editorial. Archive is
+ * Physical + Interface. Playground is Playful, object by object. About is
+ * Physical, restrained. Contact is Physical + Interface, never theatrical.
  */
 
 // Entrance: something settling into place. Slower, decelerating hard at the end.
